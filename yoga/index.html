@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>St. Mark's Yoga — Client Insights</title>
+<!-- Auth is enforced server-side (email one-time code) — see server.py. -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root{--bg:#141414;--paper:#1d1d1d;--text:#efeae0;--muted:#a7a299;--line:rgba(255,255,255,.10);
+    --red:#c8415c;--gold:#f5c518;--green:#4caf7d}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  .wrap{max-width:1320px;margin:0 auto;padding:24px}
+  header h1{font-size:1.9rem;font-weight:900;letter-spacing:-.03em}
+  header .sub{color:var(--muted);font-size:.95rem;margin-top:4px}
+  .accent{color:var(--red)}
+  .viewtoggle{display:inline-flex;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px;margin:4px 0 6px}
+  .vt{background:transparent;border:0;color:var(--muted);border-radius:999px;padding:8px 24px;font:inherit;font-weight:800;font-size:.9rem;cursor:pointer}
+  .vt.active{background:var(--red);color:#fff}
+  /* filter bar */
+  .filterbar{position:sticky;top:0;z-index:500;background:rgba(20,20,20,.92);backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:18px 0;display:flex;
+    align-items:center;gap:12px;flex-wrap:wrap}
+  .showing{font-weight:800}.showing b{color:var(--red)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+  .chip{display:inline-flex;align-items:center;gap:7px;background:rgba(200,65,92,.16);color:var(--red);
+    border:1px solid rgba(200,65,92,.4);border-radius:999px;padding:5px 10px;font-size:.82rem;font-weight:700}
+  .chip b{color:var(--text);font-weight:600}
+  .chip .x{cursor:pointer;font-weight:900;opacity:.8}.chip .x:hover{opacity:1}
+  .clearall{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;
+    padding:6px 12px;font:inherit;font-size:.82rem;font-weight:700;cursor:pointer}
+  .clearall:hover{color:var(--text);border-color:var(--text)}
+  .hint{color:var(--muted);font-size:.82rem}
+  /* time control */
+  .timebox{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .timebox .lab{font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}
+  .timebox .rng{display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--red);width:230px}
+  .timeval{font-weight:800;color:var(--red);min-width:62px;display:inline-block;text-align:center}
+  .presets{display:flex;gap:6px;flex-wrap:wrap;width:100%;margin-top:4px}
+  .preset{background:var(--paper);border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 13px;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer}
+  .preset:hover{color:var(--text);border-color:var(--red)}
+  #heat .hrow{display:grid;grid-template-columns:46px repeat(17,1fr);gap:3px;align-items:center;margin-bottom:3px}
+  #heat .hcell{height:22px;border-radius:4px;cursor:pointer;background:#1f1f1f;transition:.1s}
+  #heat .hcell:hover{outline:1.5px solid var(--text)}
+  #heat .hcell.sel{outline:2px solid #fff}
+  #heat .hlab{font-size:.72rem;font-weight:700;color:var(--muted)}
+  #heat .hhdr{font-size:.6rem;color:var(--muted);text-align:center}
+  #bmap{height:460px;border-radius:12px;border:1px solid var(--line);background:#0b0b0d}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin:18px 0}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .stat .v{font-size:1.6rem;font-weight:900;letter-spacing:-.03em}
+  .stat .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin-top:3px}
+  .stat .v.red{color:var(--red)}.stat .v.gold{color:var(--gold)}.stat .v.green{color:var(--green)}
+  @media(max-width:1100px){.stats{grid-template-columns:repeat(4,1fr)}}
+  @media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:18px}
+  .panel h2{font-size:1.05rem;font-weight:800;margin-bottom:4px}
+  .panel .note{color:var(--muted);font-size:.85rem;margin-bottom:12px}
+  #map{height:500px;border-radius:12px;border:1px solid var(--line);background:#0b0b0d}
+  .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#222;color:var(--text)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:.8rem;color:var(--muted)}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:900px){.grid,.grid3{grid-template-columns:1fr}}
+  .chartbox{position:relative;height:280px}
+  canvas{cursor:pointer}
+  .foot{color:var(--muted);font-size:.85rem;margin-top:8px}.foot b{color:var(--text)}
+  .pill{display:inline-block;background:rgba(200,65,92,.15);color:var(--red);font-size:.72rem;font-weight:700;
+    padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div id="gate" style="position:fixed;inset:0;z-index:99999;background:#141414;display:flex;align-items:center;justify-content:center;font-family:Inter,Arial,sans-serif">
+  <div style="background:#1d1d1d;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:36px 40px;width:330px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <div style="font-size:1.5rem;font-weight:900;color:#efeae0;letter-spacing:-.03em">St. Mark&rsquo;s Yoga</div>
+    <div style="color:#a7a299;font-size:.85rem;margin:6px 0 20px">Client Insights &mdash; enter password</div>
+    <input id="gpw" type="password" placeholder="Password" autocomplete="current-password" style="width:100%;padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#141414;color:#efeae0;font:inherit;font-size:1rem" />
+    <button id="gbtn" style="width:100%;margin-top:12px;padding:11px;border:0;border-radius:10px;background:#c8415c;color:#fff;font:inherit;font-weight:800;font-size:1rem;cursor:pointer">Enter</button>
+    <div id="gerr" style="color:#c8415c;font-size:.8rem;margin-top:10px;height:1em"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='smy_gate', PW='yoga', g=document.getElementById('gate');
+  function unlock(){ g.style.display='none'; }
+  if(sessionStorage.getItem(KEY)==='1'){ unlock(); }
+  else { var i=document.getElementById('gpw'); if(i) i.focus(); }
+  function go(){ var v=(document.getElementById('gpw').value||'').trim().toLowerCase();
+    if(v===PW){ sessionStorage.setItem(KEY,'1'); unlock(); }
+    else { document.getElementById('gerr').textContent='Wrong password'; } }
+  document.getElementById('gbtn').addEventListener('click',go);
+  document.getElementById('gpw').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+})();
+</script>
+<div class="wrap">
+  <header>
+    <a href="javascript:void(0)" onclick="sessionStorage.removeItem('smy_gate');location.reload()" style="float:right;color:var(--muted);font-size:.85rem;font-weight:700;text-decoration:none">Sign out →</a>
+    <a href="/admin" id="adminlink" style="float:right;display:none;margin-right:16px;color:var(--red);font-size:.85rem;font-weight:700;text-decoration:none">Manage users →</a>
+    
+    
+    <h1>St. Mark's Yoga — <span class="accent">Client Insights</span></h1>
+    <div class="sub">Cross-filtering dashboard · click any chart, ZIP, or bar to filter everything · aggregates only, no personal data</div>
+  </header>
+
+  <div class="viewtoggle">
+    <button class="vt active" data-view="clients">Clients</button>
+    <button class="vt" data-view="bookings">Bookings</button>
+  </div>
+  <div id="clientsView">
+
+  <div class="filterbar">
+    <span class="showing">Showing <b id="showing">—</b> of 64,965</span>
+    <div class="chips" id="chips"><span class="hint">No filters — click a city, age, referral, ZIP, or drag the time slider.</span></div>
+    <button class="clearall" id="clearall">Clear all</button>
+  </div>
+
+  <div class="panel">
+    <div class="timebox">
+      <span class="lab">Time range (signup month)</span>
+      <div class="rng"><span class="timeval" id="t0lab">—</span>
+        <input type="range" id="t0" min="0" value="0"><input type="range" id="t1" min="0">
+        <span class="timeval" id="t1lab">—</span></div>
+      <div class="presets" id="presets"></div>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="panel">
+    <h2>Where clients are <span class="pill">NYC</span></h2>
+    <div class="note">Circle = ZIP, sized/colored by client count <i>(within current filters)</i>. Click a circle to filter to that ZIP. Toggle the Heatmap (top-right).</div>
+    <div id="map"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Sign-up cohorts over time</h2>
+    <div class="note">New client records per month. Red bars = selected time window (use the slider above). The one-time Oct-2023 Recess import (~19k) is omitted from this plot so the organic signup trend is readable — it's still counted in every other chart and stat.</div>
+    <div class="chartbox"><canvas id="cohort"></canvas></div>
+  </div>
+
+  <div class="grid3">
+    <div class="panel"><h2>Age</h2><div class="note">Click a bar to filter.</div><div class="chartbox"><canvas id="age"></canvas></div></div>
+    <div class="panel"><h2>How they found us</h2><div class="note">Click a slice to filter.</div><div class="chartbox"><canvas id="ref"></canvas></div></div>
+    <div class="panel"><h2>Marketing email</h2><div class="note">Click to filter.</div><div class="chartbox"><canvas id="mkt"></canvas></div></div>
+  </div>
+
+  <div class="grid">
+    <div class="panel"><h2>Engagement — classes taken</h2><div class="note">Lifetime classes per client. Click a bar to filter.</div><div class="chartbox"><canvas id="cls"></canvas></div></div>
+    <div class="panel"><h2>Top states</h2><div class="note">Click a bar to filter.</div><div class="chartbox"><canvas id="states"></canvas></div></div>
+  </div>
+  <div class="grid">
+    <div class="panel"><h2>Top neighborhoods</h2><div class="note">NYC grouped into neighborhoods (from ZIP); out-of-town shown by city. Click a bar to filter.</div><div class="chartbox"><canvas id="cities"></canvas></div></div>
+    <div class="panel"><h2>Top countries</h2><div class="note">Click a bar to filter.</div><div class="chartbox"><canvas id="countries"></canvas></div></div>
+  </div>
+
+  <div class="panel"><h2>Data quality notes</h2><div class="foot" id="dq"></div></div>
+  </div><!-- /#clientsView -->
+
+  <div id="bookingsView" style="display:none">
+    <div class="filterbar">
+      <span class="showing">Showing <b id="bShowing">—</b> of 240,830 bookings</span>
+      <div class="chips" id="bChips"><span class="hint">No filters — click a teacher, status, payment, or heatmap cell.</span></div>
+      <button class="clearall" id="bClear">Clear all</button>
+    </div>
+    <div class="panel">
+      <div class="timebox">
+        <span class="lab">Class month</span>
+        <div class="rng"><span class="timeval" id="bT0">—</span>
+          <input type="range" id="bt0" min="0" value="0"><input type="range" id="bt1" min="0">
+          <span class="timeval" id="bT1">—</span></div>
+        <div class="presets" id="bPresets"></div>
+      </div>
+    </div>
+    <div class="stats" id="bStats"></div>
+    <div class="panel">
+      <h2>When classes happen <span class="pill">day × hour</span></h2>
+      <div class="note">Bookings by weekday × hour, within current filters — darker = busier. Click a cell to filter to that time slot.</div>
+      <div id="heat"></div>
+    </div>
+    <div class="panel">
+      <h2>Bookings over time</h2>
+      <div class="note">Attended bookings per month. Red = the selected window (slider above).</div>
+      <div class="chartbox"><canvas id="bTrend"></canvas></div>
+    </div>
+    <div class="grid">
+      <div class="panel"><h2>Teachers</h2><div class="note">Bookings per instructor. Click to filter everything to that teacher's audience.</div><div class="chartbox" style="height:520px"><canvas id="bTeach"></canvas></div></div>
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="panel"><h2>Status</h2><div class="note">Attended / cancelled / no-show — click to filter.</div><div class="chartbox" style="height:210px"><canvas id="bStatus"></canvas></div></div>
+        <div class="panel"><h2>Payment method</h2><div class="note">How they paid — click to filter.</div><div class="chartbox" style="height:230px"><canvas id="bPay"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Where attendees live <span class="pill">NYC</span></h2>
+      <div class="note">ZIPs of the clients in the current booking filter (joined by email — the ~4% of bookings whose client has an address). Click a circle to filter; pick a teacher above to see <i>their</i> map.</div>
+      <div id="bmap"></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><h2>Attendee age</h2><div class="note">Click a bar to filter.</div><div class="chartbox"><canvas id="bAge"></canvas></div></div>
+      <div class="panel"><h2>How they found us</h2><div class="note">Referral source. Click to filter.</div><div class="chartbox"><canvas id="bRef"></canvas></div></div>
+      <div class="panel"><h2>Top neighborhoods</h2><div class="note">Click a bar to filter.</div><div class="chartbox"><canvas id="bNbhd"></canvas></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.vt').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.vt').forEach(x=>x.classList.toggle('active',x===b));
+    const v=b.dataset.view;
+    document.getElementById('clientsView').style.display = v==='clients'?'':'none';
+    document.getElementById('bookingsView').style.display = v==='bookings'?'':'none';
+    if(v==='bookings' && window.bInit) window.bInit();
+    setTimeout(()=>window.dispatchEvent(new Event('resize')),60);  // fix Leaflet sizing on view switch
+  });
+  // Once bookings data is loaded, default to the Bookings tab automatically.
+  fetch('./bookings_data.json',{method:'HEAD'}).then(r=>{ if(r.ok){ const b=document.querySelector('.vt[data-view="bookings"]'); if(b) b.click(); } }).catch(()=>{});
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const COL={red:'#c8415c',red2:'#e0728a',gold:'#f5c518',green:'#4caf7d',blue:'#9ab0c9',
+  text:'#efeae0',muted:'#a7a299',line:'rgba(255,255,255,.10)',off:'#3a3340'};
+const CLS=['0','1','2-5','6-10','11-25','26-50','51-100','100+'];
+const clsB=n=>n<1?0:n<2?1:n<6?2:n<11?3:n<26?4:n<51?5:n<101?6:7;
+const fmt=n=>n.toLocaleString();
+const PAL=[COL.red,COL.red2,COL.gold,COL.green,COL.blue,'#9b6dd6','#7a7a7a'];
+
+let D, rows, NC, charts={}, map, circles=[], intlCircles=[], heat;
+let filters={};                 // single value per key; time:[s,e] when narrowed
+const FNAMES={zip:'ZIP',city:'City',state:'State',country:'Country',age:'Age',
+  ref:'Referral',mkt:'Marketing',cls:'Classes',pkg:'Package',time:'Time'};
+
+const act = () => Object.entries(filters).filter(([k,v])=>v!=null);
+function matches(r,except){
+  for(const [k,v] of act()){ if(k===except) continue;
+    if(k==='zip'){ if(r[0]!==v) return false; }
+    else if(k==='city'){ if(r[1]!==v) return false; }
+    else if(k==='state'){ if(r[2]!==v) return false; }
+    else if(k==='country'){ if(r[3]!==v) return false; }
+    else if(k==='age'){ if(r[4]!==v) return false; }
+    else if(k==='ref'){ if(r[5]!==v) return false; }
+    else if(k==='mkt'){ if(r[6]!==v) return false; }
+    else if(k==='cls'){ if(clsB(r[7])!==v) return false; }
+    else if(k==='pkg'){ if(r[9]!==v) return false; }
+    else if(k==='nbhd'){ if(r[10]!==v) return false; }
+    else if(k==='time'){ const c=r[8]; if(c<0||c<v[0]||c>v[1]) return false; }
+  } return true;
+}
+function counts(get,n,except){const a=new Array(n).fill(0);
+  for(const r of rows){ if(matches(r,except)){const k=get(r); if(k>=0&&k<n)a[k]++;} } return a;}
+
+function toggle(key,val){ if(filters[key]===val) delete filters[key]; else filters[key]=val; rerender(); }
+
+const colorFor=c=> c>=150?'#ff2d55': c>=60?COL.red: c>=20?COL.red2: c>=6?'#caa39f':'#9ab0c9';
+
+fetch('./data.json').then(r=>r.json()).then(d=>{ D=d; rows=d.rows; NC=d.dims.cohorts.length; init(); });
+
+function init(){
+  // stat cards shell
+  document.getElementById('stats').innerHTML=
+    [['clients',''],['withLoc',''],['mapped',''],['mkt','green'],['reach','gold'],['tc',''],['avg','red']]
+    .map(([id,c])=>`<div class="stat"><div class="v ${c}" id="st_${id}">—</div><div class="k" id="kt_${id}"></div></div>`).join('');
+  const K={clients:'Clients',withLoc:'With location',mapped:'Mapped (ZIP)',mkt:'Mktg-subscribed',
+    reach:'Reachable by email',tc:'Classes taken',avg:'Avg / active'};
+  for(const id in K) document.getElementById('kt_'+id).textContent=K[id];
+
+  // time slider
+  const t0=document.getElementById('t0'), t1=document.getElementById('t1');
+  t0.max=NC-1; t1.max=NC-1; t1.value=NC-1; t0.value=NC-1;  // default view: last month's signups
+  const onTime=()=>{ let s=+t0.value, e=+t1.value; if(s>e){ [s,e]=[e,s]; }
+    document.getElementById('t0lab').textContent=D.dims.cohorts[s];
+    document.getElementById('t1lab').textContent=D.dims.cohorts[e];
+    if(s===0&&e===NC-1) delete filters.time; else filters.time=[s,e]; rerender(); };
+  t0.addEventListener('input',onTime); t1.addEventListener('input',onTime);
+
+  const PRESETS=[['Last month',()=>[NC-1,NC-1]],['All',()=>[0,NC-1]],
+    ['This year',()=>{const y=D.dims.cohorts[NC-1].slice(0,4);const s=D.dims.cohorts.findIndex(c=>c.startsWith(y));return [s<0?0:s,NC-1];}],
+    ['Last 12mo',()=>[Math.max(0,NC-12),NC-1]],['Last 6mo',()=>[Math.max(0,NC-6),NC-1]],['Last 3mo',()=>[Math.max(0,NC-3),NC-1]],
+    ['Organic only',()=>{let s=0;while(window.IMPORT&&window.IMPORT.has(s))s++;return [s,NC-1];}]];
+  document.getElementById('presets').innerHTML=PRESETS.map((p,i)=>`<button class="preset" data-i="${i}">${p[0]}</button>`).join('');
+  document.querySelectorAll('.preset').forEach(b=>b.onclick=()=>{const [s,e]=PRESETS[+b.dataset.i][1]();t0.value=s;t1.value=e;onTime();});
+
+  document.getElementById('clearall').onclick=()=>{ filters={}; t0.value=0; t1.value=NC-1; onTime(); };
+
+  // map
+  map=L.map('map',{scrollWheelZoom:true}).setView([40.728,-73.99],11);
+  // Esri "Dark Gray Canvas" — a clean, genuine dark basemap (no API key),
+  // plus its subtle reference layer so neighborhoods/streets read.
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    {attribution:'Tiles © Esri',maxZoom:16}).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+    {maxZoom:16,opacity:.85}).addTo(map);
+  const cl=L.layerGroup().addTo(map);
+  D.dims.zips.forEach((p,u)=>{ const m=L.circleMarker([p.lat,p.lng],{radius:5,weight:1,fillOpacity:.7});
+    m.bindPopup(''); m.on('click',()=>toggle('zip',u)); m.addTo(cl); circles[u]=m; });
+  (D.dims.intlPoints||[]).forEach((p,j)=>{ const m=L.circleMarker([p.lat,p.lng],{radius:5,weight:1.5,color:'#f5c518',fillColor:'#f5c518',fillOpacity:.55});
+    m.bindPopup(''); m.on('click',()=>toggle('country',p.ci)); m.addTo(cl); intlCircles[j]=m; });
+  heat=L.heatLayer([],{radius:25,blur:18,maxZoom:13});
+  L.control.layers(null,{'ZIP circles':cl,'Heatmap':heat},{collapsed:false}).addTo(map);
+  document.getElementById('legend').innerHTML=
+    [['#ff2d55','150+'],[COL.red,'60-149'],[COL.red2,'20-59'],['#caa39f','6-19'],['#9ab0c9','1-5']]
+    .map(([c,l])=>`<span><i style="background:${c}"></i>${l}/ZIP</span>`).join('')
+    + '<span><i style="background:#f5c518"></i>international (by country — zoom out)</span>';
+
+  // charts
+  Chart.defaults.color=COL.muted; Chart.defaults.font.family='Inter'; Chart.defaults.borderColor=COL.line;
+  const grid={grid:{color:COL.line},ticks:{color:COL.muted}};
+  const clickOpt=(e,els,ch)=>{ if(els.length) toggle(ch._key, ch._map[els[0].index]); };
+  const mkBar=(id,horizontal)=>charts[id]=new Chart(document.getElementById(id),{type:'bar',
+    data:{labels:[],datasets:[{data:[],borderRadius:5}]},
+    options:{indexAxis:horizontal?'y':'x',maintainAspectRatio:false,onClick:clickOpt,
+      plugins:{legend:{display:false}},scales:{x:grid,y:grid}}});
+  const mkDonut=id=>charts[id]=new Chart(document.getElementById(id),{type:'doughnut',
+    data:{labels:[],datasets:[{data:[],borderColor:'#1d1d1d',borderWidth:2}]},
+    options:{maintainAspectRatio:false,onClick:clickOpt,
+      plugins:{legend:{position:'bottom',labels:{color:COL.text,boxWidth:12}}}}});
+  mkBar('age'); mkDonut('ref'); mkDonut('mkt'); mkBar('cls');
+  mkBar('states',true); mkBar('cities',true); mkBar('countries',true); mkBar('cohort');
+  charts.cohort.options.onClick=null; charts.cohort.options.scales=charts.cohort.options.scales;
+  charts.cohort.data.labels=D.dims.cohorts;
+
+  // Detect the one-time bulk-import outlier month(s) so they don't flatten the
+  // cohort axis (the import isn't organic signup — it's the Recess migration).
+  { const full=counts(r=>r[8],NC,null); const nz=full.filter(x=>x>0).slice().sort((a,b)=>a-b);
+    const med=nz.length?nz[Math.floor(nz.length/2)]:1; window.IMPORT=new Set();
+    full.forEach((c,i)=>{ if(c>med*4) IMPORT.add(i); }); }
+
+  document.getElementById('dq').innerHTML=
+    `• Only ~5% of clients have an address — the map is that subset.<br>`+
+    `• <b>${fmt(D.meta.jan1Birthdays)}</b> "January 1" placeholder birthdays — treat age as directional.<br>`+
+    `• Late-2023 cohort spike = one-time Recess import, not organic growth.`;
+
+  onTime(); // sets labels + first render
+}
+
+function fixedBar(id,labels,data,key){const ch=charts[id]; const base=id==='cls'?COL.gold:COL.red;
+  ch.data.labels=labels; ch.data.datasets[0].data=data; const sel=filters[key];
+  ch.data.datasets[0].backgroundColor=data.map((_,i)=> sel==null||i===sel?base:COL.off);
+  ch._key=key; ch._map=labels.map((_,i)=>i); ch.update();}
+function topBar(id,labelsAll,countsAll,key,N,base){const ch=charts[id];
+  const idx=countsAll.map((c,i)=>[i,c]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,N);
+  ch.data.labels=idx.map(x=>labelsAll[x[0]]); ch.data.datasets[0].data=idx.map(x=>x[1]);
+  ch._map=idx.map(x=>x[0]); ch._key=key; const sel=filters[key];
+  ch.data.datasets[0].backgroundColor=ch._map.map(u=> sel==null||u===sel?base:COL.off); ch.update();}
+function donut(id,labels,data,key){const ch=charts[id]; ch.data.labels=labels; ch.data.datasets[0].data=data;
+  const sel=filters[key]; ch.data.datasets[0].backgroundColor=labels.map((_,i)=> sel==null||i===sel?PAL[i%PAL.length]:COL.off);
+  ch._key=key; ch._map=labels.map((_,i)=>i); ch.update();}
+
+function rerender(){
+  let clients=0,withLoc=0,mapped=0,mkt=0,tc=0,active=0;
+  for(const r of rows){ if(matches(r,null)){ clients++;
+    if(r[0]>=0||r[1]>=0||r[2]>=0||r[3]>=0) withLoc++; if(r[0]>=0) mapped++;
+    if(r[6]===1) mkt++; tc+=r[7]; if(r[7]>0) active++; } }
+  const set=(id,v)=>document.getElementById('st_'+id).textContent=v;
+  set('clients',fmt(clients)); set('withLoc',fmt(withLoc)); set('mapped',fmt(mapped));
+  set('mkt',fmt(mkt)); set('reach',clients?Math.round(100*mkt/clients)+'%':'—');
+  set('tc',fmt(tc)); set('avg',active?(tc/active).toFixed(1):'0');
+  document.getElementById('showing').textContent=fmt(clients);
+
+  fixedBar('age',D.dims.ages,counts(r=>r[4],D.dims.ages.length,'age'),'age');
+  donut('ref',D.dims.referrals,counts(r=>r[5],D.dims.referrals.length,'ref'),'ref');
+  let ms=0,mu=0; for(const r of rows){ if(matches(r,'mkt')){ r[6]===1?ms++:mu++; } }
+  const mc=charts.mkt; mc.data.labels=['Subscribed','Unsubscribed']; mc.data.datasets[0].data=[ms,mu];
+  const sm=filters.mkt; mc.data.datasets[0].backgroundColor=[sm==null||sm===1?COL.green:COL.off, sm==null||sm===0?'#666':COL.off];
+  mc._key='mkt'; mc._map=[1,0]; mc.update();
+  fixedBar('cls',CLS,counts(r=>clsB(r[7]),8,'cls'),'cls');
+  topBar('states',D.dims.states,counts(r=>r[2],D.dims.states.length,'state'),'state',12,COL.red);
+  topBar('cities',D.dims.neighborhoods,counts(r=>r[10],D.dims.neighborhoods.length,'nbhd'),'nbhd',15,COL.red2);
+  topBar('countries',D.dims.countries,counts(r=>r[3],D.dims.countries.length,'country'),'country',12,COL.blue);
+
+  // cohort (exclude time so full timeline shows; highlight selected window)
+  const coh=counts(r=>r[8],NC,'time'); const t=filters.time;
+  charts.cohort.data.datasets[0].data=coh.map((c,i)=> IMPORT.has(i)?null:c); // omit import spike from plot
+  charts.cohort.data.datasets[0].backgroundColor=coh.map((_,i)=> (!t||(i>=t[0]&&i<=t[1]))?COL.red:COL.off);
+  charts.cohort.update();
+
+  // map (exclude zip filter so all ZIPs remain pickable)
+  const zc=counts(r=>r[0],D.dims.zips.length,'zip'); const mx=Math.max(1,...zc);
+  const pts=[];
+  D.dims.zips.forEach((p,u)=>{ const c=zc[u], m=circles[u], col=colorFor(c), sel=filters.zip===u;
+    m.setStyle({radius:c?4+18*Math.sqrt(c/mx):0,color:sel?'#fff':col,weight:sel?2.5:1,fillColor:col,fillOpacity:c?.72:0});
+    m.setPopupContent(`<b>ZIP ${p.zip}</b>${p.city?' · '+p.city:''}${p.state?', '+p.state:''}<br>${fmt(c)} client${c!=1?'s':''}`);
+    if(c) pts.push([p.lat,p.lng,c]); });
+  heat.setLatLngs(pts);
+  const ip=D.dims.intlPoints||[];
+  if(ip.length){ const cc=counts(r=>r[3],D.dims.countries.length,'country'); const mxc=Math.max(1,...ip.map(p=>cc[p.ci]||0));
+    ip.forEach((p,j)=>{ const n=cc[p.ci]||0, m=intlCircles[j], sel=filters.country===p.ci;
+      m.setStyle({radius:n?5+12*Math.sqrt(n/mxc):0,color:sel?'#fff':'#f5c518',weight:sel?2.5:1.5,fillColor:'#f5c518',fillOpacity:n?.6:0});
+      m.setPopupContent(`<b>${p.code}</b><br>${fmt(n)} client${n!=1?'s':''}`); }); }
+
+  renderChips();
+}
+
+function chipLabel(k,v){
+  if(k==='time') return `Time: ${D.dims.cohorts[v[0]]} → ${D.dims.cohorts[v[1]]}`;
+  if(k==='mkt') return `Marketing: ${v===1?'Subscribed':'Unsubscribed'}`;
+  if(k==='cls') return `Classes: ${CLS[v]}`;
+  if(k==='age') return `Age: ${D.dims.ages[v]}`;
+  if(k==='ref') return `Referral: ${D.dims.referrals[v]}`;
+  if(k==='zip') return `ZIP: ${D.dims.zips[v].zip}`;
+  if(k==='city') return `City: ${D.dims.cities[v]}`;
+  if(k==='nbhd') return `Neighborhood: ${D.dims.neighborhoods[v]}`;
+  if(k==='state') return `State: ${D.dims.states[v]}`;
+  if(k==='country') return `Country: ${D.dims.countries[v]}`;
+  if(k==='pkg') return `Package: ${D.dims.packages[v]}`;
+  return k;
+}
+function renderChips(){const a=act(); const box=document.getElementById('chips');
+  if(!a.length){ box.innerHTML='<span class="hint">No filters — click a city, age, referral, ZIP, or drag the time slider.</span>'; return; }
+  box.innerHTML=a.map(([k,v])=>`<span class="chip"><b>${chipLabel(k,v)}</b><span class="x" data-k="${k}">✕</span></span>`).join('');
+  box.querySelectorAll('.x').forEach(x=>x.onclick=()=>{ const k=x.dataset.k;
+    if(k==='time'){ document.getElementById('t0').value=0; document.getElementById('t1').value=NC-1; }
+    delete filters[k]; rerender(); });
+}
+</script>
+<script>
+/* ===== Bookings view — lazy-loaded cross-filter engine ===== */
+(function(){
+  const C={red:'#c8415c',red2:'#e0728a',gold:'#f5c518',green:'#4caf7d',blue:'#9ab0c9',text:'#efeae0',muted:'#a7a299',line:'rgba(255,255,255,.10)',off:'#3a3340'};
+  const fmt=n=>n.toLocaleString();
+  const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const HOURS=[6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+  const hr12=h=>{const ap=h<12?'a':'p';return (h%12||12)+ap;};
+  const STATUS=['Attended','Cancelled','No-show'];
+  const PAL=[C.red,C.red2,C.gold,C.green,C.blue,'#9b6dd6','#7a7a7a','#557'];
+  let B,R,NC,charts={},F={},loaded=false,bmap,bcircles=[];
+  const statusOf=r=> r[6]?1:(r[5]?0:2);                 // row: [teacher,dow,hour,type,pay,ci,cx,cents,month,zip,nbhd,age,ref]
+  const act=()=>Object.entries(F).filter(([k,v])=>v!=null);
+  function match(r,except){
+    for(const [k,v] of act()){ if(k===except)continue;
+      if(k==='teacher'){if(r[0]!==v)return false;}
+      else if(k==='type'){if(r[3]!==v)return false;}
+      else if(k==='pay'){if(r[4]!==v)return false;}
+      else if(k==='status'){if(statusOf(r)!==v)return false;}
+      else if(k==='cell'){if(r[1]!==v[0]||r[2]!==v[1])return false;}
+      else if(k==='zip'){if(r[9]!==v)return false;}
+      else if(k==='nbhd'){if(r[10]!==v)return false;}
+      else if(k==='age'){if(r[11]!==v)return false;}
+      else if(k==='ref'){if(r[12]!==v)return false;}
+      else if(k==='time'){const m=r[8];if(m<0||m<v[0]||m>v[1])return false;}
+    } return true;
+  }
+  const counts=(get,n,except)=>{const a=new Array(n).fill(0);for(const r of R){if(match(r,except)){const k=get(r);if(k>=0&&k<n)a[k]++;}}return a;};
+
+  window.bInit=function(){ if(loaded)return; loaded=true;
+    fetch('./bookings_data.json').then(r=>r.json()).then(d=>{B=d;R=d.rows;NC=d.dims.months.length;setup();render();}); };
+
+  function setup(){
+    document.getElementById('bStats').innerHTML=
+      [['bk',''],['att','green'],['attr','gold'],['can','red'],['ns',''],['rev','green'],['avg','']]
+      .map(([id,c])=>`<div class="stat"><div class="v ${c}" id="bs_${id}">—</div><div class="k" id="bk_${id}"></div></div>`).join('');
+    const K={bk:'Bookings',att:'Attended',attr:'Attendance rate',can:'Cancelled',ns:'No-show/upcoming',rev:'Revenue',avg:'Avg $/booking'};
+    for(const id in K) document.getElementById('bk_'+id).textContent=K[id];
+    const t0=document.getElementById('bt0'),t1=document.getElementById('bt1');
+    t0.max=NC-1;t1.max=NC-1;t1.value=NC-1;
+    const onT=()=>{let s=+t0.value,e=+t1.value;if(s>e){const z=s;s=e;e=z;}
+      document.getElementById('bT0').textContent=B.dims.months[s];document.getElementById('bT1').textContent=B.dims.months[e];
+      if(s===0&&e===NC-1)delete F.time; else F.time=[s,e]; render();};
+    t0.addEventListener('input',onT);t1.addEventListener('input',onT);
+    const P=[['All',[0,NC-1]],['Last month',[NC-1,NC-1]],['Last 3mo',[Math.max(0,NC-3),NC-1]],['Last 6mo',[Math.max(0,NC-6),NC-1]],['Last 12mo',[Math.max(0,NC-12),NC-1]]];
+    document.getElementById('bPresets').innerHTML=P.map((p,i)=>`<button class="preset" data-i="${i}">${p[0]}</button>`).join('');
+    document.querySelectorAll('#bPresets .preset').forEach(b=>b.onclick=()=>{const r=P[+b.dataset.i][1];t0.value=r[0];t1.value=r[1];onT();});
+    document.getElementById('bClear').onclick=()=>{F={};t0.value=0;t1.value=NC-1;onT();};
+    Chart.defaults.color=C.muted;Chart.defaults.font.family='Inter';Chart.defaults.borderColor=C.line;
+    const grid={grid:{color:C.line},ticks:{color:C.muted}};
+    const click=(e,els,ch)=>{if(els.length)btoggle(ch._key,ch._map[els[0].index]);};
+    charts.bTeach=new Chart(document.getElementById('bTeach'),{type:'bar',data:{labels:[],datasets:[{data:[],backgroundColor:C.red,borderRadius:4}]},options:{indexAxis:'y',maintainAspectRatio:false,onClick:click,plugins:{legend:{display:false}},scales:{x:grid,y:grid}}});
+    charts.bStatus=new Chart(document.getElementById('bStatus'),{type:'doughnut',data:{labels:STATUS,datasets:[{data:[],backgroundColor:[C.green,C.red,'#777'],borderColor:'#1d1d1d',borderWidth:2}]},options:{maintainAspectRatio:false,onClick:click,plugins:{legend:{position:'bottom',labels:{color:C.text,boxWidth:12}}}}});
+    charts.bPay=new Chart(document.getElementById('bPay'),{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:PAL.slice(),borderColor:'#1d1d1d',borderWidth:2}]},options:{maintainAspectRatio:false,onClick:click,plugins:{legend:{position:'bottom',labels:{color:C.text,boxWidth:12}}}}});
+    charts.bTrend=new Chart(document.getElementById('bTrend'),{type:'bar',data:{labels:B.dims.months,datasets:[{data:[],backgroundColor:C.red}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:grid,y:grid}}});
+    // map of where attendees live (joined to clients by email)
+    bmap=L.map('bmap',{scrollWheelZoom:true}).setView([40.728,-73.99],11);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri',maxZoom:16}).addTo(bmap);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',{maxZoom:16,opacity:.85}).addTo(bmap);
+    (B.dims.zips||[]).forEach((p,u)=>{const m=L.circleMarker([p.lat,p.lng],{radius:5,weight:1,fillOpacity:.7});m.bindPopup('');m.on('click',()=>btoggle('zip',u));m.addTo(bmap);bcircles[u]=m;});
+    setTimeout(()=>bmap.invalidateSize(),120);
+    charts.bAge=new Chart(document.getElementById('bAge'),{type:'bar',data:{labels:B.dims.ages,datasets:[{data:[],backgroundColor:C.red,borderRadius:5}]},options:{maintainAspectRatio:false,onClick:click,plugins:{legend:{display:false}},scales:{x:grid,y:grid}}});
+    charts.bRef=new Chart(document.getElementById('bRef'),{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:PAL.slice(),borderColor:'#1d1d1d',borderWidth:2}]},options:{maintainAspectRatio:false,onClick:click,plugins:{legend:{position:'bottom',labels:{color:C.text,boxWidth:12}}}}});
+    charts.bNbhd=new Chart(document.getElementById('bNbhd'),{type:'bar',data:{labels:[],datasets:[{data:[],backgroundColor:C.red2,borderRadius:5}]},options:{indexAxis:'y',maintainAspectRatio:false,onClick:click,plugins:{legend:{display:false}},scales:{x:grid,y:grid}}});
+  }
+  const btoggle=(k,v)=>{ if(JSON.stringify(F[k])===JSON.stringify(v))delete F[k]; else F[k]=v; render(); };
+
+  function render(){
+    let bk=0,att=0,can=0,ns=0,rev=0;
+    for(const r of R){ if(match(r,null)){ bk++; const s=statusOf(r); s===0?att++:s===1?can++:ns++; rev+=r[7]; } }
+    const set=(id,v)=>document.getElementById('bs_'+id).textContent=v;
+    set('bk',fmt(bk));set('att',fmt(att));set('attr',(att+ns)?Math.round(100*att/(att+ns))+'%':'—');
+    set('can',fmt(can));set('ns',fmt(ns));set('rev','$'+fmt(Math.round(rev/100)));set('avg',bk?'$'+(rev/100/bk).toFixed(0):'—');
+    document.getElementById('bShowing').textContent=fmt(bk);
+
+    const tc=counts(r=>r[0],B.dims.teachers.length,'teacher');
+    const ti=tc.map((c,i)=>[i,c]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,20);
+    let ch=charts.bTeach; ch.data.labels=ti.map(x=>B.dims.teachers[x[0]]); ch.data.datasets[0].data=ti.map(x=>x[1]);
+    ch._map=ti.map(x=>x[0]); ch._key='teacher'; const ts=F.teacher;
+    ch.data.datasets[0].backgroundColor=ch._map.map(u=>ts==null||u===ts?C.red:C.off); ch.update();
+
+    const sc=[0,0,0]; for(const r of R){if(match(r,'status'))sc[statusOf(r)]++;}
+    let sd=charts.bStatus; sd.data.datasets[0].data=sc; sd._map=[0,1,2]; sd._key='status'; const ss=F.status;
+    sd.data.datasets[0].backgroundColor=[0,1,2].map(i=>ss==null||ss===i?[C.green,C.red,'#777'][i]:C.off); sd.update();
+
+    const pc=counts(r=>r[4],B.dims.payments.length,'pay');
+    const pi=pc.map((c,i)=>[i,c]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+    let pd=charts.bPay; pd.data.labels=pi.map(x=>B.dims.payments[x[0]]); pd.data.datasets[0].data=pi.map(x=>x[1]);
+    pd._map=pi.map(x=>x[0]); pd._key='pay'; const ps=F.pay;
+    pd.data.datasets[0].backgroundColor=pd._map.map((u,i)=>ps==null||u===ps?PAL[i%PAL.length]:C.off); pd.update();
+
+    const tr=new Array(NC).fill(0); for(const r of R){if(match(r,'time')&&statusOf(r)===0&&r[8]>=0)tr[r[8]]++;}
+    let td=charts.bTrend; td.data.datasets[0].data=tr; const tf=F.time;
+    td.data.datasets[0].backgroundColor=tr.map((_,i)=>(!tf||(i>=tf[0]&&i<=tf[1]))?C.red:C.off); td.update();
+
+    // demographics joined to clients
+    updFixed(charts.bAge,B.dims.ages,counts(r=>r[11],B.dims.ages.length,'age'),'age',C.red);
+    updTop(charts.bRef,B.dims.referrals,counts(r=>r[12],B.dims.referrals.length,'ref'),'ref',8,true);
+    updTop(charts.bNbhd,B.dims.neighborhoods,counts(r=>r[10],B.dims.neighborhoods.length,'nbhd'),'nbhd',12,false);
+    // attendee map (exclude zip filter so all ZIPs stay pickable)
+    const zc=counts(r=>r[9],(B.dims.zips||[]).length,'zip'),zmx=Math.max(1,...zc);
+    const zcol=c=> c>=80?'#ff2d55':c>=30?C.red:c>=10?C.red2:c>=3?'#caa39f':'#9ab0c9';
+    (B.dims.zips||[]).forEach((p,u)=>{const c=zc[u],m=bcircles[u],sel=F.zip===u; if(!m)return;
+      m.setStyle({radius:c?4+18*Math.sqrt(c/zmx):0,color:sel?'#fff':zcol(c),weight:sel?2.5:1,fillColor:zcol(c),fillOpacity:c?.72:0});
+      m.setPopupContent(`<b>ZIP ${p.zip}</b>${p.nbhd?' · '+p.nbhd:''}<br>${fmt(c)} booking${c!=1?'s':''}`);});
+
+    renderHeat(); renderChips();
+  }
+  function updFixed(ch,labels,data,key,base){ch.data.labels=labels;ch.data.datasets[0].data=data;const sel=F[key];
+    ch.data.datasets[0].backgroundColor=data.map((_,i)=>sel==null||i===sel?base:C.off);ch._key=key;ch._map=labels.map((_,i)=>i);ch.update();}
+  function updTop(ch,labelsAll,countsAll,key,N,donut){
+    const idx=countsAll.map((c,i)=>[i,c]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,N);
+    ch.data.labels=idx.map(x=>labelsAll[x[0]]);ch.data.datasets[0].data=idx.map(x=>x[1]);
+    ch._map=idx.map(x=>x[0]);ch._key=key;const sel=F[key];
+    ch.data.datasets[0].backgroundColor=ch._map.map((u,i)=>sel==null||u===sel?(donut?PAL[i%PAL.length]:(key==='nbhd'?C.red2:C.red)):C.off);ch.update();}
+  function renderHeat(){
+    const M=Array.from({length:7},()=>new Array(24).fill(0)); let mx=1;
+    for(const r of R){ if(match(r,'cell')&&r[1]>=0&&r[2]>=0){ const v=++M[r[1]][r[2]]; if(v>mx)mx=v; } }
+    let h='<div class="hrow"><span class="hlab"></span>'+HOURS.map(x=>`<span class="hhdr">${hr12(x)}</span>`).join('')+'</div>';
+    for(let d=0;d<7;d++){ h+=`<div class="hrow"><span class="hlab">${DOW[d]}</span>`;
+      for(const hh of HOURS){const c=M[d][hh];const bg=c?`rgba(200,65,92,${(0.12+0.88*c/mx).toFixed(3)})`:'#1f1f1f';
+        const sel=F.cell&&F.cell[0]===d&&F.cell[1]===hh;
+        h+=`<div class="hcell${sel?' sel':''}" style="background:${bg}" title="${DOW[d]} ${hr12(hh)} — ${c} bookings" data-d="${d}" data-h="${hh}"></div>`;}
+      h+='</div>'; }
+    const el=document.getElementById('heat'); el.innerHTML=h;
+    el.querySelectorAll('.hcell').forEach(c=>c.onclick=()=>btoggle('cell',[+c.dataset.d,+c.dataset.h]));
+  }
+  function renderChips(){
+    const lab=(k,v)=> k==='teacher'?'Teacher: '+B.dims.teachers[v]: k==='type'?'Type: '+B.dims.types[v]:
+      k==='pay'?'Payment: '+B.dims.payments[v]: k==='status'?'Status: '+STATUS[v]:
+      k==='zip'?'ZIP: '+B.dims.zips[v].zip: k==='nbhd'?'Neighborhood: '+B.dims.neighborhoods[v]:
+      k==='age'?'Age: '+B.dims.ages[v]: k==='ref'?'Referral: '+B.dims.referrals[v]:
+      k==='cell'?'Time: '+DOW[v[0]]+' '+hr12(v[1]): k==='time'?'Months: '+B.dims.months[v[0]]+'→'+B.dims.months[v[1]]:k;
+    const a=act(),box=document.getElementById('bChips');
+    if(!a.length){box.innerHTML='<span class="hint">No filters — click a teacher, status, payment, or heatmap cell.</span>';return;}
+    box.innerHTML=a.map(([k,v])=>`<span class="chip"><b>${lab(k,v)}</b><span class="x" data-k="${k}">✕</span></span>`).join('');
+    box.querySelectorAll('.x').forEach(x=>x.onclick=()=>{const k=x.dataset.k; if(k==='time'){document.getElementById('bt0').value=0;document.getElementById('bt1').value=NC-1;} delete F[k]; render();});
+  }
+  // Auto-init if the Bookings tab is already showing (it may have auto-defaulted before this script defined bInit).
+  const bv=document.getElementById('bookingsView');
+  if(bv && bv.style.display!=='none') window.bInit();
+})();
+</script>
+</body>
+</html>
