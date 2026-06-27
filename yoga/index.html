@@ -72,6 +72,35 @@
   .foot{color:var(--muted);font-size:.85rem;margin-top:8px}.foot b{color:var(--text)}
   .pill{display:inline-block;background:rgba(200,65,92,.15);color:var(--red);font-size:.72rem;font-weight:700;
     padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em}
+  /* freshness badge */
+  .fresh{display:inline-block;background:rgba(76,175,125,.15);color:var(--green);font-size:.72rem;font-weight:700;
+    padding:3px 10px;border-radius:999px;margin-left:10px;vertical-align:3px;letter-spacing:.02em}
+  /* stat deltas (vs prior month) */
+  .stat .d{font-size:.74rem;font-weight:800;margin-top:5px;min-height:1em}
+  .stat .d.up{color:var(--green)} .stat .d.down{color:var(--red)} .stat .d.flat{color:var(--muted)}
+  /* retention funnel */
+  .funnelhead{font-size:.98rem;color:var(--muted);margin-bottom:14px}
+  .funnelhead b{color:var(--red);font-weight:800}
+  .funnel{display:flex;flex-direction:column;gap:9px}
+  .frow{display:grid;grid-template-columns:128px 1fr auto;align-items:center;gap:12px}
+  .frow .flbl{font-size:.86rem;font-weight:700;line-height:1.15}
+  .frow .fbar{height:32px;border-radius:7px;min-width:3px;transition:width .35s ease}
+  .frow .fval{font-size:.84rem;color:var(--muted);font-weight:700;white-space:nowrap}
+  .frow .fval b{color:var(--text);font-weight:800}
+  /* mobile polish */
+  @media(max-width:560px){
+    .wrap{padding:14px}
+    header h1{font-size:1.4rem;line-height:1.2}
+    .fresh{display:block;width:fit-content;margin:8px 0 0}
+    .filterbar{position:static}
+    input[type=range]{width:150px}
+    #map,#bmap{height:360px}
+    #heat{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    #heat .hrow{grid-template-columns:36px repeat(17,minmax(15px,1fr));min-width:540px}
+    .frow{grid-template-columns:78px 1fr auto;gap:8px}
+    .frow .flbl{font-size:.76rem}
+    header a[href]{float:none !important;display:inline-block;margin:0 12px 6px 0 !important}
+  }
 </style>
 </head>
 <body>
@@ -103,7 +132,7 @@
     <a href="/admin" id="adminlink" style="float:right;display:none;margin-right:16px;color:var(--red);font-size:.85rem;font-weight:700;text-decoration:none">Manage users →</a>
     
     
-    <h1>St. Mark's Yoga — <span class="accent">Client Insights</span></h1>
+    <h1>St. Mark's Yoga — <span class="accent">Client Insights</span><span class="fresh" id="freshness" title="Auto-refreshes daily at 6 AM"></span></h1>
     <div class="sub">Cross-filtering dashboard · click any chart, ZIP, or bar to filter everything · aggregates only, no personal data</div>
   </header>
 
@@ -131,6 +160,13 @@
 
   <div class="stats" id="stats"></div>
 
+  <div class="panel" id="funnelPanel">
+    <h2>Retention funnel <span class="pill">classes taken</span></h2>
+    <div class="funnelhead" id="funnelHead"></div>
+    <div class="funnel" id="funnel"></div>
+    <div class="note" style="margin-top:12px">Lifetime classes per client, within the current filters. The drop from New to Loyal is the studio's core growth lever, converting one-timers into regulars.</div>
+  </div>
+
   <div class="panel">
     <h2>Where clients are <span class="pill">NYC</span></h2>
     <div class="note">Circle = ZIP, sized/colored by client count <i>(within current filters)</i>. Click a circle to filter to that ZIP. Toggle the Heatmap (top-right).</div>
@@ -139,7 +175,7 @@
   </div>
 
   <div class="panel">
-    <h2>Sign-up cohorts over time</h2>
+    <h2>Sign-up cohorts over time <span class="fresh" id="signupDelta" style="display:none"></span></h2>
     <div class="note">New client records per month. Red bars = selected time window (use the slider above). The one-time Oct-2023 Recess import (~19k) is omitted from this plot so the organic signup trend is readable — it's still counted in every other chart and stat.</div>
     <div class="chartbox"><canvas id="cohort"></canvas></div>
   </div>
@@ -183,10 +219,17 @@
       <div class="note">Bookings by weekday × hour, within current filters — darker = busier. Click a cell to filter to that time slot.</div>
       <div id="heat"></div>
     </div>
-    <div class="panel">
-      <h2>Bookings over time</h2>
-      <div class="note">Attended bookings per month. Red = the selected window (slider above).</div>
-      <div class="chartbox"><canvas id="bTrend"></canvas></div>
+    <div class="grid">
+      <div class="panel">
+        <h2>Bookings over time</h2>
+        <div class="note">Attended bookings per month. Red = the selected window (slider above).</div>
+        <div class="chartbox"><canvas id="bTrend"></canvas></div>
+      </div>
+      <div class="panel">
+        <h2>Revenue over time</h2>
+        <div class="note">Dollars collected per month, within current filters. Red = the selected window.</div>
+        <div class="chartbox"><canvas id="bRev"></canvas></div>
+      </div>
     </div>
     <div class="grid">
       <div class="panel"><h2>Teachers</h2><div class="note">Bookings per instructor. Click to filter everything to that teacher's audience.</div><div class="chartbox" style="height:520px"><canvas id="bTeach"></canvas></div></div>
@@ -262,7 +305,17 @@ const colorFor=c=> c>=150?'#ff2d55': c>=60?COL.red: c>=20?COL.red2: c>=6?'#caa39
 
 fetch('./data.json').then(r=>r.json()).then(d=>{ D=d; rows=d.rows; NC=d.dims.cohorts.length; init(); });
 
+// Index of the last COMPLETE month in a YYYY-MM label list (skips the current,
+// still-running calendar month so "vs prior month" deltas compare like with like).
+function lastCompleteIdx(labels){
+  // index of the last month STRICTLY BEFORE the current calendar month, so partial
+  // current months (and future advance-booking months) never skew a delta.
+  const now=new Date(); const cur=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  let i=-1; for(let j=0;j<labels.length;j++){ if(labels[j]<cur) i=j; } return i;
+}
+
 function init(){
+  document.getElementById('freshness').textContent = (D.meta && D.meta.builtAt) ? 'Updated '+D.meta.builtAt : '';
   // stat cards shell
   document.getElementById('stats').innerHTML=
     [['clients',''],['withLoc',''],['mapped',''],['mkt','green'],['reach','gold'],['tc',''],['avg','red']]
@@ -353,6 +406,24 @@ function donut(id,labels,data,key){const ch=charts[id]; ch.data.labels=labels; c
   const sel=filters[key]; ch.data.datasets[0].backgroundColor=labels.map((_,i)=> sel==null||i===sel?PAL[i%PAL.length]:COL.off);
   ch._key=key; ch._map=labels.map((_,i)=>i); ch.update();}
 
+function renderFunnel(){
+  const b=[0,0,0,0]; let tot=0;
+  for(const r of rows){ if(matches(r,null)){ tot++; const n=r[7];
+    b[ n<=1?0 : n<=3?1 : n<=9?2 : 3 ]++; } }
+  const defs=[['New','0-1 classes','#9ab0c9'],['Tried','2-3 classes','#e0728a'],
+              ['Regular','4-9 classes','#c8415c'],['Loyal','10+ classes','#4caf7d']];
+  const mx=Math.max(1,...b);
+  document.getElementById('funnel').innerHTML=defs.map((d,i)=>{
+    const c=b[i], pct=tot?Math.round(100*c/tot):0;
+    return `<div class="frow"><span class="flbl">${d[0]}<br><span style="font-weight:400;color:var(--muted);font-size:.72rem">${d[1]}</span></span>`
+      +`<span class="fbar" style="width:${(100*c/mx).toFixed(1)}%;background:${d[2]}"></span>`
+      +`<span class="fval"><b>${fmt(c)}</b> · ${pct}%</span></div>`;
+  }).join('');
+  const onePct=tot?Math.round(100*b[0]/tot):0;
+  document.getElementById('funnelHead').innerHTML=
+    `<b>${onePct}%</b> are one-and-done (0-1 classes). Converting them to a 2nd class is the single biggest growth lever.`;
+}
+
 function rerender(){
   let clients=0,withLoc=0,mapped=0,mkt=0,tc=0,active=0;
   for(const r of rows){ if(matches(r,null)){ clients++;
@@ -394,6 +465,19 @@ function rerender(){
     ip.forEach((p,j)=>{ const n=cc[p.ci]||0, m=intlCircles[j], sel=filters.country===p.ci;
       m.setStyle({radius:n?5+12*Math.sqrt(n/mxc):0,color:sel?'#fff':'#f5c518',weight:sel?2.5:1.5,fillColor:'#f5c518',fillOpacity:n?.6:0});
       m.setPopupContent(`<b>${p.code}</b><br>${fmt(n)} client${n!=1?'s':''}`); }); }
+
+  renderFunnel();
+  // new-signups delta: last complete month vs the one before (ignores the time filter)
+  { const li=lastCompleteIdx(D.dims.cohorts); let cur=0,prev=0;
+    for(const r of rows){ if(matches(r,'time')){ if(r[8]===li)cur++; else if(r[8]===li-1)prev++; } }
+    const el=document.getElementById('signupDelta');
+    if(li>0 && (cur||prev)){ const dp=prev?Math.round(100*(cur-prev)/prev):(cur?100:0);
+      const up=dp>=0, arrow=dp>0?'▲':dp<0?'▼':'■';
+      el.style.display='inline-block';
+      el.style.background=up?'rgba(76,175,125,.15)':'rgba(200,65,92,.15)';
+      el.style.color=up?'var(--green)':'var(--red)';
+      el.textContent=`${D.dims.cohorts[li]}: ${fmt(cur)} new ${arrow} ${dp>0?'+':''}${dp}% vs prior mo`;
+    } else el.style.display='none'; }
 
   renderChips();
 }
@@ -448,6 +532,7 @@ function renderChips(){const a=act(); const box=document.getElementById('chips')
     } return true;
   }
   const counts=(get,n,except)=>{const a=new Array(n).fill(0);for(const r of R){if(match(r,except)){const k=get(r);if(k>=0&&k<n)a[k]++;}}return a;};
+  const lastCompleteIdx=labels=>{const now=new Date();const cur=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');let i=-1;for(let j=0;j<labels.length;j++){if(labels[j]<cur)i=j;}return i;};
 
   window.bInit=function(){ if(loaded)return; loaded=true;
     fetch('./bookings_data.json').then(r=>r.json()).then(d=>{B=d;R=d.rows;NC=d.dims.months.length;setup();render();}); };
@@ -455,7 +540,7 @@ function renderChips(){const a=act(); const box=document.getElementById('chips')
   function setup(){
     document.getElementById('bStats').innerHTML=
       [['bk',''],['att','green'],['attr','gold'],['can','red'],['ns',''],['rev','green'],['avg','']]
-      .map(([id,c])=>`<div class="stat"><div class="v ${c}" id="bs_${id}">—</div><div class="k" id="bk_${id}"></div></div>`).join('');
+      .map(([id,c])=>`<div class="stat"><div class="v ${c}" id="bs_${id}">—</div><div class="k" id="bk_${id}"></div><div class="d" id="bd_${id}"></div></div>`).join('');
     const K={bk:'Bookings',att:'Attended',attr:'Attendance rate',can:'Cancelled',ns:'No-show/upcoming',rev:'Revenue',avg:'Avg $/booking'};
     for(const id in K) document.getElementById('bk_'+id).textContent=K[id];
     const t0=document.getElementById('bt0'),t1=document.getElementById('bt1');
@@ -475,6 +560,7 @@ function renderChips(){const a=act(); const box=document.getElementById('chips')
     charts.bStatus=new Chart(document.getElementById('bStatus'),{type:'doughnut',data:{labels:STATUS,datasets:[{data:[],backgroundColor:[C.green,C.red,'#777'],borderColor:'#1d1d1d',borderWidth:2}]},options:{maintainAspectRatio:false,onClick:click,plugins:{legend:{position:'bottom',labels:{color:C.text,boxWidth:12}}}}});
     charts.bPay=new Chart(document.getElementById('bPay'),{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:PAL.slice(),borderColor:'#1d1d1d',borderWidth:2}]},options:{maintainAspectRatio:false,onClick:click,plugins:{legend:{position:'bottom',labels:{color:C.text,boxWidth:12}}}}});
     charts.bTrend=new Chart(document.getElementById('bTrend'),{type:'bar',data:{labels:B.dims.months,datasets:[{data:[],backgroundColor:C.red}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:grid,y:grid}}});
+    charts.bRev=new Chart(document.getElementById('bRev'),{type:'bar',data:{labels:B.dims.months,datasets:[{data:[],backgroundColor:C.green}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+Math.round(c.parsed.y).toLocaleString()}}},scales:{x:grid,y:{grid:{color:C.line},ticks:{color:C.muted,callback:v=>'$'+Math.round(v/1000)+'k'}}}}});
     // map of where attendees live (joined to clients by email)
     bmap=L.map('bmap',{scrollWheelZoom:true}).setView([40.728,-73.99],11);
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri',maxZoom:16}).addTo(bmap);
@@ -514,6 +600,21 @@ function renderChips(){const a=act(); const box=document.getElementById('chips')
     const tr=new Array(NC).fill(0); for(const r of R){if(match(r,'time')&&statusOf(r)===0&&r[8]>=0)tr[r[8]]++;}
     let td=charts.bTrend; td.data.datasets[0].data=tr; const tf=F.time;
     td.data.datasets[0].backgroundColor=tr.map((_,i)=>(!tf||(i>=tf[0]&&i<=tf[1]))?C.red:C.off); td.update();
+
+    // revenue over time (dollars per month)
+    const rv=new Array(NC).fill(0); for(const r of R){if(match(r,'time')&&r[8]>=0)rv[r[8]]+=r[7];}
+    let rd=charts.bRev; rd.data.datasets[0].data=rv.map(c=>c/100);
+    rd.data.datasets[0].backgroundColor=rv.map((_,i)=>(!tf||(i>=tf[0]&&i<=tf[1]))?C.green:C.off); rd.update();
+
+    // vs-prior-month deltas on Bookings + Revenue (last complete month vs the one before; ignores time filter)
+    { const li=lastCompleteIdx(B.dims.months); let cbk=0,pbk=0,crev=0,prv=0;
+      for(const r of R){ if(match(r,'time')){ if(r[8]===li){cbk++;crev+=r[7];} else if(r[8]===li-1){pbk++;prv+=r[7];} } }
+      const setD=(id,c,p)=>{ const el=document.getElementById('bd_'+id); if(!el)return;
+        if(li<1||(!c&&!p)){el.textContent='';el.className='d';return;}
+        const dp=p?Math.round(100*(c-p)/p):(c?100:0);
+        el.className='d '+(dp>0?'up':dp<0?'down':'flat');
+        el.textContent=`${dp>0?'▲':dp<0?'▼':'■'} ${dp>0?'+':''}${dp}% vs prior mo`; };
+      setD('bk',cbk,pbk); setD('rev',crev,prv); }
 
     // demographics joined to clients
     updFixed(charts.bAge,B.dims.ages,counts(r=>r[11],B.dims.ages.length,'age'),'age',C.red);
