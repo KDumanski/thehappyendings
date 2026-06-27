@@ -173,6 +173,7 @@
   var grid = $('#loc-grid');
   var filterWrap = $('#loc-filter');
   if (grid) {
+    var map = null, locMarkers = [];
     LOCATIONS.forEach(function (l) {
       var card = document.createElement('div');
       card.className = 'loc-card';
@@ -195,6 +196,7 @@
         $$('.loc-card', grid).forEach(function (c) {
           c.classList.toggle('is-hidden', b !== 'All' && c.dataset.boro !== b);
         });
+        if (map) { locMarkers.forEach(function (m) { var show = (b === 'All' || m._boro === b); if (show) { if (!map.hasLayer(m)) m.addTo(map); } else { map.removeLayer(m); } }); }
       });
       filterWrap.appendChild(pill);
     });
@@ -220,6 +222,7 @@
         $$('.loc-card', grid).forEach(function (c) { c.classList.remove('is-hidden'); });
         card.classList.add('is-highlight');
         card.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+        if (map) { var mc = COORDS[match.hood]; var mk = locMarkers[idx]; if (mc) map.setView(mc, 14); if (mk) { if (!map.hasLayer(mk)) mk.addTo(map); mk.openPopup(); } }
         fResult.innerHTML = 'Your closest spot: <strong>' + match.name + '</strong> in ' + match.hood + ' · ' + match.time + '.';
       } else {
         fResult.innerHTML = 'No exact match, we’re always adding spots. <a href="mailto:queensperennial@gmail.com?subject=Pickup%20near%20me">Ask us about your neighborhood</a>.';
@@ -227,6 +230,51 @@
     };
     fBtn.addEventListener('click', runFinder);
     fInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') runFinder(); });
+
+    var COORDS = {
+      'Astoria (Broadway)': [40.7644, -73.9235],
+      'Astoria–Ditmars': [40.7754, -73.9118],
+      'Jackson Heights': [40.7472, -73.8895],
+      'Sunnyside': [40.7434, -73.9210],
+      'Long Island City': [40.7470, -73.9490],
+      'Hunters Point': [40.7432, -73.9550],
+      'Ridgewood': [40.7008, -73.9056],
+      'Arverne (Rockaway)': [40.5926, -73.7951],
+      'Greenpoint': [40.7304, -73.9540],
+      'Williamsburg': [40.7196, -73.9608],
+      'Prospect Heights': [40.6770, -73.9690],
+      'Park Slope': [40.6690, -73.9880],
+      'Midtown East': [40.7510, -73.9720]
+    };
+    var BORO_COLOR = { Queens: '#2f5a3f', Brooklyn: '#c06b67', Manhattan: '#e8a23d' };
+    var mapEl = $('#loc-map');
+    if (mapEl && window.L) {
+      map = L.map(mapEl, { scrollWheelZoom: false, zoomControl: true })
+        .setView([40.705, -73.92], 11);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd', maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+      }).addTo(map);
+      var bounds = [];
+      LOCATIONS.forEach(function (l, i) {
+        var c = COORDS[l.hood]; if (!c) return;
+        var color = BORO_COLOR[l.boro] || '#1f3d2b';
+        var icon = L.divIcon({
+          className: 'qp-pin-wrap',
+          html: '<span class="qp-pin" style="background:' + color + '"></span>',
+          iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12]
+        });
+        var m = L.marker(c, { icon: icon, title: l.name, riseOnHover: true }).addTo(map);
+        m.bindPopup('<div class="qp-pop"><div class="qp-pop-name">' + l.name + '</div>' +
+          '<div class="qp-pop-hood">' + l.hood + ' · ' + l.boro + '</div>' +
+          '<div class="qp-pop-time">🌸 ' + l.time + '</div></div>');
+        m._boro = l.boro; m._idx = i;
+        locMarkers.push(m); bounds.push(c);
+      });
+      if (bounds.length) map.fitBounds(bounds, { padding: [36, 36] });
+      setTimeout(function () { map.invalidateSize(); }, 400);
+      window.addEventListener('resize', function () { map.invalidateSize(); });
+    }
   }
 
   var cardHTML = function (t) { return '<figure class="tm-card"><p>“' + t.q + '”</p><cite>' + t.n + '</cite></figure>'; };
