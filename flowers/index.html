@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Queens Perennial, A Flower CSA Growing Community Across NYC</title>
+  <meta name="description" content="Queens Perennial is a flower CSA delivering fresh, seasonal, locally grown bouquets, grown without synthetic pesticides, to neighborhood pickup spots across Queens, Brooklyn & Manhattan, while supporting immigrant farmers and organizers of color." />
+  <meta name="theme-color" content="#1f3d2b" />
+  <meta property="og:title" content="Queens Perennial, A Flower CSA Growing Community" />
+  <meta property="og:description" content="Fresh, seasonal, locally grown flowers delivered weekly to your NYC neighborhood. Grown without synthetic pesticides. Support BIPOC farmers and organizers." />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scroll-vine" id="scroll-vine" aria-hidden="true"><span></span></div>
+  <canvas id="petal-canvas" aria-hidden="true"></canvas>
+
+  <!-- ============================ NAV ============================ -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="nav__brand" href="#top" aria-label="Queens Perennial home">
+        <span class="nav__mark" aria-hidden="true"><svg viewBox="0 0 32 32" width="32" height="32"><use href="#bloom-mark" /></svg></span>
+        <span class="nav__name">Queens&nbsp;Perennial</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#story">Story</a>
+        <a href="#clean">Why us</a>
+        <a href="#shares">Shares</a>
+        <a href="#calendar">In bloom</a>
+        <a href="#locations">Pickup</a>
+        <a href="#farm">The farm</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="btn btn--solid nav__cta" href="#shares">Join the CSA</a>
+      <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <div class="drawer" id="mobile-menu" aria-hidden="true">
+    <nav class="drawer__links" aria-label="Mobile">
+      <a href="#story">Story</a>
+      <a href="#clean">Why our flowers</a>
+      <a href="#shares">Shares &amp; pricing</a>
+      <a href="#calendar">In bloom</a>
+      <a href="#locations">Pickup spots</a>
+      <a href="#farm">The farm</a>
+      <a href="#testimonials">Love notes</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn--solid" href="#shares">Join the CSA</a>
+    </nav>
+  </div>
+
+  <main id="main">
+    <span id="top"></span>
+
+    <!-- ============================ HERO ============================ -->
+    <section class="hero" id="hero">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="hero__inner">
+        <p class="eyebrow eyebrow--light reveal" data-reveal>A neighborhood flower CSA · est. 2020</p>
+        <h1 class="hero__title reveal" data-reveal>A season of flowers,<br /><em>grown for your block.</em></h1>
+        <p class="hero__lede reveal" data-reveal>
+          Queens Perennial brings fresh, seasonal, locally grown bouquets, grown without synthetic
+          pesticides, to neighborhood pickup spots across Queens, Brooklyn &amp; Manhattan, while
+          putting your dollars behind immigrant farmers and organizers of color.
+        </p>
+        <div class="hero__cta reveal" data-reveal>
+          <a class="btn btn--solid btn--lg" href="#shares">Join the 2026 season</a>
+          <a class="btn btn--ghost btn--lg" href="#clean">Why our flowers</a>
+        </div>
+        <ul class="hero__stats reveal" data-reveal>
+          <li><span class="stat" data-count="20">0</span><small>weeks of blooms</small></li>
+          <li><span class="stat" data-count="13">0</span><small>neighborhood spots</small></li>
+          <li><span class="stat" data-count="100" data-suffix="%">0</span><small>BIPOC-grown</small></li>
+        </ul>
+      </div>
+      <a class="hero__scroll" href="#story" aria-label="Scroll to story"><span></span></a>
+    </section>
+
+    <!-- ============================ TICKER ============================ -->
+    <div class="ticker" aria-hidden="true"><div class="ticker__track" id="ticker-track"></div></div>
+
+    <!-- ============================ STORY ============================ -->
+    <section class="section story" id="story">
+      <div class="story__grid">
+        <div class="story__media reveal" data-reveal>
+          <div class="frame frame--tall">
+            <div class="frame__placeholder" data-img="helen-portrait.jpg">
+              <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true"><use href="#bloom-mark"/></svg>
+              <span>Helen &amp; the QP team</span>
+            </div>
+          </div>
+          <div class="story__badge"><strong>Helen&nbsp;Ho</strong><span>Founder &amp; chief bloom-bringer</span></div>
+        </div>
+        <div class="story__copy">
+          <p class="eyebrow reveal" data-reveal>Our story</p>
+          <h2 class="reveal" data-reveal>Flowers that knit a neighborhood back together.</h2>
+          <p class="lead reveal" data-reveal>
+            Queens Perennial began in the thick of the pandemic, when founder Helen Ho went looking
+            for a safe way to keep her community connected. What started as a few neighbors gathering
+            for fresh blooms has grown into a seasonal tradition across the city.
+          </p>
+          <p class="reveal" data-reveal>
+            Every share is more than a bouquet. A CSA, Community Supported Agriculture, is a
+            promise: a group of people pledge to support a farm for the whole season, sharing in both
+            its bounty and its risk. That up-front support is what lets a small farm plan, invest,
+            and weather the swings of weather and market that small growers face alone.
+          </p>
+          <p class="reveal" data-reveal>
+            We pour that support into <strong>Luna Family Farm</strong>, a farmer-of-color owned and
+            operated farm in central New Jersey, and into the organizers of color who keep our
+            neighborhoods growing.
+          </p>
+          <blockquote class="pull reveal" data-reveal>
+            “How many things in your week are just purely joyful? I look forward to Queens Perennial
+            pick-ups every week.”
+            <cite>Lesslie, longtime member</cite>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ GROWN CLEAN (explainer) ============================ -->
+    <section class="section clean" id="clean">
+      <div class="section__head reveal" data-reveal>
+        <p class="eyebrow">Why our flowers</p>
+        <h2>Grown clean. Picked fresh. Grown for good.</h2>
+        <p class="section__sub">Most supermarket bouquets are flown in from overseas, days old, and doused along the way. Ours are a different thing entirely.</p>
+      </div>
+      <div class="clean__grid">
+        <article class="clean__card reveal" data-reveal>
+          <div class="clean__bloom" aria-hidden="true"><svg viewBox="0 0 80 80" width="64" height="64"><use href="#bloom-mark"/></svg></div>
+          <h3>No synthetic pesticides</h3>
+          <p>Grown without synthetic pesticides, the way flowers were meant to be. Better for the soil, the growers, and the table you set them on.</p>
+        </article>
+        <article class="clean__card reveal" data-reveal>
+          <div class="clean__bloom" aria-hidden="true"><svg viewBox="0 0 80 80" width="64" height="64"><use href="#bloom-mark"/></svg></div>
+          <h3>Cut the same morning</h3>
+          <p>Many stems are harvested the very morning you pick them up, so a Queens Perennial bouquet lasts far longer than flowers shipped across the world.</p>
+        </article>
+        <article class="clean__card reveal" data-reveal>
+          <div class="clean__bloom" aria-hidden="true"><svg viewBox="0 0 80 80" width="64" height="64"><use href="#bloom-mark"/></svg></div>
+          <h3>Rooted in real care</h3>
+          <p>Grown on healthy soil by a family farm, not an industrial supplier, and chosen for beauty and season, never for what ships best.</p>
+        </article>
+      </div>
+
+      <div class="dollar reveal" data-reveal>
+        <p class="dollar__label">Where your share goes</p>
+        <div class="dollar__bars">
+          <div class="dollar__bar" style="--w:62%"><span class="dollar__fill"></span><span class="dollar__txt">A fair living for Luna Family Farm</span></div>
+          <div class="dollar__bar" style="--w:24%"><span class="dollar__fill"></span><span class="dollar__txt">Organizers &amp; growers of color</span></div>
+          <div class="dollar__bar" style="--w:14%"><span class="dollar__fill"></span><span class="dollar__txt">Your neighborhood pickup hosts</span></div>
+        </div>
+        <p class="dollar__note">Every dollar stays close to home, a small, beautiful push against an industry that rarely lets farmers of color thrive.</p>
+      </div>
+    </section>
+
+    <!-- ============================ HOW IT WORKS ============================ -->
+    <section class="section how" id="how">
+      <div class="section__head reveal" data-reveal>
+        <p class="eyebrow">How it works</p>
+        <h2>Four steps to a season of flowers</h2>
+        <p class="section__sub">Pledge once in spring, then collect a fresh hand-tied bouquet every week, all season long.</p>
+      </div>
+      <ol class="steps">
+        <li class="step reveal" data-reveal><span class="step__num">01</span><h3>Pledge your share</h3><p>Choose a season-long or flexible share in spring. Your up-front pledge funds seeds, supplies and a fair living for the farm.</p></li>
+        <li class="step reveal" data-reveal><span class="step__num">02</span><h3>We grow &amp; gather</h3><p>Luna Family Farm grows the flowers; our team hand-ties bouquets and brings them into the city, often picked the very same morning.</p></li>
+        <li class="step reveal" data-reveal><span class="step__num">03</span><h3>Stroll &amp; pick up</h3><p>Swing by your neighborhood café, bar or shop on pickup day and grab that week's bouquet. No two weeks are ever the same.</p></li>
+        <li class="step reveal" data-reveal><span class="step__num">04</span><h3>Bloom all season</h3><p>Fresh flowers on your table every week from June to November, and a small farm that's stronger because of you.</p></li>
+      </ol>
+    </section>
+
+    <!-- ============================ SHARES ============================ -->
+    <section class="section shares" id="shares">
+      <div class="section__head reveal" data-reveal>
+        <p class="eyebrow">Shares &amp; pricing</p>
+        <h2>Pick the share that fits your season</h2>
+        <p class="section__sub">2026 season runs the week of <strong>June&nbsp;29</strong> through the week of <strong>November&nbsp;9</strong>. We do not offer delivery, every share is a neighborhood pickup.</p>
+      </div>
+      <div class="plans">
+        <article class="plan reveal" data-reveal>
+          <header class="plan__head"><h3>Season Share</h3><p class="plan__tag">The full bloom</p></header>
+          <p class="plan__price"><span class="plan__amount">$420</span><span class="plan__per">/ 20 weeks</span></p>
+          <p class="plan__rate">about $21 a week</p>
+          <ul class="plan__list">
+            <li>A fresh hand-tied bouquet every week</li>
+            <li>Full season: Jun 29 – Nov 9, 2026</li>
+            <li>Best value per week</li>
+            <li>Pause for vacations with two weeks' notice</li>
+          </ul>
+          <a class="btn btn--solid btn--block" href="mailto:queensperennial@gmail.com?subject=Queens%20Perennial%20%E2%80%94%20Season%20Share">Reserve a season share</a>
+        </article>
+        <article class="plan plan--featured reveal" data-reveal>
+          <span class="plan__ribbon">Most flexible</span>
+          <header class="plan__head"><h3>Flex Share</h3><p class="plan__tag">10 weeks at a time</p></header>
+          <p class="plan__price"><span class="plan__amount">$230</span><span class="plan__per">/ 10 weeks</span></p>
+          <p class="plan__rate">$23 a week · auto-renews each cycle</p>
+          <ul class="plan__list">
+            <li>Commit in shorter 10-week cycles</li>
+            <li>Renews automatically through season's end</li>
+            <li>Starts the week of June 29</li>
+            <li>Prorated &amp; custom schedules on request</li>
+          </ul>
+          <a class="btn btn--solid btn--block" href="mailto:queensperennial@gmail.com?subject=Queens%20Perennial%20%E2%80%94%20Flex%20Share">Start a flex share</a>
+        </article>
+        <article class="plan reveal" data-reveal>
+          <header class="plan__head"><h3>Holiday Wreath</h3><p class="plan__tag">Seasonal extra</p></header>
+          <p class="plan__price"><span class="plan__amount">$35</span><span class="plan__per">/ wreath</span></p>
+          <p class="plan__rate">December pickup</p>
+          <ul class="plan__list">
+            <li>A fresh, locally made holiday wreath</li>
+            <li>Pickup across the same neighborhood spots</li>
+            <li>Supports BIPOC farmers &amp; organizers</li>
+            <li>A gift that gives twice</li>
+          </ul>
+          <a class="btn btn--outline btn--block" href="mailto:queensperennial@gmail.com?subject=Queens%20Perennial%20%E2%80%94%20Holiday%20Wreath">Ask about wreaths</a>
+        </article>
+      </div>
+
+      <div class="extras">
+        <div class="extra reveal" data-reveal>
+          <div class="extra__icon" aria-hidden="true">🎁</div>
+          <div>
+            <h3>Gift a share</h3>
+            <p>Flowers, every week, with their name on them. The rare gift that keeps arriving all season, and supports a small farm while it does.</p>
+            <a class="btn btn--outline" href="mailto:queensperennial@gmail.com?subject=Queens%20Perennial%20%E2%80%94%20Gift%20a%20share">Gift a season</a>
+          </div>
+        </div>
+        <div class="extra reveal" data-reveal>
+          <div class="extra__icon" aria-hidden="true">🌷</div>
+          <div>
+            <h3>Neighborhood sold out?</h3>
+            <p>Spots fill fast and each one is limited. Join the waitlist and we'll reach out the moment a share opens near you.</p>
+            <form class="mini-form" data-form="waitlist">
+              <input type="email" name="email" placeholder="you@email.com" aria-label="Email for waitlist" required />
+              <button class="btn btn--solid" type="submit">Join waitlist</button>
+            </form>
+            <p class="mini-form__msg" data-msg></p>
+          </div>
+        </div>
+      </div>
+
+      <p class="shares__note reveal" data-reveal>
+        Traveling mid-season? Tell us at least two weeks ahead and we'll double up a nearby week or
+        prorate your share. Questions? <a href="mailto:queensperennial@gmail.com">queensperennial@gmail.com</a>
+      </p>
+    </section>
+
+    <!-- ============================ CALENDAR ============================ -->
+    <section class="section calendar" id="calendar">
+      <div class="section__head reveal" data-reveal>
+        <p class="eyebrow">What's in bloom</p>
+        <h2>A living calendar of the season</h2>
+        <p class="section__sub">We never announce the week's bouquet until pickup day, frost and wind can always change the plan, but here's a sneak peek at what the farm grows, month by month.</p>
+      </div>
+      <div class="calendar__wrap reveal" data-reveal>
+        <div class="calendar__months" id="cal-months" role="tablist" aria-label="Months in bloom"></div>
+        <div class="calendar__stage">
+          <div class="calendar__season" id="cal-season"></div>
+          <ul class="calendar__blooms" id="cal-blooms" aria-live="polite"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ LOCATIONS + FINDER ============================ -->
+    <section class="section locations" id="locations">
+      <div class="section__head reveal" data-reveal>
+        <p class="eyebrow">Pickup spots</p>
+        <h2>Thirteen neighborhood doorsteps</h2>
+        <p class="section__sub">Every share is picked up at a local café, bar or shop, turning flower day into a stroll around your neighborhood.</p>
+      </div>
+
+      <div class="finder reveal" data-reveal>
+        <label class="finder__label" for="finder-input">Find your closest spot</label>
+        <div class="finder__row">
+          <input id="finder-input" type="text" placeholder="Type your neighborhood, Astoria, Park Slope, LIC…" autocomplete="off" />
+          <button class="btn btn--solid" id="finder-btn" type="button">Find it</button>
+        </div>
+        <p class="finder__result" id="finder-result" aria-live="polite"></p>
+      </div>
+
+      <div class="locations__filter reveal" data-reveal id="loc-filter"></div>
+      <div class="locations__grid" id="loc-grid"></div>
+      <p class="locations__note reveal" data-reveal>Pick up earlier in the day when you can, every spot is outdoors, and a head start keeps your flowers happiest.</p>
+    </section>
+
+    <!-- ============================ FARM ============================ -->
+    <section class="section farm" id="farm">
+      <div class="farm__grid">
+        <div class="farm__copy">
+          <p class="eyebrow reveal" data-reveal>Our farm partner</p>
+          <h2 class="reveal" data-reveal>Luna Family Farm</h2>
+          <p class="lead reveal" data-reveal>Every Queens Perennial bouquet is grown by Luna Family Farm, a farmer-of-color owned and operated farm in central New Jersey, run alongside a beloved local bakery.</p>
+          <p class="reveal" data-reveal>“Farmers of color are still a rarity today. It's not for lack of desire from people of color who want to farm, but stems from issues of systemic racism and the distribution of wealth that still exist in society.” Choosing Luna is how our members push, in a small and beautiful way, against that imbalance.</p>
+          <p class="reveal" data-reveal>Pablo&nbsp;Jr. and the Luna family will be your guides through the growing season, from the first tulips of spring to the last ornamental kale of November.</p>
+          <div class="farm__chips reveal" data-reveal>
+            <span class="chip">BIPOC-owned</span>
+            <span class="chip">Central New Jersey</span>
+            <span class="chip">No synthetic pesticides</span>
+            <span class="chip">Family-run</span>
+          </div>
+        </div>
+        <div class="farm__media reveal" data-reveal>
+          <div class="frame frame--wide">
+            <div class="frame__placeholder" data-img="luna-farm.jpg">
+              <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true"><use href="#bloom-mark"/></svg>
+              <span>Luna Family Farm</span>
+            </div>
+          </div>
+          <div class="farm__partners">
+            <p class="eyebrow">Distribution partners</p>
+            <p>Lockwood · The Greats of Craft · Commonwealth · Depanneur · Astor Apiaries · Art Cafe &amp; Bar · The WonderMart · Dada · Jupiter Club</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ TESTIMONIALS ============================ -->
+    <section class="section testimonials" id="testimonials">
+      <div class="section__head reveal" data-reveal>
+        <p class="eyebrow">Love notes</p>
+        <h2>The highlight of a lot of weeks</h2>
+        <p class="section__sub">In our members' own words.</p>
+      </div>
+      <div class="marquee" id="tm-row-1"><div class="marquee__track"></div></div>
+      <div class="marquee marquee--reverse" id="tm-row-2"><div class="marquee__track"></div></div>
+    </section>
+
+    <!-- ============================ FAQ ============================ -->
+    <section class="section faq" id="faq">
+      <div class="section__head reveal" data-reveal>
+        <p class="eyebrow">Good to know</p>
+        <h2>Frequently asked</h2>
+      </div>
+      <div class="faq__list" id="faq-list"></div>
+    </section>
+
+    <!-- ============================ EVENTS ============================ -->
+    <section class="section events" id="events">
+      <div class="events__card reveal" data-reveal>
+        <div class="events__text">
+          <p class="eyebrow">Weddings &amp; events</p>
+          <h2>Local, seasonal, ethically grown arrangements for your big day.</h2>
+          <p>Planning a wedding, gala or private event in the NYC area? We'll create your perfect arrangements with the same locally grown, seasonal flowers, and the same values.</p>
+        </div>
+        <a class="btn btn--solid btn--lg" href="mailto:queensperennial@gmail.com?subject=Queens%20Perennial%20%E2%80%94%20Event%20inquiry">Inquire about events</a>
+      </div>
+    </section>
+
+    <!-- ============================ FOLLOW + NEWSLETTER ============================ -->
+    <section class="section follow" id="follow">
+      <div class="follow__grid">
+        <div class="follow__copy reveal" data-reveal>
+          <p class="eyebrow">Stay in bloom</p>
+          <h2>Flower facts, weekly, in your inbox.</h2>
+          <p>Members rave about Helen's weekly notes, the local, seasonal picks and the fun facts behind them. Sign up and follow along on Instagram for the full bloom.</p>
+          <form class="mini-form mini-form--lg" data-form="newsletter">
+            <input type="email" name="email" placeholder="you@email.com" aria-label="Email for newsletter" required />
+            <button class="btn btn--solid" type="submit">Sign me up</button>
+          </form>
+          <p class="mini-form__msg" data-msg></p>
+          <a class="follow__ig" href="https://www.instagram.com/queensperennial/" target="_blank" rel="noopener">Follow @queensperennial →</a>
+        </div>
+        <div class="follow__feed reveal" data-reveal id="ig-feed" aria-label="Instagram preview"></div>
+      </div>
+    </section>
+
+    <!-- ============================ CTA ============================ -->
+    <section class="cta" id="join">
+      <div class="cta__inner reveal" data-reveal>
+        <h2>Bloom with us in 2026.</h2>
+        <p>Reserve your share, pick your neighborhood, and let a season of flowers find its way to your table.</p>
+        <div class="cta__buttons">
+          <a class="btn btn--solid btn--lg" href="#shares">See the shares</a>
+          <a class="btn btn--ghost btn--lg" href="mailto:queensperennial@gmail.com">Email us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <span class="nav__mark" aria-hidden="true"><svg viewBox="0 0 32 32" width="40" height="40"><use href="#bloom-mark"/></svg></span>
+        <div>
+          <strong>Queens Perennial</strong>
+          <p>A flower CSA growing community across Queens, Brooklyn &amp; Manhattan.</p>
+        </div>
+      </div>
+      <nav class="footer__nav" aria-label="Footer">
+        <a href="#story">Story</a>
+        <a href="#shares">Shares</a>
+        <a href="#calendar">In bloom</a>
+        <a href="#locations">Pickup</a>
+        <a href="#faq">FAQ</a>
+        <a href="#events">Events</a>
+      </nav>
+      <div class="footer__contact">
+        <a href="mailto:queensperennial@gmail.com">queensperennial@gmail.com</a>
+        <a href="https://www.instagram.com/queensperennial/" target="_blank" rel="noopener">@queensperennial</a>
+      </div>
+    </div>
+    <div class="footer__base">
+      <p>© <span id="year"></span> Queens Perennial · Grown with Luna Family Farm</p>
+      <p>Supporting immigrant farmers &amp; organizers of color 🌸</p>
+    </div>
+  </footer>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="bloom-mark" viewBox="0 0 32 32">
+      <g fill="currentColor">
+        <circle cx="16" cy="16" r="3.4"/>
+        <path d="M16 2c2.6 1.2 4 3.8 4 6.6 0 1.7-.7 3.3-1.8 4.5C19.9 12.4 22 11.6 24 12c2.8.5 4.9 2.7 5.6 5.4-2.4 1.4-5.3 1.4-7.6.1 1.4 1 2.4 2.6 2.7 4.4.5 2.8-.6 5.5-2.7 7.2-1.7-2.1-2.3-4.9-1.6-7.5-.9 1.6-2.5 2.8-4.4 3.1-2.8.5-5.6-.6-7.2-2.8 2.1-1.7 4.9-2.2 7.4-1.4-1.7-.4-3.2-1.5-4-3.1-1.3-2.5-1-5.5.8-7.6 2 1.6 3.1 4 3.1 6.5.2-1.9 1.2-3.6 2.8-4.7-1.1-1.2-1.8-2.8-1.8-4.5C13.9 5 15.3 3.2 16 2z" opacity=".92"/>
+      </g>
+    </symbol>
+  </svg>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>
