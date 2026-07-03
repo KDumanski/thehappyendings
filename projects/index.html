@@ -215,11 +215,13 @@
     <h1>ACTIVE<br>PROJECTS</h1>
     <p class="tagline">Sites and tools I design, build, and run. <br>Every one of these is live right now.</p>
     <div class="chips">
-      <span class="chip live"><i></i>4 Live</span>
+      <span class="chip live"><i></i>6 Live</span>
       <span class="chip">Wellness</span>
       <span class="chip">Healthcare</span>
       <span class="chip">Construction</span>
       <span class="chip">Luxury travel</span>
+      <span class="chip">Art</span>
+      <span class="chip">Events</span>
     </div>
     <div class="scrollcue" aria-hidden="true">▾ Explore the city ▾</div>
   </div>
@@ -255,6 +257,20 @@
         <img class="shot" src="shots/dental.jpg" alt="Pride Dental Group practice website" loading="lazy" style="object-position:50% 0%">
         <span class="scrim"></span><span class="pill"><i></i>Live</span>
         <span class="meta"><span class="txt"><span class="name">Pride Dental Group</span><span class="cat"><span class="dot"></span>Healthcare</span></span><span class="go" aria-hidden="true">↗</span></span>
+        <span class="accentbar"></span>
+      </a>
+
+      <a class="card span7" style="--c:#7dffb0;--c2:#b3ffd1" href="https://omarchacon.72.60.117.113.nip.io" target="_blank" rel="noopener" data-bob="Omar Chacón: a painter's portfolio with a built-in editor he updates himself." aria-label="Omar Chacón: visit the site">
+        <img class="shot" src="shots/omar.jpg" alt="Omar Chacón painter portfolio, hand-cast acrylic drips hero" loading="lazy" style="object-position:50% 0%">
+        <span class="scrim"></span><span class="pill"><i></i>Live</span>
+        <span class="meta"><span class="txt"><span class="name">Omar Chacón</span><span class="cat"><span class="dot"></span>Art · Portfolio + CMS</span></span><span class="go" aria-hidden="true">↗</span></span>
+        <span class="accentbar"></span>
+      </a>
+
+      <a class="card span5" style="--c:#ff5e6c;--c2:#ffcf6b" href="https://starkproductiongroup.nyc" target="_blank" rel="noopener" data-bob="Stark Production Group: NYC event production, one call does it all." aria-label="Stark Production Group: visit the site">
+        <img class="shot" src="shots/spg.jpg" alt="Stark Production Group NYC event production site" loading="lazy" style="object-position:50% 0%">
+        <span class="scrim"></span><span class="pill"><i></i>Live</span>
+        <span class="meta"><span class="txt"><span class="name">Stark Production Group</span><span class="cat"><span class="dot"></span>Events · Production</span></span><span class="go" aria-hidden="true">↗</span></span>
         <span class="accentbar"></span>
       </a>
 
@@ -306,7 +322,7 @@
       '<span class="h">THE HAPPY ENDINGS OS  v2.6</span>',
       'booting neon core .............. <span class="ok">OK</span>',
       'mounting /projects ............. <span class="ok">OK</span>',
-      'syncing 4 live clients ......... <span class="ok">OK</span>',
+      'syncing 6 live clients ......... <span class="ok">OK</span>',
       'automations ................... <span class="ok">RUNNING</span>',
       '<span class="h">READY.</span>'
     ];
@@ -326,12 +342,14 @@
       yoga:    {name:"St. Mark's Yoga", href:"/yoga/", ext:false, c:"var(--pink)", bob:"St. Mark's Yoga: a live analytics dashboard I built, refreshed every morning."},
       fabians: {name:"Fabian's Tours", href:"https://kdumanski.github.io/fabians-tours/", ext:true, c:"var(--gold)", bob:"Fabian's Tours: a cinematic site for luxury Egypt journeys."},
       stark:   {name:"Stark Level", href:"https://starklevelsolutions.com", ext:true, c:"var(--cyan)", bob:"Stark Level: a construction brand built to win jobs."},
-      dental:  {name:"Pride Dental", href:"https://kdumanski.github.io/DentalGroup/", ext:true, c:"var(--purple)", bob:"Pride Dental: a clean, trustworthy practice site."}
+      dental:  {name:"Pride Dental", href:"https://kdumanski.github.io/DentalGroup/", ext:true, c:"var(--purple)", bob:"Pride Dental: a clean, trustworthy practice site."},
+      omar:    {name:"Omar Chacón", href:"https://omarchacon.72.60.117.113.nip.io", ext:true, c:"#7dffb0", bob:"Omar Chacón: a painter's portfolio with a built-in editor he updates himself."},
+      spg:     {name:"Stark Production Group", href:"https://starkproductiongroup.nyc", ext:true, c:"#ff5e6c", bob:"Stark Production Group: NYC event production, one call does it all."}
     };
     var LAYOUT = [
-      {w:32,h:.5},{w:24,h:.76},{w:56,h:.9,proj:'yoga'},{w:20,h:.5},{w:50,h:.64},
+      {w:32,h:.5},{w:24,h:.76},{w:56,h:.9,proj:'yoga'},{w:20,h:.5},{w:50,h:.86,proj:'omar'},
       {w:58,h:.96,proj:'fabians'},{w:28,h:.46},{w:26,h:.7},{w:60,h:.9,proj:'stark'},
-      {w:22,h:.4},{w:38,h:.6},{w:58,h:.94,proj:'dental'},{w:24,h:.56},{w:34,h:.44},{w:28,h:.72}
+      {w:22,h:.4},{w:38,h:.88,proj:'spg'},{w:58,h:.94,proj:'dental'},{w:24,h:.56},{w:34,h:.44},{w:28,h:.72}
     ];
     var wrap = document.getElementById('skyline');
     LAYOUT.forEach(function(b, idx){
