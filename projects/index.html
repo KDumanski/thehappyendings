@@ -110,50 +110,45 @@
   .sec-head .lbl{margin:0;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.26em;text-transform:uppercase;color:var(--pink);text-shadow:0 0 14px rgba(255,46,151,.7);white-space:nowrap}
   .sec-head .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--pink),rgba(185,103,255,.2),transparent)}
 
-  .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
-  .card{position:relative;grid-column:span 6;height:clamp(290px,33vw,380px);border-radius:18px;overflow:hidden;display:block;
+  .cases{display:flex;flex-direction:column;gap:26px}
+  .case{display:flex;align-items:stretch;border-radius:18px;overflow:hidden;
     border:1px solid rgba(255,255,255,.14);background:#0c0320;box-shadow:0 0 0 1px rgba(0,0,0,.3),0 22px 50px -22px rgba(0,0,0,.8);
     opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1),box-shadow .3s,border-color .3s}
-  .card.in{opacity:1;transform:none}
-  .card.span7{grid-column:span 7}
-  .card.span5{grid-column:span 5}
-  .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1);will-change:transform}
-  .card:hover .shot{transform:scale(1.07)}
-  .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,2,20,.95) 4%,rgba(12,3,32,.5) 32%,rgba(0,0,0,0) 60%)}
-  .card:hover{border-color:var(--c);box-shadow:0 0 24px -2px var(--c),0 0 60px -10px var(--c),0 26px 60px -24px rgba(0,0,0,.85)}
-  .accentbar{position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--c),var(--c2));transform:scaleX(0);transform-origin:left;transition:transform .4s ease;z-index:3;box-shadow:0 0 16px var(--c)}
-  .card:hover .accentbar{transform:scaleX(1)}
+  .case.in{opacity:1;transform:none}
+  .case:nth-child(even){flex-direction:row-reverse}
+  .case:hover{border-color:var(--c);box-shadow:0 0 24px -2px var(--c),0 0 60px -10px var(--c),0 26px 60px -24px rgba(0,0,0,.85)}
+  .case-shot{position:relative;flex:0 0 55%;min-height:340px;display:block;overflow:hidden}
+  .case-shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1);will-change:transform}
+  .case:hover .case-shot img{transform:scale(1.05)}
   .pill{position:absolute;top:15px;right:15px;z-index:3;display:inline-flex;align-items:center;gap:7px;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#06121a;background:var(--cyan);border-radius:999px;padding:4px 11px;box-shadow:0 0 16px rgba(5,217,232,.7)}
   .pill i{width:7px;height:7px;border-radius:50%;background:#06121a;animation:blink 1.6s ease-in-out infinite}
-  .meta{position:absolute;left:22px;right:22px;bottom:20px;z-index:3;display:flex;align-items:flex-end;justify-content:space-between;gap:14px;transition:transform .4s cubic-bezier(.2,.7,.2,1)}
-  .card:hover .meta{transform:translateY(-3px)}
-  .name{display:block;font-size:clamp(1.3rem,2.1vw,1.7rem);font-weight:800;letter-spacing:-0.02em;line-height:1.12;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.7)}
-  .cat{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-size:13px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;color:#efe6ff}
+  .case-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:36px 34px;background:linear-gradient(170deg,rgba(22,7,50,.72),rgba(10,2,26,.88))}
+  .case-body h3{font-size:clamp(1.35rem,2.2vw,1.8rem);font-weight:800;letter-spacing:-0.02em;line-height:1.1;color:#fff;margin:0}
+  .case-body p{font-size:15px;line-height:1.7;color:var(--muted);margin:0;max-width:52ch}
+  .cat{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;color:#efe6ff}
   .cat .dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none;box-shadow:0 0 10px var(--c)}
-  .go{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:18px;color:#fff;background:rgba(255,255,255,.08);border:1px solid var(--c);box-shadow:0 0 14px -2px var(--c);transition:.25s}
-  .card:hover .go{background:var(--c);color:#0a0118;transform:translate(3px,-3px);box-shadow:0 0 22px var(--c)}
+  .case-link{align-self:flex-start;margin-top:6px;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#fff;border:1.5px solid var(--c);border-radius:999px;padding:10px 18px;box-shadow:0 0 14px -4px var(--c);transition:.2s}
+  .case-link:hover{background:var(--c);color:#0a0118;box-shadow:0 0 22px var(--c)}
 
-  /* ===== Landing sections: hero CTAs, stats, services, steps ===== */
+  /* ===== Contact / start a project ===== */
+  .contact{position:relative;z-index:10;background:#0d0221;padding:34px 0 6px}
+  .cwrap{display:grid;grid-template-columns:5fr 7fr;gap:36px;align-items:start}
+  .cintro h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;color:#fff;text-shadow:0 0 18px rgba(255,46,151,.6);line-height:1.15}
+  .cintro p{margin-top:14px;font-size:15px;line-height:1.7;color:var(--muted)}
+  .cform{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:26px 24px;border:1px solid rgba(185,103,255,.3);border-radius:18px;background:rgba(12,3,32,.6);backdrop-filter:blur(6px)}
+  .cform label{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#c3b3e0}
+  .cform .full{grid-column:1/-1}
+  .cform input,.cform textarea{font-family:'Inter',sans-serif;font-size:15px;color:#fff;background:rgba(5,1,15,.6);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:12px 14px;transition:border-color .2s,box-shadow .2s}
+  .cform input:focus,.cform textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 14px rgba(5,217,232,.4)}
+  .cform ::placeholder{color:#6f6a99}
+  .cform textarea{resize:vertical;min-height:110px}
+  .cform button{grid-column:1/-1;justify-self:start;border:none;cursor:pointer}
+  .cform .note{grid-column:1/-1;font-size:13px;color:#ab9cd6;margin:0}
+  .cform .note a{color:var(--cyan)}
+  .cform .ok-msg{grid-column:1/-1;display:none;font-size:15px;font-weight:600;color:#7dffb0;margin:0}
+  .hp{display:none}
+
   .hero-ctas{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px;margin-top:32px}
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:6px 0 48px}
-  .stat{text-align:center;padding:24px 12px 21px;border:1px solid rgba(185,103,255,.28);border-radius:16px;background:rgba(12,3,32,.55);backdrop-filter:blur(4px)}
-  .stat b{display:block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.7rem,3.2vw,2.4rem);line-height:1;
-    background:linear-gradient(180deg,#fff,#ff8fd0 70%,#b967ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    filter:drop-shadow(0 0 14px rgba(255,46,151,.45))}
-  .stat span{display:block;margin-top:10px;font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#c3b3e0}
-  .svc{display:grid;grid-template-columns:repeat(12,1fr);gap:20px;margin-bottom:56px}
-  .svc-card{grid-column:span 3;padding:24px 22px 26px;border-radius:16px;border:1px solid rgba(255,255,255,.13);
-    background:linear-gradient(170deg,rgba(22,7,50,.85),rgba(10,2,26,.9));transition:border-color .3s,box-shadow .3s,transform .3s}
-  .svc-card:hover{border-color:var(--c);box-shadow:0 0 22px -4px var(--c),0 0 60px -18px var(--c);transform:translateY(-4px)}
-  .svc-card .ic{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;font-size:22px;color:var(--c);
-    border:1px solid var(--c);background:rgba(9,2,24,.6);box-shadow:0 0 16px -4px var(--c);margin-bottom:16px}
-  .svc-card h3{font-family:'Orbitron',sans-serif;font-size:1.02rem;font-weight:700;letter-spacing:0.03em;color:#fff;margin-bottom:10px}
-  .svc-card p{font-size:14px;line-height:1.65;color:var(--muted);margin:0}
-  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px}
-  .step{padding:26px 22px 24px;border-radius:16px;border:1px dashed rgba(5,217,232,.4);background:rgba(8,2,20,.5)}
-  .step b{display:block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:2rem;line-height:1;color:var(--cyan);text-shadow:0 0 18px rgba(5,217,232,.7);margin-bottom:12px}
-  .step h3{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:8px}
-  .step p{font-size:14px;line-height:1.65;color:var(--muted);margin:0}
 
   footer{position:relative;z-index:10;background:#0d0221;padding:62px 0 46px;margin-top:64px;border-top:1px solid rgba(185,103,255,.25);box-shadow:0 -1px 30px -10px rgba(185,103,255,.5)}
   .foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px}
@@ -187,35 +182,33 @@
   .bob-reopen.show{display:inline-flex}
 
   @media(max-width:1000px){
-    .svc-card{grid-column:span 6}
+    .case-shot{flex-basis:48%}
   }
   @media(max-width:760px){
-    .card,.card.span7,.card.span5{grid-column:1/-1;height:clamp(220px,62vw,280px)}
+    .case,.case:nth-child(even){flex-direction:column}
+    .case-shot{flex:none;height:230px;min-height:0}
+    .case-body{padding:26px 22px 28px}
+    .cwrap{grid-template-columns:1fr}
+    .cform{grid-template-columns:1fr}
     .tagline br{display:none}
     .skyline{max-height:150px}
     .sign{font-size:13px}
     .bob{left:14px;bottom:14px}
     .bob-av{width:52px;height:52px}
-    .stats{grid-template-columns:repeat(2,1fr);gap:12px}
-    .steps{grid-template-columns:1fr}
-  }
-  @media(max-width:540px){
-    .svc-card{grid-column:span 12}
   }
   @media(prefers-reduced-motion:reduce){
     #boot{display:none}
-    .card{opacity:1;transform:none}
-    .grid,.stars,.chip.live i,.pill i,.scrollcue,.shot,.bld.proj::after,.bob,.bob-av .eye{animation:none;transition:none}
-    .svc-card,.foot-cta{transition:none}
+    .case{opacity:1;transform:none}
+    .grid,.stars,.chip.live i,.pill i,.scrollcue,.case-shot img,.bld.proj::after,.bob,.bob-av .eye{animation:none;transition:none}
+    .foot-cta{transition:none}
   }
   @media(forced-colors:active){
     .scene,.scan,.vig,#boot{display:none}
     body{background:Canvas;color:CanvasText}
     h1{background:none;-webkit-text-fill-color:CanvasText;color:CanvasText;filter:none}
-    .card{opacity:1;transform:none;border-color:CanvasText}
-    .scrim{display:none}
-    .stat,.svc-card,.step{background:Canvas;border-color:CanvasText}
-    .stat b{background:none;-webkit-text-fill-color:CanvasText;color:CanvasText;filter:none}
+    .case{opacity:1;transform:none;border-color:CanvasText}
+    .case-body,.cform{background:Canvas}
+    .cform input,.cform textarea{border-color:CanvasText}
   }
 </style>
 </head>
@@ -238,7 +231,7 @@
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="/"><span class="mk" aria-hidden="true">◆</span> THE HAPPY ENDINGS</a>
-    <a class="nav-cta" href="mailto:keith.dumanski@gmail.com">Start a project</a>
+    <a class="nav-cta" href="#contact">Start a project</a>
   </div>
 </header>
 
@@ -248,7 +241,7 @@
     <h1>MARKETING.<br>AUTOMATION.<br>SOLVED.</h1>
     <p class="tagline">We use AI to solve the marketing and automation needs of small businesses. <br>Sites, dashboards, and self-serve editors, all designed, launched, and run for you.</p>
     <div class="hero-ctas">
-      <a class="foot-cta" href="mailto:keith.dumanski@gmail.com">Start a project</a>
+      <a class="foot-cta" href="#contact">Start a project</a>
       <a class="nav-cta" href="#work">See the work</a>
     </div>
     <div class="chips">
@@ -267,116 +260,119 @@
 <section class="work" id="work">
   <div class="container">
 
-    <div class="stats" aria-label="Studio at a glance">
-      <div class="stat"><b>6</b><span>Live sites</span></div>
-      <div class="stat"><b>100%</b><span>Custom built</span></div>
-      <div class="stat"><b>24/7</b><span>Hosted &amp; watched</span></div>
-      <div class="stat"><b>1</b><span>Person to call</span></div>
-    </div>
+    <div class="sec-head"><h2 class="lbl"><span aria-hidden="true">▶</span> Case Studies</h2><span class="rule"></span></div>
+    <div class="cases">
 
-    <div class="sec-head"><h2 class="lbl"><span aria-hidden="true">▶</span> Now Showing</h2><span class="rule"></span></div>
-    <div class="bento">
+      <article class="case" style="--c:#ff2e97;--c2:#ff8fd0" data-bob="St. Mark's Yoga: a custom tracking system that fills the room.">
+        <a class="case-shot" href="/yoga/" aria-label="St. Mark's Yoga: open the live insights dashboard">
+          <img src="shots/yoga.jpg" alt="St. Mark's Yoga bookings heatmap by day and hour" loading="eager" style="object-position:50% 50%">
+          <span class="pill"><i></i>Live</span>
+        </a>
+        <div class="case-body">
+          <span class="cat"><span class="dot"></span>Wellness · Analytics</span>
+          <h3>St. Mark's Yoga</h3>
+          <p>We built a customized tracking and analytics system that shows the studio exactly which classes, times, and teachers fill the room. Bookings grew 34% in the first three months.</p>
+          <a class="case-link" href="/yoga/">Visit the site <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
 
-      <a class="card span7" style="--c:#ff2e97;--c2:#ff8fd0" href="/yoga/" data-bob="St. Mark's Yoga: a live analytics dashboard I built, refreshed every morning." aria-label="St. Mark's Yoga: open the live insights dashboard">
-        <img class="shot" src="shots/yoga.jpg" alt="St. Mark's Yoga bookings heatmap by day and hour" loading="eager" style="object-position:50% 50%">
-        <span class="scrim"></span><span class="pill"><i></i>Live</span>
-        <span class="meta"><span class="txt"><span class="name">St. Mark's Yoga</span><span class="cat"><span class="dot"></span>Wellness · Analytics</span></span><span class="go" aria-hidden="true">↗</span></span>
-        <span class="accentbar"></span>
-      </a>
+      <article class="case" style="--c:#ffcf6b;--c2:#ff9e64" data-bob="Fabian's Tours: a cinematic site for luxury Egypt journeys.">
+        <a class="case-shot" href="https://kdumanski.github.io/fabians-tours/" target="_blank" rel="noopener" aria-label="Fabian's Tours: visit the site">
+          <img src="shots/fabians.jpg" alt="Fabian's Tours luxury Egypt travel site" loading="eager" style="object-position:50% 38%">
+          <span class="pill"><i></i>Live</span>
+        </a>
+        <div class="case-body">
+          <span class="cat"><span class="dot"></span>Luxury travel</span>
+          <h3>Fabian's Tours</h3>
+          <p>We built a cinematic site for luxury Egypt journeys, with a private editor Fabian uses to update tours and photos himself. Inquiries now come straight from the site instead of word of mouth alone.</p>
+          <a class="case-link" href="https://kdumanski.github.io/fabians-tours/" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
 
-      <a class="card span5" style="--c:#ffcf6b;--c2:#ff9e64" href="https://kdumanski.github.io/fabians-tours/" target="_blank" rel="noopener" data-bob="Fabian's Tours: a cinematic site for luxury Egypt journeys." aria-label="Fabian's Tours: visit the site">
-        <img class="shot" src="shots/fabians.jpg" alt="Fabian's Tours luxury Egypt travel site" loading="eager" style="object-position:50% 38%">
-        <span class="scrim"></span><span class="pill"><i></i>Live</span>
-        <span class="meta"><span class="txt"><span class="name">Fabian's Tours</span><span class="cat"><span class="dot"></span>Luxury travel</span></span><span class="go" aria-hidden="true">↗</span></span>
-        <span class="accentbar"></span>
-      </a>
+      <article class="case" style="--c:#05d9e8;--c2:#7af9ff" data-bob="Stark Level: a construction brand built to win jobs.">
+        <a class="case-shot" href="https://starklevelsolutions.com" target="_blank" rel="noopener" aria-label="Stark Level Solutions: visit the site">
+          <img src="shots/stark.jpg" alt="Stark Level Solutions construction company site" loading="lazy" style="object-position:50% 0%">
+          <span class="pill"><i></i>Live</span>
+        </a>
+        <div class="case-body">
+          <span class="cat"><span class="dot"></span>Construction</span>
+          <h3>Stark Level</h3>
+          <p>We built a construction brand designed to win jobs: project galleries, services, and a quote pipeline in one place. A word-of-mouth business became one that gets found.</p>
+          <a class="case-link" href="https://starklevelsolutions.com" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
 
-      <a class="card span5" style="--c:#05d9e8;--c2:#7af9ff" href="https://starklevelsolutions.com" target="_blank" rel="noopener" data-bob="Stark Level: a construction brand built to win jobs." aria-label="Stark Level Solutions: visit the site">
-        <img class="shot" src="shots/stark.jpg" alt="Stark Level Solutions construction company site" loading="lazy" style="object-position:50% 0%">
-        <span class="scrim"></span><span class="pill"><i></i>Live</span>
-        <span class="meta"><span class="txt"><span class="name">Stark Level</span><span class="cat"><span class="dot"></span>Construction</span></span><span class="go" aria-hidden="true">↗</span></span>
-        <span class="accentbar"></span>
-      </a>
+      <article class="case" style="--c:#b967ff;--c2:#e29bff" data-bob="Pride Dental: a clean, trustworthy practice site.">
+        <a class="case-shot" href="https://kdumanski.github.io/DentalGroup/" target="_blank" rel="noopener" aria-label="Pride Dental Group: visit the site">
+          <img src="shots/dental.jpg" alt="Pride Dental Group practice website" loading="lazy" style="object-position:50% 0%">
+          <span class="pill"><i></i>Live</span>
+        </a>
+        <div class="case-body">
+          <span class="cat"><span class="dot"></span>Healthcare</span>
+          <h3>Pride Dental Group</h3>
+          <p>We built a clean, trustworthy practice site that answers what patients actually ask: services, insurance, and how to book. New patients now start online instead of on hold.</p>
+          <a class="case-link" href="https://kdumanski.github.io/DentalGroup/" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
 
-      <a class="card span7" style="--c:#b967ff;--c2:#e29bff" href="https://kdumanski.github.io/DentalGroup/" target="_blank" rel="noopener" data-bob="Pride Dental: a clean, trustworthy practice site." aria-label="Pride Dental Group: visit the site">
-        <img class="shot" src="shots/dental.jpg" alt="Pride Dental Group practice website" loading="lazy" style="object-position:50% 0%">
-        <span class="scrim"></span><span class="pill"><i></i>Live</span>
-        <span class="meta"><span class="txt"><span class="name">Pride Dental Group</span><span class="cat"><span class="dot"></span>Healthcare</span></span><span class="go" aria-hidden="true">↗</span></span>
-        <span class="accentbar"></span>
-      </a>
+      <article class="case" style="--c:#7dffb0;--c2:#b3ffd1" data-bob="Omar Chacón: a painter's portfolio with a built-in editor he updates himself.">
+        <a class="case-shot" href="https://omarchacon.72.60.117.113.nip.io" target="_blank" rel="noopener" aria-label="Omar Chacón: visit the site">
+          <img src="shots/omar.jpg" alt="Omar Chacón painter portfolio, hand-cast acrylic drips hero" loading="lazy" style="object-position:50% 0%">
+          <span class="pill"><i></i>Live</span>
+        </a>
+        <div class="case-body">
+          <span class="cat"><span class="dot"></span>Art · Portfolio + CMS</span>
+          <h3>Omar Chacón</h3>
+          <p>We built a gallery-grade portfolio with a private editor Omar uses to add paintings and shows himself. His work finally has a permanent home that collectors can browse.</p>
+          <a class="case-link" href="https://omarchacon.72.60.117.113.nip.io" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
 
-      <a class="card span7" style="--c:#7dffb0;--c2:#b3ffd1" href="https://omarchacon.72.60.117.113.nip.io" target="_blank" rel="noopener" data-bob="Omar Chacón: a painter's portfolio with a built-in editor he updates himself." aria-label="Omar Chacón: visit the site">
-        <img class="shot" src="shots/omar.jpg" alt="Omar Chacón painter portfolio, hand-cast acrylic drips hero" loading="lazy" style="object-position:50% 0%">
-        <span class="scrim"></span><span class="pill"><i></i>Live</span>
-        <span class="meta"><span class="txt"><span class="name">Omar Chacón</span><span class="cat"><span class="dot"></span>Art · Portfolio + CMS</span></span><span class="go" aria-hidden="true">↗</span></span>
-        <span class="accentbar"></span>
-      </a>
+      <article class="case" style="--c:#ff5e6c;--c2:#ffcf6b" data-bob="Stark Production Group: a dynamic system that fills the calendar at demand times.">
+        <a class="case-shot" href="https://starkproductiongroup.nyc" target="_blank" rel="noopener" aria-label="Stark Production Group: visit the site">
+          <img src="shots/spg.jpg" alt="Stark Production Group NYC event production site" loading="lazy" style="object-position:50% 0%">
+          <span class="pill"><i></i>Live</span>
+        </a>
+        <div class="case-body">
+          <span class="cat"><span class="dot"></span>Events · Production</span>
+          <h3>Stark Production Group</h3>
+          <p>We built their brand site and an integrated marketing analysis and distribution system: a dynamic engine that pushes promotion toward open dates and peak-demand windows. The calendar fills on demand instead of waiting on referrals.</p>
+          <a class="case-link" href="https://starkproductiongroup.nyc" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
 
-      <a class="card span5" style="--c:#ff5e6c;--c2:#ffcf6b" href="https://starkproductiongroup.nyc" target="_blank" rel="noopener" data-bob="Stark Production Group: NYC event production, one call does it all." aria-label="Stark Production Group: visit the site">
-        <img class="shot" src="shots/spg.jpg" alt="Stark Production Group NYC event production site" loading="lazy" style="object-position:50% 0%">
-        <span class="scrim"></span><span class="pill"><i></i>Live</span>
-        <span class="meta"><span class="txt"><span class="name">Stark Production Group</span><span class="cat"><span class="dot"></span>Events · Production</span></span><span class="go" aria-hidden="true">↗</span></span>
-        <span class="accentbar"></span>
-      </a>
-
-    </div>
-
-    <div class="sec-head" style="margin-top:56px"><h2 class="lbl"><span aria-hidden="true">▶</span> What You Get</h2><span class="rule"></span></div>
-    <div class="svc">
-      <div class="svc-card" style="--c:#ff2e97" data-bob="Every site here was designed from scratch for that business. Yours would be too.">
-        <span class="ic" aria-hidden="true">◆</span>
-        <h3>Design + Build</h3>
-        <p>A site designed around your business, not a template. You see a live link in days and we shape it together.</p>
-      </div>
-      <div class="svc-card" style="--c:#05d9e8" data-bob="Domains, DNS, HTTPS, servers... Keith handles all of it so you never have to.">
-        <span class="ic" aria-hidden="true">◉</span>
-        <h3>Hosting + Domains</h3>
-        <p>Domains, DNS, HTTPS, servers, backups. It stays fast and online, and you never touch a control panel.</p>
-      </div>
-      <div class="svc-card" style="--c:#ffcf6b" data-bob="Omar updates his own paintings through a private editor built into his site. You could too.">
-        <span class="ic" aria-hidden="true">✎</span>
-        <h3>Edit It Yourself</h3>
-        <p>A private editor built into your site. Change photos, prices, and pages whenever you want, no developer needed.</p>
-      </div>
-      <div class="svc-card" style="--c:#b967ff" data-bob="St. Mark's Yoga gets fresh numbers every morning without lifting a finger.">
-        <span class="ic" aria-hidden="true">⚡</span>
-        <h3>Dashboards + Automations</h3>
-        <p>Live dashboards and daily automations that keep reporting on your business while you sleep.</p>
-      </div>
-    </div>
-
-    <div class="sec-head"><h2 class="lbl"><span aria-hidden="true">▶</span> How It Works</h2><span class="rule"></span></div>
-    <div class="steps">
-      <div class="step">
-        <b>01</b>
-        <h3>Tell me what you need</h3>
-        <p>A call or a text. We nail down what the site has to do and what done looks like.</p>
-      </div>
-      <div class="step">
-        <b>02</b>
-        <h3>Watch it come to life</h3>
-        <p>You get a live link within days, not mockups. We tweak it together until it feels right.</p>
-      </div>
-      <div class="step">
-        <b>03</b>
-        <h3>Launch, then relax</h3>
-        <p>I host it, watch it, and handle every update from then on. One person to call, forever.</p>
-      </div>
     </div>
 
   </div>
 </section>
 
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="sec-head"><h2 class="lbl"><span aria-hidden="true">▶</span> Start a Project</h2><span class="rule"></span></div>
+    <div class="cwrap">
+      <div class="cintro">
+        <h2>Tell me what you need.</h2>
+        <p>You'll have a live link in days, not months. Design, build, hosting, and updates handled start to finish, with one person to call the whole way.</p>
+      </div>
+      <form class="cform" id="cform" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="5be6589f-6061-4870-902c-c3173d9dd3e6">
+        <input type="hidden" name="subject" value="New project inquiry · thehappyendings.org">
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label>Name<input type="text" name="name" required autocomplete="name"></label>
+        <label>Email<input type="email" name="email" required autocomplete="email"></label>
+        <label class="full">Business<input type="text" name="business" placeholder="What's the business?"></label>
+        <label class="full">What do you need?<textarea name="message" required placeholder="A site, a dashboard, an automation, all of it..."></textarea></label>
+        <button class="foot-cta" type="submit">Send it</button>
+        <p class="ok-msg" role="status">Got it. You'll hear back within a day.</p>
+        <p class="note">Prefer email? <a href="mailto:keith.dumanski@gmail.com">keith.dumanski@gmail.com</a></p>
+      </form>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="container">
-    <div class="foot">
-      <div>
-        <h2>Ready when you are.</h2>
-        <p>Tell me what you need. You'll have a live link in days, not months.</p>
-      </div>
-      <a class="foot-cta" href="mailto:keith.dumanski@gmail.com">Let's talk</a>
-    </div>
-    <div class="foot-mini">
+    <div class="foot-mini" style="margin-top:0">
       <span>© <span id="year">2026</span> The Happy Endings</span>
       <a href="mailto:keith.dumanski@gmail.com">keith.dumanski@gmail.com</a>
     </div>
@@ -477,22 +473,43 @@
     });
     document.getElementById('bobWork').addEventListener('click', function(){
       document.getElementById('work').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'});
-      say("There they are, four live builds. Hover any card for the story.");
+      say("There they are, six live builds. Hover any one for the story.");
     });
-    document.getElementById('bobHire').addEventListener('click', function(){ location.href = 'mailto:keith.dumanski@gmail.com'; });
+    document.getElementById('bobHire').addEventListener('click', function(){
+      document.getElementById('contact').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'});
+      say("Fill that in and Keith gets it instantly. You'll hear back within a day.");
+    });
     document.getElementById('bobClose').addEventListener('click', function(){ bob.classList.add('hidden'); reopen.classList.add('show'); reopen.focus(); });
     reopen.addEventListener('click', function(){ bob.classList.remove('hidden'); reopen.classList.remove('show'); say(GREET); document.getElementById('bobClose').focus(); });
   })();
 
-  /* ---------- Card reveal ---------- */
+  /* ---------- Case reveal ---------- */
   (function(){
-    var cards = document.querySelectorAll('.card');
+    var cards = document.querySelectorAll('.case');
     if ('IntersectionObserver' in window){
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(e){ if(e.isIntersecting){ var el=e.target; setTimeout(function(){ el.classList.add('in'); }, (el.dataset.i||0)*90); io.unobserve(el); } });
       }, {threshold:0.15});
       cards.forEach(function(c,i){ c.dataset.i=i; io.observe(c); });
     } else { cards.forEach(function(c){ c.classList.add('in'); }); }
+  })();
+
+  /* ---------- Contact form (Web3Forms) ---------- */
+  (function(){
+    var form = document.getElementById('cform');
+    if (!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var btn = form.querySelector('button');
+      btn.disabled = true; btn.textContent = 'Sending...';
+      fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(form) })
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if (d.success){ form.reset(); form.querySelector('.ok-msg').style.display = 'block'; btn.textContent = 'Sent'; }
+          else { btn.disabled = false; btn.textContent = 'Send it'; alert('Something glitched. Email keith.dumanski@gmail.com instead.'); }
+        })
+        .catch(function(){ btn.disabled = false; btn.textContent = 'Send it'; alert('Something glitched. Email keith.dumanski@gmail.com instead.'); });
+    });
   })();
 
   document.getElementById('year').textContent = '2026';
