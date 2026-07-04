@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Happy Endings · Arcade concept</title>
+<meta name="description" content="The Happy Endings landing page reimagined as a 16-bit console with a Street Fighter style project select.">
+<style>
+  :root{
+    --ink:#0b021c; --screen:#170436; --screen2:#0e0326;
+    --cyan:#22e7f5; --pink:#ff3d9a; --purple:#c07bff; --gold:#ffd36b;
+    --green:#7dffb0; --red:#ff6b6b; --text:#f3ecff; --muted:#b6a3e0; --dim:#7c6ba8;
+    --mono:ui-monospace,'Cascadia Mono','Segoe UI Mono','SFMono-Regular','Menlo','Consolas','Courier New',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:clamp(12px,3vw,32px);
+    background:radial-gradient(120% 90% at 50% 0%,#1a0740 0%,#0b021c 60%),var(--ink);
+    color:var(--text);font-family:var(--mono);line-height:1.6}
+  a{color:inherit;text-decoration:none}
+  a:focus-visible,button:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:6px}
+
+  .console{position:relative;width:min(1120px,97vw);aspect-ratio:16/10;max-height:94vh;border-radius:18px;overflow:hidden;isolation:isolate;
+    background:radial-gradient(130% 100% at 50% 18%,var(--screen) 0%,var(--screen2) 70%,#08021a 100%);
+    border:1px solid rgba(192,123,255,.35);
+    box-shadow:0 0 0 8px #05010f,0 0 0 9px rgba(192,123,255,.25),0 30px 80px -20px rgba(0,0,0,.9),inset 0 0 120px -30px rgba(255,61,154,.25);
+    outline:none;animation:poweron .75s ease-out both}
+  .console:focus-visible{box-shadow:0 0 0 8px #05010f,0 0 0 11px var(--cyan),0 30px 80px -20px rgba(0,0,0,.9)}
+  .console::before{content:"";position:absolute;inset:0;z-index:40;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.22) 2px 3px)}
+  .console::after{content:"";position:absolute;inset:0;z-index:41;pointer-events:none;border-radius:18px;box-shadow:inset 0 0 90px 10px rgba(4,1,15,.85);background:radial-gradient(130% 110% at 50% 50%,transparent 62%,rgba(4,1,15,.6) 100%)}
+  @keyframes poweron{0%{transform:scale(.965);filter:brightness(2.6) saturate(.4);opacity:.15}22%{opacity:1}100%{transform:scale(1);filter:none;opacity:1}}
+
+  .powerflash{position:absolute;inset:0;z-index:60;background:#fff;pointer-events:none;animation:pflash .9s ease-out both}
+  @keyframes pflash{0%{opacity:.85}20%{opacity:0}100%{opacity:0}}
+
+  .floor{position:absolute;left:-20%;right:-20%;bottom:-2%;height:44%;z-index:1;pointer-events:none;
+    background-image:linear-gradient(90deg,rgba(34,231,245,.5) 1px,transparent 1px),linear-gradient(0deg,rgba(255,61,154,.5) 1px,transparent 1px);
+    background-size:44px 44px;transform:perspective(280px) rotateX(70deg);transform-origin:50% 100%;opacity:.4;animation:flow 2.6s linear infinite}
+  @keyframes flow{to{background-position:0 44px}}
+  .sun{position:absolute;left:50%;top:12%;transform:translateX(-50%);width:min(40%,300px);aspect-ratio:1;border-radius:50%;z-index:1;
+    background:linear-gradient(180deg,#fff2b8,#ffcf6b 42%,#ff6f9c 72%,#ff4d6d);opacity:.28;filter:blur(2px)}
+
+  .scene{position:absolute;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:5% 6%}
+  .scene.on{display:flex}
+
+  @keyframes blink{50%{opacity:0}}
+
+  /* ===== MENU: text left, buttons right ===== */
+  .spread{position:relative;z-index:5;width:100%;max-width:900px;display:grid;grid-template-columns:1.35fr 1fr;align-items:center;text-align:left}
+  .spread::before{content:"";position:absolute;top:2%;bottom:2%;left:57.4%;width:2px;background:linear-gradient(180deg,transparent,rgba(192,123,255,.55),transparent)}
+  .intro{padding:6px 36px 6px 6px;opacity:0;transform:translateX(-26px);animation:heIn .6s .42s cubic-bezier(.2,.7,.2,1) forwards}
+  .mission-text{font-size:clamp(15px,2vw,21px);line-height:1.75;color:#fff;letter-spacing:.005em;font-weight:500;text-shadow:0 1px 12px rgba(4,1,20,.9)}
+  .menu-col{padding:6px 6px 6px 36px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+  .menu{display:flex;flex-direction:column;gap:16px;width:100%}
+  .mi{position:relative;display:flex;align-items:center;gap:12px;width:100%;text-align:left;font-family:inherit;
+    font-size:clamp(.95rem,2vw,1.25rem);font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--muted);cursor:pointer;background:rgba(10,3,34,.7);border:2px solid rgba(182,163,224,.32);border-radius:11px;padding:17px 16px;
+    opacity:0;transform:translateX(26px);animation:heInR .5s cubic-bezier(.2,.7,.2,1) forwards;transition:color .14s,border-color .14s,background .14s,box-shadow .14s}
+  .menu .mi:nth-child(1){animation-delay:.56s}
+  .menu .mi:nth-child(2){animation-delay:.68s}
+  .mi .cur{color:var(--gold);opacity:0;text-shadow:0 0 12px var(--gold)}
+  .mi[aria-selected="true"]{color:#fff;border-color:var(--cyan);background:rgba(34,231,245,.1);box-shadow:0 0 22px -3px var(--cyan);text-shadow:2px 0 var(--pink),-2px 0 var(--cyan)}
+  .mi[aria-selected="true"] .cur{opacity:1}
+  @keyframes heIn{to{opacity:1;transform:none}}
+  @keyframes heInR{to{opacity:1;transform:none}}
+
+  /* ===== CHARACTER SELECT (portfolio) ===== */
+  .back{position:absolute;top:6%;left:7%;font-size:12px;letter-spacing:.14em;color:var(--muted);background:none;border:none;font-family:inherit;cursor:pointer;text-transform:uppercase;z-index:6}
+  .back:hover{color:#fff}
+  .cs-head{font-size:clamp(13px,2.2vw,18px);letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:18px;text-shadow:0 0 12px rgba(255,211,107,.5)}
+  .roster{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:640px}
+  .ftile{position:relative;aspect-ratio:4/3;border:2px solid rgba(182,163,224,.3);border-radius:8px;overflow:hidden;cursor:pointer;background:#0a0322;padding:0;font-family:inherit}
+  .ftile .face{position:absolute;inset:0;background-size:cover;background-position:50% 28%;filter:saturate(.8) brightness(.62);transition:filter .14s,transform .35s}
+  .ftile .tag{position:absolute;left:0;right:0;bottom:0;z-index:2;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;background:linear-gradient(180deg,transparent,rgba(6,1,18,.96));padding:16px 6px 6px;text-align:center}
+  .ftile[aria-selected="true"]{border-color:var(--c);box-shadow:0 0 22px -2px var(--c),0 0 52px -12px var(--c);z-index:3}
+  .ftile[aria-selected="true"] .face{filter:saturate(1.15) brightness(1);transform:scale(1.07)}
+  .roster.pop .ftile{animation:pop .42s cubic-bezier(.2,.7,.2,1) backwards}
+  .roster.pop .ftile:nth-child(1){animation-delay:.02s}
+  .roster.pop .ftile:nth-child(2){animation-delay:.07s}
+  .roster.pop .ftile:nth-child(3){animation-delay:.12s}
+  .roster.pop .ftile:nth-child(4){animation-delay:.17s}
+  .roster.pop .ftile:nth-child(5){animation-delay:.22s}
+  .roster.pop .ftile:nth-child(6){animation-delay:.27s}
+  @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+  .nameplate{margin-top:18px;min-height:5.4em;max-width:54ch;text-align:center}
+  .np-name{font-size:clamp(1.1rem,2.6vw,1.65rem);font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.02em;text-shadow:2px 0 var(--pink),-2px 0 var(--cyan)}
+  .np-type{font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin-top:6px}
+  .np-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-top:9px}
+  .hint{position:absolute;bottom:6%;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.18em;color:var(--dim)}
+  .hint b{color:var(--muted)}
+
+  /* ===== DETAIL (VS slam) ===== */
+  .panel{width:100%;max-width:600px;text-align:left}
+  .panel.slam{animation:slam .5s cubic-bezier(.2,.85,.25,1)}
+  @keyframes slam{0%{opacity:0;transform:translateX(70px) scale(1.06)}55%{opacity:1}100%{transform:none}}
+  .panel .ty{font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+  .panel h2{font-size:clamp(1.1rem,3vw,1.7rem);text-transform:uppercase;letter-spacing:.05em;margin:6px 0;color:#fff;text-shadow:2px 0 var(--pink),-2px 0 var(--cyan)}
+  .panel p{margin-top:10px;font-size:14px;color:var(--muted);line-height:1.7}
+  .act{margin-top:24px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{font-family:inherit;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;border-radius:999px;padding:12px 20px;border:2px solid var(--cyan);color:#04101a;background:var(--cyan);text-decoration:none;box-shadow:0 0 18px rgba(34,231,245,.5);transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(34,231,245,.8)}
+  .btn.ghost{background:transparent;color:#fff;border-color:var(--purple);box-shadow:0 0 16px rgba(192,123,255,.3)}
+
+  @media(max-width:640px){
+    .console{aspect-ratio:3/4;max-height:none}
+    .roster{grid-template-columns:repeat(2,1fr)}
+    .spread{grid-template-columns:1fr;gap:22px;max-width:100%}
+    .spread::before{display:none}
+    .intro{padding:0;animation-delay:.3s}
+    .menu-col{padding:0}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .console,.powerflash,.floor,.intro,.mi,.roster.pop .ftile,.panel.slam{animation:none}
+    .powerflash{display:none}
+    .intro,.mi{opacity:1;transform:none}
+    .btn,.stage,.mi,.ftile .face{transition:none}
+  }
+  @media(forced-colors:active){
+    .console::before,.console::after,.floor,.sun,.powerflash{display:none}
+    body{background:Canvas;color:CanvasText}
+    .mi,.ftile{border-color:CanvasText}
+  }
+</style>
+</head>
+<body>
+
+<div class="console" id="console" tabindex="0" role="application" aria-label="The Happy Endings console. Use arrow keys and Enter.">
+  <div class="powerflash" aria-hidden="true"></div>
+  <div class="floor" aria-hidden="true"></div>
+  <div class="sun" aria-hidden="true"></div>
+
+  <!-- MENU -->
+  <section class="scene on" id="s-menu" aria-label="Main menu">
+    <div class="spread">
+      <div class="intro">
+        <p class="mission-text">We help small businesses automate integrated marketing and operations, so you can focus on creating value for society.</p>
+      </div>
+      <div class="menu-col">
+        <div class="menu" id="menu" role="listbox" aria-label="Main menu" tabindex="-1">
+          <button class="mi" role="option" data-action="contact"><span class="cur" aria-hidden="true">▶</span>Start a Project</button>
+          <button class="mi" role="option" data-action="stages"><span class="cur" aria-hidden="true">▶</span>Portfolio</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARACTER SELECT -->
+  <section class="scene" id="s-stages" aria-label="Select a project">
+    <button class="back" data-back="menu">◂ Back</button>
+    <div class="cs-head">▶ Select Your Project</div>
+    <div class="roster" id="grid" role="listbox" aria-label="Projects" tabindex="-1"></div>
+    <div class="nameplate" id="nameplate" aria-live="polite"></div>
+    <div class="hint"><b>◀ ▶ ▲ ▼</b> MOVE &nbsp;·&nbsp; <b>ENTER</b> SELECT &nbsp;·&nbsp; <b>ESC</b> BACK</div>
+  </section>
+
+  <!-- DETAIL -->
+  <section class="scene" id="s-detail" aria-label="Project detail">
+    <button class="back" data-back="stages">◂ Back</button>
+    <div class="panel" id="detailPanel"></div>
+  </section>
+
+  <!-- START A PROJECT -->
+  <section class="scene" id="s-contact" aria-label="Start a project">
+    <button class="back" data-back="menu">◂ Back</button>
+    <div class="panel">
+      <div class="ty">New Game</div>
+      <h2>Start a Project</h2>
+      <p>Tell us what you need. You'll have a live link in days, not months, design, build, hosting, and updates handled start to finish.</p>
+      <div class="act">
+        <a class="btn" href="mailto:keith.dumanski@gmail.com">Press Start ▸</a>
+        <button class="btn ghost" data-back="menu">Cancel</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var con = document.getElementById('console');
+  var scenes = {
+    menu:document.getElementById('s-menu'), stages:document.getElementById('s-stages'),
+    detail:document.getElementById('s-detail'), contact:document.getElementById('s-contact')
+  };
+  var cur='menu';
+  function show(name){
+    for(var k in scenes) scenes[k].classList.toggle('on', k===name);
+    cur=name;
+    if(name==='menu'){ selMenu=0; paintMenu(); }
+    if(name==='stages'){ selStage=0; paintStages(); playPop(); }
+  }
+
+  var actx=null;
+  function blip(freq,dur){
+    try{
+      actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+      var o=actx.createOscillator(),g=actx.createGain();
+      o.type='square';o.frequency.value=freq;g.gain.value=0.04;o.connect(g);g.connect(actx.destination);o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+dur);o.stop(actx.currentTime+dur);
+    }catch(e){}
+  }
+
+  var menuItems=[].slice.call(document.querySelectorAll('#menu .mi'));
+  var selMenu=0;
+  function paintMenu(){ menuItems.forEach(function(el,i){ el.setAttribute('aria-selected', i===selMenu?'true':'false'); }); }
+  menuItems.forEach(function(el,i){
+    el.addEventListener('mouseenter',function(){ selMenu=i; paintMenu(); });
+    el.addEventListener('click',function(){ selMenu=i; paintMenu(); chooseMenu(); });
+  });
+  function chooseMenu(){ blip(660,.12); show(menuItems[selMenu].dataset.action); }
+
+  var STAGES=[
+    {nm:"St. Mark's Yoga",ty:'WELLNESS',c:'#ff3d9a',img:'shots/yoga.jpg',href:'https://thehappyendings.org/yoga/',d:'Custom booking analytics and integrated marketing targeting platform for a yoga studio.'},
+    {nm:"Fabian's Tours",ty:'TRAVEL',c:'#ffd36b',img:'shots/fabians.jpg',href:'https://kdumanski.github.io/fabians-tours/',d:'Cinematic booking site for a luxury Egypt travel brand.'},
+    {nm:'Stark Level',ty:'CONSTRUCTION',c:'#22e7f5',img:'shots/stark.jpg',href:'https://starklevelsolutions.com',d:'Lead-generating brand site for a construction company.'},
+    {nm:'Pride Dental',ty:'HEALTHCARE',c:'#c07bff',img:'shots/dental.jpg',href:'https://kdumanski.github.io/DentalGroup/',d:'Modern patient acquisition site for a family dental practice.'},
+    {nm:'Omar Chacón',ty:'ART',c:'#7dffb0',img:'shots/omar.jpg',href:'https://omarchacon.72.60.117.113.nip.io',d:'Interactive art exhibition platform and e-portfolio for a working painter.'},
+    {nm:'Stark Production',ty:'EVENTS',c:'#ff6b6b',img:'shots/spg.jpg',href:'https://starkproductiongroup.nyc',d:'Integrated marketing analysis and distribution system for an NYC event production company.'}
+  ];
+  var grid=document.getElementById('grid'), nameplate=document.getElementById('nameplate'), selStage=0;
+  STAGES.forEach(function(s,i){
+    var b=document.createElement('button');
+    b.className='ftile'; b.setAttribute('role','option'); b.style.setProperty('--c',s.c);
+    b.innerHTML='<span class="face" style="background-image:url('+s.img+')"></span><span class="tag">'+s.nm+'</span>';
+    b.addEventListener('mouseenter',function(){ selStage=i; paintStages(); });
+    b.addEventListener('click',function(){ selStage=i; paintStages(); openStage(); });
+    grid.appendChild(b);
+  });
+  var tiles=[].slice.call(grid.children);
+  function paintStages(){
+    tiles.forEach(function(el,i){ el.setAttribute('aria-selected', i===selStage?'true':'false'); });
+    var s=STAGES[selStage];
+    nameplate.innerHTML='<div class="np-name">'+s.nm+'</div><div class="np-type" style="color:'+s.c+'">'+s.ty+'</div><div class="np-desc">'+s.d+'</div>';
+  }
+  function playPop(){ grid.classList.remove('pop'); void grid.offsetWidth; grid.classList.add('pop'); }
+  function openStage(){
+    blip(760,.14); var s=STAGES[selStage], p=document.getElementById('detailPanel');
+    p.innerHTML='<div class="ty">'+s.ty+'</div><h2>'+s.nm+'</h2><p>'+s.d+'</p>'+
+      '<div class="act"><a class="btn" href="'+s.href+'" target="_blank" rel="noopener">Visit the site ▸</a>'+
+      '<button class="btn ghost" data-back="stages">Back to select</button></div>';
+    show('detail'); p.classList.remove('slam'); void p.offsetWidth; p.classList.add('slam');
+  }
+
+  con.addEventListener('click',function(e){ var b=e.target.closest('[data-back]'); if(b){ blip(320,.1); show(b.dataset.back); } });
+  con.addEventListener('keydown',function(e){
+    var k=e.key;
+    if(cur==='menu'){
+      if(k==='ArrowDown'||k==='ArrowUp'){ e.preventDefault(); selMenu=(selMenu+(k==='ArrowDown'?1:menuItems.length-1))%menuItems.length; paintMenu(); blip(440,.06); }
+      else if(k==='Enter'||k===' '){ e.preventDefault(); chooseMenu(); }
+      return;
+    }
+    if(cur==='stages'){
+      var cols=(window.innerWidth<=640)?2:3;
+      if(k==='ArrowRight'){ e.preventDefault(); selStage=(selStage+1)%STAGES.length; paintStages(); blip(440,.06); }
+      else if(k==='ArrowLeft'){ e.preventDefault(); selStage=(selStage+STAGES.length-1)%STAGES.length; paintStages(); blip(440,.06); }
+      else if(k==='ArrowDown'){ e.preventDefault(); selStage=(selStage+cols)%STAGES.length; paintStages(); blip(440,.06); }
+      else if(k==='ArrowUp'){ e.preventDefault(); selStage=(selStage+STAGES.length-cols)%STAGES.length; paintStages(); blip(440,.06); }
+      else if(k==='Enter'||k===' '){ e.preventDefault(); openStage(); }
+      else if(k==='Escape'){ e.preventDefault(); show('menu'); }
+      return;
+    }
+    if(cur==='detail'){ if(k==='Escape'){ e.preventDefault(); show('stages'); } return; }
+    if(cur==='contact'){ if(k==='Escape'){ e.preventDefault(); show('menu'); } return; }
+  });
+  con.addEventListener('click',function(){ con.focus(); });
+  paintMenu(); paintStages(); con.focus();
+})();
+</script>
+</body>
+</html>
