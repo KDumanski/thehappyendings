@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Happy Endings · AI Web Studio</title>
-<meta name="description" content="We use AI to end your marketing and automation problems and make running a small business a little easier. That's the happy ending.">
+<meta name="description" content="We use AI to help small businesses market and automate, so they can focus on adding value to society. That's the happy ending.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
@@ -182,6 +182,19 @@
   .bob-reopen{position:fixed;left:22px;bottom:22px;z-index:70;display:none;align-items:center;gap:8px;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;color:#04101a;background:var(--cyan);border:none;border-radius:999px;padding:10px 15px;cursor:pointer;box-shadow:0 0 20px rgba(5,217,232,.6)}
   .bob-reopen.show{display:inline-flex}
 
+  /* ===== Cookie notice ===== */
+  .cookiebar{position:fixed;right:22px;bottom:22px;z-index:80;width:min(340px,calc(100vw - 44px));
+    background:rgba(10,3,26,.96);border:1px solid var(--purple);border-radius:14px;padding:16px 16px 14px;
+    box-shadow:0 0 26px rgba(185,103,255,.4);backdrop-filter:blur(6px)}
+  .cookiebar p{font-size:13.5px;line-height:1.55;color:#eaddfb;margin:0}
+  .cookiebar strong{color:#fff}
+  .cookie-btns{display:flex;gap:8px;margin-top:12px}
+  .cookie-btns button{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:999px;padding:8px 14px;cursor:pointer;transition:.2s}
+  #ckYes{color:#04101a;background:var(--cyan);border:1px solid var(--cyan);box-shadow:0 0 14px rgba(5,217,232,.5)}
+  #ckYes:hover{box-shadow:0 0 22px rgba(5,217,232,.8)}
+  #ckNo{color:#cbb9ec;background:transparent;border:1px solid rgba(255,255,255,.28)}
+  #ckNo:hover{color:#fff;border-color:#fff}
+
   @media(max-width:1000px){
     .case-shot{flex-basis:48%}
   }
@@ -196,6 +209,7 @@
     .sign{font-size:13px}
     .bob{left:14px;bottom:14px}
     .bob-av{width:52px;height:52px}
+    .cookiebar{right:14px;bottom:14px}
   }
   @media(prefers-reduced-motion:reduce){
     #boot{display:none}
@@ -240,7 +254,7 @@
   <div class="container">
     <div class="kicker">AI Web Studio · New York · Est. 2026</div>
     <h1>MARKETING.<br>AUTOMATION.<br>SOLVED.</h1>
-    <p class="tagline">We use AI to end your marketing and automation problems <br>and make running a small business a little easier. <em>That's the happy ending.</em></p>
+    <p class="tagline">We use AI to help small businesses market and automate, <br>so they can focus on adding value to society. <em>That's the happy ending.</em></p>
     <div class="hero-ctas">
       <a class="foot-cta" href="#contact">Start a project</a>
       <a class="nav-cta" href="#work">See the work</a>
@@ -395,6 +409,15 @@
 </div>
 <button class="bob-reopen" id="bobReopen" aria-label="Open BOB the guide">◆ Ask BOB</button>
 
+<!-- Cookie notice -->
+<div class="cookiebar" id="cookiebar" role="region" aria-label="Cookie notice" hidden>
+  <p><strong>One cookie, that's it.</strong> We count visits to see what's working. No ads, nothing sold, ever.</p>
+  <div class="cookie-btns">
+    <button type="button" id="ckYes">Sounds good</button>
+    <button type="button" id="ckNo">No thanks</button>
+  </div>
+</div>
+
 <script>
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -510,6 +533,35 @@
           else { btn.disabled = false; btn.textContent = 'Send it'; alert('Something glitched. Email keith.dumanski@gmail.com instead.'); }
         })
         .catch(function(){ btn.disabled = false; btn.textContent = 'Send it'; alert('Something glitched. Email keith.dumanski@gmail.com instead.'); });
+    });
+  })();
+
+  /* ---------- Cookie consent + visit counter ---------- */
+  (function(){
+    var HIT = 'https://hits.72.60.117.113.nip.io/hit';
+    var bar = document.getElementById('cookiebar');
+    function track(){
+      try{
+        var m = document.cookie.match(/(?:^|; )the_vid=([a-z0-9]+)/);
+        var id = m ? m[1] : Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        if (!m) document.cookie = 'the_vid=' + id + '; max-age=31536000; path=/; SameSite=Lax; Secure';
+        var payload = JSON.stringify({ site: location.hostname, path: location.pathname, ref: document.referrer || null, vid: id, w: window.innerWidth });
+        if (navigator.sendBeacon) navigator.sendBeacon(HIT, payload);
+        else fetch(HIT, { method: 'POST', body: payload, keepalive: true });
+      }catch(e){}
+    }
+    var choice = null;
+    try{ choice = localStorage.getItem('the_cookies'); }catch(e){}
+    if (choice === 'yes'){ track(); return; }
+    if (choice === 'no') return;
+    bar.hidden = false;
+    document.getElementById('ckYes').addEventListener('click', function(){
+      try{ localStorage.setItem('the_cookies','yes'); }catch(e){}
+      bar.hidden = true; track();
+    });
+    document.getElementById('ckNo').addEventListener('click', function(){
+      try{ localStorage.setItem('the_cookies','no'); }catch(e){}
+      bar.hidden = true;
     });
   })();
 
