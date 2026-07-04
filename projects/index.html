@@ -19,9 +19,12 @@
     font-family:'Inter',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
     line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;position:relative}
   a{color:inherit;text-decoration:none}
-  a:focus-visible,button:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:6px}
-  .card:focus-visible,.bld.proj:focus-visible{outline:3px solid #fff;outline-offset:4px}
+  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:6px}
+  .case:focus-within,.bld.proj:focus-visible{outline:3px solid #fff;outline-offset:4px}
   .container{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .skip{position:fixed;top:-100px;left:16px;z-index:10000;background:var(--cyan);color:#04101a;font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;padding:12px 18px;border-radius:10px;transition:top .2s}
+  .skip:focus{top:16px;outline:3px solid #fff;outline-offset:2px}
+  #main,#work,#contact{scroll-margin-top:80px}
 
   /* ===== Boot intro ===== */
   #boot{position:fixed;inset:0;z-index:9999;background:#05010f;display:flex;align-items:center;justify-content:center;
@@ -204,6 +207,8 @@
 </head>
 <body>
 
+<a class="skip" href="#main">Skip to content</a>
+
 <div id="boot" aria-hidden="true">
   <div class="term" id="term"></div>
 </div>
@@ -225,21 +230,13 @@
   </div>
 </header>
 
-<section class="hero">
+<main id="main">
+<section class="hero" aria-label="Introduction">
   <div class="container">
     <h1 class="mission">Let us help your small business automate integrated marketing and operations, so you can focus on creating value for society.</h1>
     <div class="hero-ctas">
       <a class="foot-cta" href="#contact">Start a project</a>
       <a class="nav-cta" href="#work">See the work</a>
-    </div>
-    <div class="chips">
-      <span class="chip live"><i></i>6 Live</span>
-      <span class="chip">Wellness</span>
-      <span class="chip">Healthcare</span>
-      <span class="chip">Construction</span>
-      <span class="chip">Luxury travel</span>
-      <span class="chip">Art</span>
-      <span class="chip">Events</span>
     </div>
     <div class="scrollcue" aria-hidden="true">▾ Explore the city ▾</div>
   </div>
@@ -260,7 +257,7 @@
           <span class="cat"><span class="dot"></span>Wellness · Analytics</span>
           <h3>St. Mark's Yoga</h3>
           <p>Custom booking analytics and integrated marketing targeting platform for a yoga studio.</p>
-          <a class="case-link" href="/yoga/">Visit the site <span aria-hidden="true">↗</span></a>
+          <a class="case-link" href="/yoga/" aria-label="Open the St. Mark's Yoga dashboard">Visit the site <span aria-hidden="true">↗</span></a>
         </div>
       </article>
 
@@ -273,7 +270,7 @@
           <span class="cat"><span class="dot"></span>Luxury travel</span>
           <h3>Fabian's Tours</h3>
           <p>Cinematic booking site for a luxury Egypt travel brand.</p>
-          <a class="case-link" href="https://kdumanski.github.io/fabians-tours/" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+          <a class="case-link" href="https://kdumanski.github.io/fabians-tours/" target="_blank" rel="noopener" aria-label="Visit the Fabian's Tours site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
         </div>
       </article>
 
@@ -286,7 +283,7 @@
           <span class="cat"><span class="dot"></span>Construction</span>
           <h3>Stark Level</h3>
           <p>Lead-generating brand site for a construction company.</p>
-          <a class="case-link" href="https://starklevelsolutions.com" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+          <a class="case-link" href="https://starklevelsolutions.com" target="_blank" rel="noopener" aria-label="Visit the Stark Level Solutions site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
         </div>
       </article>
 
@@ -299,7 +296,7 @@
           <span class="cat"><span class="dot"></span>Healthcare</span>
           <h3>Pride Dental Group</h3>
           <p>Modern patient acquisition site for a family dental practice.</p>
-          <a class="case-link" href="https://kdumanski.github.io/DentalGroup/" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+          <a class="case-link" href="https://kdumanski.github.io/DentalGroup/" target="_blank" rel="noopener" aria-label="Visit the Pride Dental Group site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
         </div>
       </article>
 
@@ -312,7 +309,7 @@
           <span class="cat"><span class="dot"></span>Art · Portfolio + CMS</span>
           <h3>Omar Chacón</h3>
           <p>Interactive art exhibition platform and e-portfolio for a working painter.</p>
-          <a class="case-link" href="https://omarchacon.72.60.117.113.nip.io" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+          <a class="case-link" href="https://omarchacon.72.60.117.113.nip.io" target="_blank" rel="noopener" aria-label="Visit the Omar Chacón site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
         </div>
       </article>
 
@@ -325,7 +322,7 @@
           <span class="cat"><span class="dot"></span>Events · Production</span>
           <h3>Stark Production Group</h3>
           <p>Integrated marketing analysis and distribution system for an NYC event production company.</p>
-          <a class="case-link" href="https://starkproductiongroup.nyc" target="_blank" rel="noopener">Visit the site <span aria-hidden="true">↗</span></a>
+          <a class="case-link" href="https://starkproductiongroup.nyc" target="_blank" rel="noopener" aria-label="Visit the Stark Production Group site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
         </div>
       </article>
 
@@ -357,6 +354,7 @@
     </div>
   </div>
 </section>
+</main>
 
 <footer>
   <div class="container">
