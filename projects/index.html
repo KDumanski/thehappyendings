@@ -160,28 +160,6 @@
   .foot-mini{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:38px;font-size:13px;color:#ab9cd6}
   .foot-mini a:hover{color:var(--cyan)}
 
-  /* ===== BOB the guide ===== */
-  .bob{position:fixed;left:22px;bottom:22px;z-index:70;display:flex;align-items:flex-end;gap:0;animation:float 4s ease-in-out infinite}
-  @keyframes float{50%{transform:translateY(-8px)}}
-  .bob-av{position:relative;width:60px;height:60px;flex:none;border-radius:16px;background:linear-gradient(160deg,#22104a,#0b0322);border:2px solid var(--cyan);box-shadow:0 0 20px rgba(5,217,232,.6)}
-  .bob-av .ant{position:absolute;top:-11px;left:50%;transform:translateX(-50%);width:2px;height:10px;background:var(--pink)}
-  .bob-av .ant::after{content:"";position:absolute;top:-6px;left:-3.5px;width:9px;height:9px;border-radius:50%;background:var(--pink);box-shadow:0 0 12px var(--pink)}
-  .bob-av .eye{position:absolute;top:21px;width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 9px var(--cyan);animation:eye 4s infinite}
-  .bob-av .eye.l{left:13px}.bob-av .eye.r{right:13px}
-  @keyframes eye{48%,52%{transform:scaleY(1)}50%{transform:scaleY(.1)}}
-  .bob-av .mouth{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:22px;height:5px;border-radius:0 0 7px 7px;background:var(--pink);opacity:.85}
-  .bob-bubble{position:absolute;left:0;bottom:74px;width:min(310px,74vw);background:rgba(10,3,26,.94);border:1px solid var(--cyan);border-radius:14px 14px 14px 4px;padding:14px 16px 15px;box-shadow:0 0 26px rgba(5,217,232,.35);backdrop-filter:blur(6px)}
-  .bob-bubble .who{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.05em;color:var(--cyan);text-shadow:0 0 10px rgba(5,217,232,.6);margin-bottom:6px}
-  .bob-bubble p{font-size:13.5px;line-height:1.55;color:#eaddfb;margin:0}
-  .bob-replies{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-  .bob-replies button{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#fff;background:rgba(185,103,255,.16);border:1px solid var(--purple);border-radius:999px;padding:7px 13px;cursor:pointer;transition:.2s}
-  .bob-replies button:hover{background:var(--purple);color:#120524}
-  .bob-close{position:absolute;top:7px;right:9px;width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:transparent;color:#cbb9ec;font-size:14px;line-height:1;cursor:pointer}
-  .bob-close:hover{color:#fff;border-color:#fff}
-  .bob.hidden{display:none}
-  .bob-reopen{position:fixed;left:22px;bottom:22px;z-index:70;display:none;align-items:center;gap:8px;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;color:#04101a;background:var(--cyan);border:none;border-radius:999px;padding:10px 15px;cursor:pointer;box-shadow:0 0 20px rgba(5,217,232,.6)}
-  .bob-reopen.show{display:inline-flex}
-
   /* ===== Cookie notice ===== */
   .cookiebar{position:fixed;right:22px;bottom:22px;z-index:80;width:min(340px,calc(100vw - 44px));
     background:rgba(10,3,26,.96);border:1px solid var(--purple);border-radius:14px;padding:16px 16px 14px;
@@ -207,14 +185,12 @@
     .tagline br{display:none}
     .skyline{max-height:150px}
     .sign{font-size:13px}
-    .bob{left:14px;bottom:14px}
-    .bob-av{width:52px;height:52px}
     .cookiebar{right:14px;bottom:14px}
   }
   @media(prefers-reduced-motion:reduce){
     #boot{display:none}
     .case{opacity:1;transform:none}
-    .grid,.stars,.chip.live i,.pill i,.scrollcue,.case-shot img,.bld.proj::after,.bob,.bob-av .eye{animation:none;transition:none}
+    .grid,.stars,.chip.live i,.pill i,.scrollcue,.case-shot img,.bld.proj::after{animation:none;transition:none}
     .foot-cta{transition:none}
   }
   @media(forced-colors:active){
@@ -394,21 +370,6 @@
   </div>
 </footer>
 
-<!-- BOB the Business Ops Bot -->
-<div class="bob" id="bob">
-  <div class="bob-bubble">
-    <button class="bob-close" id="bobClose" aria-label="Dismiss BOB">✕</button>
-    <div class="who">BOB · Business Ops Bot</div>
-    <p id="bobText">Hi, I'm BOB. This whole city is clickable, tap a glowing building to open a project, or browse them all below.</p>
-    <div class="bob-replies">
-      <button type="button" id="bobWork">See all work</button>
-      <button type="button" id="bobHire">Start a project</button>
-    </div>
-  </div>
-  <div class="bob-av" aria-hidden="true"><span class="ant"></span><span class="eye l"></span><span class="eye r"></span><span class="mouth"></span></div>
-</div>
-<button class="bob-reopen" id="bobReopen" aria-label="Open BOB the guide">◆ Ask BOB</button>
-
 <!-- Cookie notice -->
 <div class="cookiebar" id="cookiebar" role="region" aria-label="Cookie notice" hidden>
   <p><strong>One cookie, that's it.</strong> We count visits to see what's working. No ads, nothing sold, ever.</p>
@@ -481,30 +442,6 @@
       }
       wrap.appendChild(el);
     });
-  })();
-
-  /* ---------- BOB the guide ---------- */
-  (function(){
-    var bob = document.getElementById('bob'), reopen = document.getElementById('bobReopen'),
-        txt = document.getElementById('bobText');
-    var GREET = txt.textContent;
-    function say(t){ txt.textContent = t; }
-    document.querySelectorAll('[data-bob]').forEach(function(el){
-      el.addEventListener('mouseenter', function(){ say(el.getAttribute('data-bob')); });
-      el.addEventListener('focus', function(){ say(el.getAttribute('data-bob')); });
-      el.addEventListener('mouseleave', function(){ say(GREET); });
-      el.addEventListener('blur', function(){ say(GREET); });
-    });
-    document.getElementById('bobWork').addEventListener('click', function(){
-      document.getElementById('work').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'});
-      say("There they are, six live builds. Hover any one for the story.");
-    });
-    document.getElementById('bobHire').addEventListener('click', function(){
-      document.getElementById('contact').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'});
-      say("Fill that in and Keith gets it instantly. You'll hear back within a day.");
-    });
-    document.getElementById('bobClose').addEventListener('click', function(){ bob.classList.add('hidden'); reopen.classList.add('show'); reopen.focus(); });
-    reopen.addEventListener('click', function(){ bob.classList.remove('hidden'); reopen.classList.remove('show'); say(GREET); document.getElementById('bobClose').focus(); });
   })();
 
   /* ---------- Case reveal ---------- */
