@@ -96,8 +96,8 @@
   h1{font-family:'Orbitron',sans-serif;font-weight:900;letter-spacing:0.02em;line-height:0.94;font-size:clamp(2.6rem,8.5vw,5.4rem);
     background:linear-gradient(180deg,#fff 0%,#ffe6f6 38%,#ff8fd0 55%,#b967ff 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
     filter:drop-shadow(0 2px 0 rgba(255,46,151,.55)) drop-shadow(0 0 26px rgba(255,46,151,.65)) drop-shadow(0 0 60px rgba(185,103,255,.5))}
-  .tagline{font-size:clamp(1.02rem,2vw,1.2rem);color:#f4ecff;margin:24px auto 0;max-width:560px;text-shadow:0 1px 16px rgba(4,1,20,.95)}
-  .tagline em{font-style:normal;font-weight:700;color:#ff8fd0;text-shadow:0 0 14px rgba(255,46,151,.75),0 1px 16px rgba(4,1,20,.95)}
+  h1.mission{font-size:clamp(1.5rem,3.4vw,2.75rem);line-height:1.3;letter-spacing:0.01em;max-width:1020px;margin:clamp(20px,8vh,100px) auto 0;text-wrap:balance}
+  .hero-ctas{margin-top:clamp(32px,6vh,64px)}
   .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:28px}
   .chip{font-size:13px;font-weight:700;letter-spacing:0.04em;color:#fff;border:1px solid rgba(255,255,255,.32);border-radius:999px;padding:7px 14px;background:rgba(9,2,24,.62);backdrop-filter:blur(4px);text-transform:uppercase}
   .chip.live{color:#06121a;background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 18px rgba(5,217,232,.7);display:inline-flex;align-items:center;gap:8px}
@@ -182,7 +182,6 @@
     .case-body{padding:26px 22px 28px}
     .cwrap{grid-template-columns:1fr}
     .cform{grid-template-columns:1fr}
-    .tagline br{display:none}
     .skyline{max-height:150px}
     .sign{font-size:13px}
     .cookiebar{right:14px;bottom:14px}
@@ -228,9 +227,7 @@
 
 <section class="hero">
   <div class="container">
-    <div class="kicker">AI Web Studio · New York · Est. 2026</div>
-    <h1>MARKETING.<br>AUTOMATION.<br>SOLVED.</h1>
-    <p class="tagline">Let us help your small business automate integrated marketing and operations, <br>so you can focus on creating value for society.</p>
+    <h1 class="mission">Let us help your small business automate integrated marketing and operations, so you can focus on creating value for society.</h1>
     <div class="hero-ctas">
       <a class="foot-cta" href="#contact">Start a project</a>
       <a class="nav-cta" href="#work">See the work</a>
