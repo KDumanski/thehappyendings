@@ -24,11 +24,11 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
   body{background:radial-gradient(120% 90% at 50% 0%, #1a0740 0%, #0b021c 60%), var(--ink);
-    color:var(--text);font-family:var(--mono);line-height:1.6;min-height:100vh;
-    padding:clamp(16px,4vw,48px) 16px;display:flex;flex-direction:column;align-items:center;gap:30px}
+    color:var(--text);font-family:var(--mono);line-height:1.6;height:100vh;overflow:hidden;
+    padding:14px;display:flex;align-items:center;justify-content:center}
 
-  /* ---------- Console / CRT ---------- */
-  .console{position:relative;width:100%;max-width:960px;aspect-ratio:4/3;border-radius:18px;overflow:hidden;isolation:isolate;background:#08021a;
+  /* ---------- Console / CRT (sized to fit the viewport, no scroll) ---------- */
+  .console{position:relative;width:min(940px, calc(100vw - 28px), calc((100vh - 28px) * 4 / 3));aspect-ratio:4/3;border-radius:18px;overflow:hidden;isolation:isolate;background:#08021a;
     border:1px solid rgba(192,123,255,.35);
     box-shadow:0 0 0 8px #05010f,0 0 0 9px rgba(192,123,255,.25),0 30px 80px -20px rgba(0,0,0,.9),inset 0 0 120px -30px rgba(255,61,154,.25);outline:none}
   .console:focus-visible{box-shadow:0 0 0 8px #05010f,0 0 0 11px var(--cyan),0 30px 80px -20px rgba(0,0,0,.9)}
@@ -117,12 +117,13 @@
   @keyframes speed{0%,100%{opacity:.25;transform:scaleX(.7)}50%{opacity:.8;transform:scaleX(1.15)}}
 
   /* ---------- hover preview (ON TOP, no layout shift) ---------- */
-  #pop{position:absolute;z-index:37;left:0;top:0;pointer-events:none;opacity:0;width:180px;
-    background:rgba(9,2,26,.97);border:2px solid var(--e,#22e7f5);border-radius:11px;box-shadow:0 0 26px -4px var(--e,#22e7f5);padding:8px;text-align:left;transition:opacity .12s}
+  #pop{position:absolute;z-index:37;left:0;top:0;pointer-events:none;opacity:0;width:232px;
+    background:rgba(9,2,26,.97);border:2px solid var(--e,#22e7f5);border-radius:11px;box-shadow:0 0 26px -4px var(--e,#22e7f5);padding:9px;text-align:left;transition:opacity .12s}
   #pop.on{opacity:1}
-  #pop img{display:block;width:100%;height:100px;object-fit:cover;border-radius:7px;background:#1a0833}
+  #pop img{display:block;width:100%;height:112px;object-fit:cover;border-radius:7px;background:#1a0833}
   #pop .pn{display:block;margin-top:8px;font-size:13px;font-weight:700;color:#fff}
   #pop .pt{display:block;margin-top:2px;font-size:10px;letter-spacing:.16em;color:var(--e,#22e7f5)}
+  #pop .pd{display:block;margin-top:6px;font-size:11px;line-height:1.5;color:var(--muted)}
 
   /* ---------- scenes ---------- */
   .scene{position:absolute;inset:0;z-index:10;display:none}
@@ -262,15 +263,6 @@
   </section>
 </div>
 
-<!-- Director's notes -->
-<div class="notes">
-  <div>
-    <h1><b>The Happy Endings</b> — landing concept</h1>
-    <p class="sub">Mission on top, the neon city scrolling behind a guy running through it, and the two buttons pinned to the top corners. The six glowing buildings are your clients — hover one (the city pauses) and its screenshot pops up on top. <b>Portfolio</b> is its own page: a Street-Fighter-style world map where each client is a location — hover for the info, click to visit the live site.</p>
-  </div>
-  <div class="foot">PROTOTYPE · not linked from the live site · images load from /projects/shots/ · keyboard + reduced-motion supported</div>
-</div>
-
 <script>
 (function(){
   var con=document.getElementById('console'), pop=document.getElementById('pop');
@@ -339,9 +331,9 @@
   function showPop(el,p){
     var cr=con.getBoundingClientRect(), br=el.getBoundingClientRect();
     pop.style.setProperty('--e',p.hue);
-    pop.innerHTML='<img src="'+p.img+'" alt=""><span class="pn">'+p.name+'</span><span class="pt">'+p.type+'</span>';
+    pop.innerHTML='<img src="'+p.img+'" alt=""><span class="pn">'+p.name+'</span><span class="pt">'+p.type+'</span><span class="pd">'+p.desc+'</span>';
     var cx=br.left-cr.left+br.width/2;
-    var popW=180, popH=150;
+    var popW=232, popH=224;
     var left=Math.max(popW/2+6, Math.min(cx, cr.width-popW/2-6));
     var above=br.top-cr.top-10;
     if(above-popH < 6){ // not enough room above -> place below the rooftop
