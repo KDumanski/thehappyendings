@@ -45,6 +45,37 @@
 
   @keyframes blink{50%{opacity:0}}
 
+  /* ===== SF2-STYLE LOAD CINEMATIC ===== */
+  .loadscene{position:absolute;inset:0;z-index:20;overflow:hidden;background:#0b021c;display:flex;align-items:center;justify-content:center;transition:opacity .5s}
+  .loadscene.done{opacity:0;pointer-events:none}
+  .climb-wrap{position:absolute;inset:0;overflow:hidden}
+  .tower{position:absolute;left:0;right:0;top:0;height:320%;display:flex;flex-direction:column;align-items:center;
+    background:linear-gradient(180deg,#1b0b3e 0%,#12042e 55%,#0b021c 100%);animation:climb 2.6s linear forwards}
+  .tower::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background-image:radial-gradient(circle,rgba(34,231,245,.5) 1px,transparent 1.6px),radial-gradient(circle,rgba(255,61,154,.4) 1px,transparent 1.6px);
+    background-size:34px 30px,34px 30px;background-position:0 0,17px 15px}
+  @keyframes climb{0%{transform:translateY(-68.75%)}100%{transform:translateY(0)}}
+  .roof{position:relative;height:31.25%;width:100%}
+  .roof .ledge{position:absolute;left:8%;right:8%;bottom:20%;height:3px;background:var(--cyan);box-shadow:0 0 14px var(--cyan);opacity:.55}
+  .fw{height:18%;display:flex;align-items:center;justify-content:center;font-weight:900;letter-spacing:.04em;text-transform:uppercase;
+    font-size:clamp(2.4rem,10vw,6rem);color:#fff;text-shadow:3px 0 var(--pink),-3px 0 var(--cyan),0 0 40px rgba(255,61,154,.5)}
+  .base{height:14.75%}
+  .boxer{position:absolute;bottom:20%;width:58px;height:94px}
+  .boxer .head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50% 50% 46% 46%;background:#0a0322;box-shadow:0 0 0 2px currentColor,0 0 12px -1px currentColor}
+  .boxer .body{position:absolute;top:19px;left:50%;transform:translateX(-50%);width:40px;height:60px;border-radius:16px 16px 8px 8px;background:#0a0322;box-shadow:0 0 0 2px currentColor,0 0 16px -3px currentColor}
+  .boxer .glove{position:absolute;top:33px;right:-3px;width:18px;height:18px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor;animation:jab .8s 2.35s ease-out both}
+  .bl{left:33%;color:var(--cyan)}
+  .br{right:33%;color:var(--pink);transform:scaleX(-1)}
+  @keyframes jab{0%,42%{transform:translateX(0)}64%{transform:translateX(96px)}76%{transform:translateX(96px)}100%{transform:translateX(0)}}
+  .impact{position:absolute;inset:0;z-index:55;pointer-events:none;opacity:0;
+    background:radial-gradient(42% 34% at 50% 42%,rgba(255,255,255,.98),rgba(255,61,154,.35) 40%,transparent 70%);animation:iflash .6s 2.6s ease-out both}
+  @keyframes iflash{0%{opacity:0}10%{opacity:1}46%{opacity:.18}100%{opacity:0}}
+  .load-logo{position:absolute;inset:0;z-index:58;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.04em;text-align:center;
+    font-weight:900;text-transform:uppercase;line-height:.98;font-size:clamp(2rem,8.5vw,5.2rem);color:#fff;opacity:0;
+    text-shadow:4px 0 var(--pink),-4px 0 var(--cyan),0 6px 0 #5b1c8a,0 0 40px rgba(255,61,154,.6);animation:logoSlam .6s 2.85s cubic-bezier(.2,.9,.25,1) forwards}
+  @keyframes logoSlam{0%{opacity:0;transform:scale(1.6);filter:blur(6px)}45%{opacity:1;filter:blur(0)}100%{opacity:1;transform:scale(1)}}
+  .skip-note{position:absolute;bottom:5%;left:0;right:0;z-index:59;text-align:center;font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;animation:blink 1.05s steps(1) infinite}
+
   /* ===== MENU: text left, buttons right ===== */
   .spread{position:relative;z-index:5;width:100%;max-width:900px;display:grid;grid-template-columns:1.35fr 1fr;align-items:center;text-align:left}
   .spread::before{content:"";position:absolute;top:2%;bottom:2%;left:57.4%;width:2px;background:linear-gradient(180deg,transparent,rgba(192,123,255,.55),transparent)}
@@ -74,15 +105,33 @@
   .ftile .tag{position:absolute;left:0;right:0;bottom:0;z-index:2;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;background:linear-gradient(180deg,transparent,rgba(6,1,18,.96));padding:16px 6px 6px;text-align:center}
   .ftile[aria-selected="true"]{border-color:var(--c);box-shadow:0 0 22px -2px var(--c),0 0 52px -12px var(--c);z-index:3}
   .ftile[aria-selected="true"] .face{filter:saturate(1.15) brightness(1);transform:scale(1.07)}
-  .roster.pop .ftile{animation:pop .42s cubic-bezier(.2,.7,.2,1) backwards}
-  .roster.pop .ftile:nth-child(1){animation-delay:.02s}
-  .roster.pop .ftile:nth-child(2){animation-delay:.07s}
-  .roster.pop .ftile:nth-child(3){animation-delay:.12s}
-  .roster.pop .ftile:nth-child(4){animation-delay:.17s}
-  .roster.pop .ftile:nth-child(5){animation-delay:.22s}
-  .roster.pop .ftile:nth-child(6){animation-delay:.27s}
-  @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
-  .nameplate{margin-top:18px;min-height:5.4em;max-width:54ch;text-align:center}
+  /* ===== Street-Fighter character-select ENTRANCE ===== */
+  /* white impact flash blooming from center */
+  .cs-flash{position:absolute;inset:0;z-index:30;pointer-events:none;opacity:0;
+    background:radial-gradient(58% 48% at 50% 44%,rgba(255,255,255,.95),rgba(255,61,154,.28) 42%,transparent 72%)}
+  #s-stages.enter .cs-flash{animation:csFlash .5s ease-out}
+  @keyframes csFlash{0%{opacity:.9}28%{opacity:.18}100%{opacity:0}}
+  /* whole scene camera-shakes on entrance */
+  #s-stages.enter{animation:csShake .42s .06s ease-out}
+  @keyframes csShake{0%,100%{transform:translate(0,0)}12%{transform:translate(-6px,2px)}30%{transform:translate(6px,-2px)}48%{transform:translate(-4px,1px)}66%{transform:translate(3px,-1px)}82%{transform:translate(-2px,0)}}
+  /* title slams in wide→tight with a blur snap */
+  #s-stages.enter .cs-head{animation:csHeadSlam .55s cubic-bezier(.2,.85,.25,1) backwards}
+  @keyframes csHeadSlam{0%{opacity:0;transform:scale(1.55);letter-spacing:.95em;filter:blur(7px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:scale(1);letter-spacing:.3em}}
+  /* nameplate drops in under the title */
+  #s-stages.enter .nameplate{animation:npIn .5s .26s cubic-bezier(.2,.7,.2,1) backwards}
+  @keyframes npIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+  /* portraits fly in from alternating sides, staggered — the SF roster reveal */
+  #s-stages.enter .ftile{animation:tileSlam .5s cubic-bezier(.2,.85,.25,1) backwards}
+  #s-stages.enter .ftile:nth-child(odd){--fx:-82px}
+  #s-stages.enter .ftile:nth-child(even){--fx:82px}
+  #s-stages.enter .ftile:nth-child(1){animation-delay:.14s}
+  #s-stages.enter .ftile:nth-child(2){animation-delay:.20s}
+  #s-stages.enter .ftile:nth-child(3){animation-delay:.26s}
+  #s-stages.enter .ftile:nth-child(4){animation-delay:.32s}
+  #s-stages.enter .ftile:nth-child(5){animation-delay:.38s}
+  #s-stages.enter .ftile:nth-child(6){animation-delay:.44s}
+  @keyframes tileSlam{0%{opacity:0;transform:translateX(var(--fx,60px)) scale(.82)}60%{opacity:1}100%{opacity:1;transform:none}}
+  .nameplate{margin:2px 0 16px;min-height:4.8em;max-width:54ch;text-align:center}
   .np-name{font-size:clamp(1.1rem,2.6vw,1.65rem);font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.02em;text-shadow:2px 0 var(--pink),-2px 0 var(--cyan)}
   .np-type{font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin-top:6px}
   .np-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-top:9px}
@@ -110,13 +159,15 @@
     .menu-col{padding:0}
   }
   @media(prefers-reduced-motion:reduce){
-    .console,.powerflash,.floor,.intro,.mi,.roster.pop .ftile,.panel.slam{animation:none}
-    .powerflash{display:none}
+    .console,.powerflash,.floor,.intro,.mi,.panel.slam,
+    .tower,.boxer .glove,.impact,.load-logo,.skip-note,
+    #s-stages.enter,#s-stages.enter .cs-flash,#s-stages.enter .cs-head,#s-stages.enter .nameplate,#s-stages.enter .ftile{animation:none}
+    .powerflash,.cs-flash{display:none}
     .intro,.mi{opacity:1;transform:none}
     .btn,.stage,.mi,.ftile .face{transition:none}
   }
   @media(forced-colors:active){
-    .console::before,.console::after,.floor,.sun,.powerflash{display:none}
+    .console::before,.console::after,.floor,.sun,.powerflash,.loadscene{display:none}
     body{background:Canvas;color:CanvasText}
     .mi,.ftile{border-color:CanvasText}
   }
@@ -129,8 +180,28 @@
   <div class="floor" aria-hidden="true"></div>
   <div class="sun" aria-hidden="true"></div>
 
+  <!-- LOAD CINEMATIC (camera cranes up the building spelling THE HAPPY ENDINGS, rooftop punch, logo slam) -->
+  <div class="loadscene" id="loadscene" role="img" aria-label="The Happy Endings intro">
+    <div class="climb-wrap">
+      <div class="tower" id="tower">
+        <div class="roof">
+          <div class="ledge"></div>
+          <div class="boxer bl"><span class="head"></span><span class="body"></span><span class="glove"></span></div>
+          <div class="boxer br"><span class="head"></span><span class="body"></span><span class="glove"></span></div>
+        </div>
+        <div class="fw">Endings</div>
+        <div class="fw">Happy</div>
+        <div class="fw">The</div>
+        <div class="base"></div>
+      </div>
+    </div>
+    <div class="impact" aria-hidden="true"></div>
+    <div class="load-logo"><span>The Happy</span><span>Endings</span></div>
+    <div class="skip-note">click or press any key to skip</div>
+  </div>
+
   <!-- MENU -->
-  <section class="scene on" id="s-menu" aria-label="Main menu">
+  <section class="scene" id="s-menu" aria-label="Main menu">
     <div class="spread">
       <div class="intro">
         <p class="mission-text">We help small businesses automate integrated marketing and operations, so you can focus on creating value for society.</p>
@@ -147,9 +218,10 @@
   <!-- CHARACTER SELECT -->
   <section class="scene" id="s-stages" aria-label="Select a project">
     <button class="back" data-back="menu">◂ Back</button>
+    <div class="cs-flash" aria-hidden="true"></div>
     <div class="cs-head">▶ Select Your Project</div>
-    <div class="roster" id="grid" role="listbox" aria-label="Projects" tabindex="-1"></div>
     <div class="nameplate" id="nameplate" aria-live="polite"></div>
+    <div class="roster" id="grid" role="listbox" aria-label="Projects" tabindex="-1"></div>
     <div class="hint"><b>◀ ▶ ▲ ▼</b> MOVE &nbsp;·&nbsp; <b>ENTER</b> SELECT &nbsp;·&nbsp; <b>ESC</b> BACK</div>
   </section>
 
@@ -186,7 +258,7 @@
     for(var k in scenes) scenes[k].classList.toggle('on', k===name);
     cur=name;
     if(name==='menu'){ selMenu=0; paintMenu(); }
-    if(name==='stages'){ selStage=0; paintStages(); playPop(); }
+    if(name==='stages'){ selStage=0; paintStages(); playEnter(); }
   }
 
   var actx=null;
@@ -231,7 +303,7 @@
     var s=STAGES[selStage];
     nameplate.innerHTML='<div class="np-name">'+s.nm+'</div><div class="np-type" style="color:'+s.c+'">'+s.ty+'</div><div class="np-desc">'+s.d+'</div>';
   }
-  function playPop(){ grid.classList.remove('pop'); void grid.offsetWidth; grid.classList.add('pop'); }
+  function playEnter(){ var sc=scenes.stages; sc.classList.remove('enter'); void sc.offsetWidth; sc.classList.add('enter'); blip(180,.09); setTimeout(function(){ blip(520,.08); },140); }
   function openStage(){
     blip(760,.14); var s=STAGES[selStage], p=document.getElementById('detailPanel');
     p.innerHTML='<div class="ty">'+s.ty+'</div><h2>'+s.nm+'</h2><p>'+s.d+'</p>'+
@@ -261,8 +333,24 @@
     if(cur==='detail'){ if(k==='Escape'){ e.preventDefault(); show('stages'); } return; }
     if(cur==='contact'){ if(k==='Escape'){ e.preventDefault(); show('menu'); } return; }
   });
-  con.addEventListener('click',function(){ con.focus(); });
-  paintMenu(); paintStages(); con.focus();
+  con.addEventListener('click',function(){ if(loadDone) con.focus(); });
+  paintMenu(); paintStages();
+
+  /* ---- Load cinematic handoff ---- */
+  var loadscene=document.getElementById('loadscene'), loadDone=false, loadTimer=null;
+  function endLoad(){
+    if(loadDone) return; loadDone=true; clearTimeout(loadTimer);
+    loadscene.classList.add('done');
+    setTimeout(function(){ loadscene.style.display='none'; }, 520);
+    show('menu'); con.focus();
+  }
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+    loadscene.style.display='none'; show('menu'); con.focus();
+  } else {
+    loadTimer=setTimeout(endLoad, 4300);
+    loadscene.addEventListener('click', endLoad);
+    window.addEventListener('keydown', function(){ if(!loadDone) endLoad(); });
+  }
 })();
 </script>
 </body>
