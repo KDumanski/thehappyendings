@@ -148,7 +148,7 @@
 
   /* ---------- PORTFOLIO — world map (Street-Fighter stage select) ---------- */
   .pfhead{position:absolute;top:5%;left:0;right:0;text-align:center;font-size:clamp(13px,2.3vw,17px);letter-spacing:.3em;color:var(--gold);text-transform:uppercase;text-shadow:0 0 12px rgba(255,211,107,.5)}
-  .worldmap{position:absolute;inset:14% 6% 8%;border:2px solid rgba(34,231,245,.32);border-radius:14px;overflow:hidden;
+  .worldmap{position:absolute;inset:12% 5% 25% 5%;border:2px solid rgba(34,231,245,.32);border-radius:14px;overflow:hidden;
     background:radial-gradient(120% 130% at 50% 26%, #12063a, #08021c 70%);box-shadow:inset 0 0 80px -24px rgba(34,231,245,.6)}
   .worldmap::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
     background-image:linear-gradient(90deg,rgba(34,231,245,.10) 1px,transparent 1px),linear-gradient(180deg,rgba(255,46,151,.09) 1px,transparent 1px);background-size:6.66% 11.1%;opacity:.7}
@@ -159,9 +159,17 @@
   .loc{position:absolute;transform:translate(-50%,-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;background:none;border:none;font-family:inherit;padding:4px}
   .loc .dot{width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c),0 0 0 4px rgba(4,1,15,.55);animation:beaconPulse 1.9s ease-in-out infinite;transition:transform .12s}
   .loc .plab{font-size:10px;letter-spacing:.03em;color:#fff;background:rgba(9,2,26,.92);border:1px solid var(--c);border-radius:6px;padding:2px 7px;white-space:nowrap;transition:.12s}
-  .loc:hover .dot,.loc:focus-visible .dot{transform:scale(1.4)}
-  .loc:hover .plab,.loc:focus-visible .plab{box-shadow:0 0 14px -3px var(--c)}
+  .loc:hover .dot,.loc:focus-visible .dot,.loc[aria-selected="true"] .dot{transform:scale(1.5)}
+  .loc:hover .plab,.loc:focus-visible .plab,.loc[aria-selected="true"] .plab{box-shadow:0 0 14px -3px var(--c)}
   .loc:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:8px}
+  /* character-select roster strip along the bottom (SF-style) */
+  .roster{position:absolute;left:0;right:0;bottom:4%;height:18%;z-index:11;display:flex;gap:10px;justify-content:center;align-items:stretch;padding:0 5%}
+  .char{position:relative;flex:1 1 0;max-width:150px;min-width:0;cursor:pointer;background:#0a0320;border:2px solid var(--c);border-radius:9px;overflow:hidden;font-family:inherit;padding:0;transition:transform .12s,box-shadow .12s}
+  .char img{display:block;width:100%;height:100%;object-fit:cover;opacity:.68;transition:opacity .12s}
+  .char .cn{position:absolute;left:0;right:0;bottom:0;font-size:10px;letter-spacing:.02em;color:#fff;background:linear-gradient(180deg,transparent,rgba(4,1,15,.94));padding:12px 4px 5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .char:hover,.char:focus-visible,.char[aria-selected="true"]{transform:translateY(-5px);box-shadow:0 0 20px -2px var(--c),0 0 46px -14px var(--c)}
+  .char:hover img,.char:focus-visible img,.char[aria-selected="true"] img{opacity:1}
+  .char:focus-visible{outline:3px solid #fff;outline-offset:2px}
 
   /* ---------- START A PROJECT ---------- */
   .panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(560px,86%);text-align:left}
@@ -182,8 +190,10 @@
   .foot{font-size:12px;color:var(--dim);letter-spacing:.05em;text-align:center}
 
   @media(max-width:600px){
-    .console{aspect-ratio:3/4}
-    .worldmap{inset:13% 4% 6%}
+    .console{aspect-ratio:3/4;width:min(94vw, calc((100vh - 28px) * 3 / 4))}
+    .worldmap{inset:10% 3% 30% 3%}
+    .roster{height:24%;gap:6px;padding:0 3%}
+    .char .cn{font-size:9px}
     .cta{padding:0 4%}
     .sun{width:72%}
   }
@@ -239,8 +249,9 @@
         </g>
         <polyline class="route" points="18,18.7 24,28.6 52,24.2 48,13.2 70,22 84,16.5" fill="none" stroke="rgba(255,211,107,.6)" stroke-width="0.4" stroke-dasharray="1.6 1.4"/>
       </svg>
-      <span class="mtag" aria-hidden="true">▸ Hover a location for info · click to visit</span>
+      <span class="mtag" aria-hidden="true">▸ Pick a project below · hover for info · click to visit</span>
     </div>
+    <div class="roster" id="roster" role="listbox" aria-label="Projects"></div>
   </section>
 
   <!-- START A PROJECT -->
@@ -346,20 +357,43 @@
   }
   function hidePop(){ pop.classList.remove('on'); }
 
-  /* ----- portfolio world map (hover = info popup on top, click = visit) ----- */
+  /* ----- portfolio: world map (top) + character-select roster (bottom), linked ----- */
   function openSite(href){ window.open(href,'_blank','noopener'); }
-  var worldmap=document.getElementById('worldmap');
-  PROJ.forEach(function(p){
+  var worldmap=document.getElementById('worldmap'), roster=document.getElementById('roster'), locs=[], chars=[];
+  function select(i){
+    PROJ.forEach(function(_,idx){
+      locs[idx].setAttribute('aria-selected', idx===i?'true':'false');
+      chars[idx].setAttribute('aria-selected', idx===i?'true':'false');
+    });
+    showPop(locs[i], PROJ[i]);   // info appears at the picked location on the map
+  }
+  function deselect(){
+    locs.forEach(function(el){ el.setAttribute('aria-selected','false'); });
+    chars.forEach(function(el){ el.setAttribute('aria-selected','false'); });
+    hidePop();
+  }
+  PROJ.forEach(function(p,i){
+    // map location marker
     var loc=document.createElement('button'); loc.className='loc'; loc.style.setProperty('--c',p.hue);
     loc.style.left=p.world[0]+'%'; loc.style.top=p.world[1]+'%';
-    loc.setAttribute('aria-label',p.name+' — '+p.type+', preview and visit');
+    loc.setAttribute('aria-label',p.name+' — '+p.type);
     loc.innerHTML='<span class="dot" aria-hidden="true"></span><span class="plab">'+p.name+'</span>';
-    loc.addEventListener('mouseenter',function(){ showPop(loc,p); });
-    loc.addEventListener('mouseleave',hidePop);
-    loc.addEventListener('focus',function(){ showPop(loc,p); });
-    loc.addEventListener('blur',hidePop);
+    loc.addEventListener('mouseenter',function(){ select(i); });
+    loc.addEventListener('mouseleave',deselect);
+    loc.addEventListener('focus',function(){ select(i); });
+    loc.addEventListener('blur',deselect);
     loc.addEventListener('click',function(){ openSite(p.href); });
-    worldmap.appendChild(loc);
+    worldmap.appendChild(loc); locs.push(loc);
+    // roster character tile
+    var ch=document.createElement('button'); ch.className='char'; ch.setAttribute('role','option'); ch.style.setProperty('--c',p.hue);
+    ch.setAttribute('aria-label',p.name+' — '+p.type+', preview and visit');
+    ch.innerHTML='<img src="'+p.img+'" alt=""><span class="cn">'+p.name+'</span>';
+    ch.addEventListener('mouseenter',function(){ select(i); });
+    ch.addEventListener('mouseleave',deselect);
+    ch.addEventListener('focus',function(){ select(i); });
+    ch.addEventListener('blur',deselect);
+    ch.addEventListener('click',function(){ openSite(p.href); });
+    roster.appendChild(ch); chars.push(ch);
   });
 
   /* ----- navigation ----- */
