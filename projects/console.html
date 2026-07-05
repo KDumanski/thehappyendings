@@ -50,10 +50,14 @@
     background:repeating-linear-gradient(180deg,transparent 0 7px,#08021a 7px 9px,transparent 9px 16px,#08021a 16px 19px,transparent 19px 30px,#08021a 30px 34px,transparent 34px 50px,#08021a 50px 56px);
     -webkit-mask:linear-gradient(180deg,transparent,#000);mask:linear-gradient(180deg,transparent,#000)}
 
-  /* skyline (static, two depth layers) */
-  .city{position:absolute;left:0;width:100%;display:flex;align-items:flex-end;justify-content:space-around;padding:0 10px}
-  .city.far{bottom:30%;height:22%;z-index:3;opacity:.5;filter:blur(.7px);gap:5px}
-  .city.near{bottom:30%;height:35%;z-index:4;gap:7px}
+  /* skyline (scrolling, two depth layers; pauses when you hover a project) */
+  .city{position:absolute;left:0;width:200%;display:flex;align-items:flex-end}
+  @keyframes citymove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .city.far{bottom:30%;height:22%;z-index:3;opacity:.5;filter:blur(.7px);animation:citymove 60s linear infinite}
+  .city.near{bottom:30%;height:35%;z-index:4;animation:citymove 38s linear infinite}
+  .cityset{flex:0 0 50%;height:100%;display:flex;align-items:flex-end;justify-content:space-around;padding:0 8px}
+  .city.far .cityset{gap:5px}.city.near .cityset{gap:7px}
+  .world.pausecity .city{animation-play-state:paused}
   .bld{flex:0 0 auto;position:relative;border-radius:2px 2px 0 0;
     background:linear-gradient(180deg,#271247 0%,#0c0421 66%,#06010f 100%);
     border-top:2px solid var(--e);box-shadow:0 0 14px -3px var(--e),inset 0 1px 0 rgba(255,255,255,.05)}
@@ -127,10 +131,12 @@
   #s-home{background:none;pointer-events:none}
   #s-portfolio,#s-start{background:radial-gradient(120% 100% at 50% 32%,rgba(11,2,28,.84),rgba(6,1,20,.95))}
 
-  .mission{position:absolute;top:6%;left:50%;transform:translateX(-50%);width:min(780px,90%);z-index:11;pointer-events:auto;
+  .mission{position:absolute;top:15%;left:50%;transform:translateX(-50%);width:min(740px,80%);z-index:11;pointer-events:auto;
     text-align:center;font-size:clamp(14px,2.1vw,20px);line-height:1.65;color:#fff;font-weight:500;
     text-shadow:0 2px 14px rgba(4,1,20,.98),0 0 34px rgba(4,1,20,.85)}
-  .cta{position:absolute;bottom:8.5%;left:50%;transform:translateX(-50%);z-index:11;pointer-events:auto;display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+  /* two CTAs pinned to the top corners, flanking the mission */
+  .cta{position:absolute;top:5%;left:0;right:0;padding:0 5.5%;z-index:12;pointer-events:none;display:flex;justify-content:space-between;align-items:flex-start}
+  .cta .btn{pointer-events:auto}
 
   .btn{font-family:inherit;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;cursor:pointer;border-radius:999px;padding:13px 26px;border:2px solid var(--cyan);color:#04101a;background:var(--cyan);text-decoration:none;box-shadow:0 0 20px rgba(34,231,245,.5);transition:transform .15s,box-shadow .15s}
   .btn:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(34,231,245,.85)}
@@ -139,23 +145,22 @@
   .back{position:absolute;top:5%;left:6%;z-index:12;font-size:12px;letter-spacing:.14em;color:var(--muted);background:none;border:none;font-family:inherit;cursor:pointer;text-transform:uppercase}
   .back:hover{color:#fff}
 
-  /* ---------- PORTFOLIO (own page: map beside the images) ---------- */
+  /* ---------- PORTFOLIO — world map (Street-Fighter stage select) ---------- */
   .pfhead{position:absolute;top:5%;left:0;right:0;text-align:center;font-size:clamp(13px,2.3vw,17px);letter-spacing:.3em;color:var(--gold);text-transform:uppercase;text-shadow:0 0 12px rgba(255,211,107,.5)}
-  .pfwrap{position:absolute;inset:12.5% 6% 7%;display:grid;grid-template-columns:38.2% 1fr;gap:20px}
-  .pfmap{position:relative;border:2px solid rgba(192,123,255,.4);border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#0e0326,#08021c);box-shadow:inset 0 0 60px -20px rgba(192,123,255,.6)}
-  .pfmap .mgrid{position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(34,231,245,.26) 1px,transparent 1px),linear-gradient(180deg,rgba(255,46,151,.26) 1px,transparent 1px);background-size:32px 32px;opacity:.7;-webkit-mask:radial-gradient(120% 120% at 50% 40%,#000 55%,transparent);mask:radial-gradient(120% 120% at 50% 40%,#000 55%,transparent)}
-  .pfmap .mtag{position:absolute;top:10px;left:12px;font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
-  .pin{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;background:none;border:none;font-family:inherit;padding:4px}
-  .pin .dot{width:15px;height:15px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c),0 0 0 4px rgba(4,1,15,.5);transition:transform .12s}
-  .pin .plab{font-size:10px;letter-spacing:.03em;color:#fff;background:rgba(9,2,26,.9);border:1px solid var(--c);border-radius:6px;padding:2px 7px;white-space:nowrap;opacity:.85;transition:.12s}
-  .pin[aria-selected="true"] .dot{transform:scale(1.4)}
-  .pin[aria-selected="true"] .plab{opacity:1;box-shadow:0 0 14px -3px var(--c)}
-  .pfview{position:relative;border:2px solid rgba(34,231,245,.32);border-radius:14px;overflow:hidden;background:#0a0320;display:flex;flex-direction:column}
-  .pfview img{width:100%;flex:1;min-height:0;object-fit:cover;background:#1a0833;display:block}
-  .pfinfo{padding:15px 18px 17px;background:linear-gradient(180deg,rgba(9,2,26,.35),rgba(9,2,26,.96))}
-  .pfinfo .pt{font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
-  .pfinfo h3{font-size:clamp(1.05rem,2.4vw,1.45rem);color:#fff;margin:5px 0 7px;text-transform:uppercase;letter-spacing:.03em}
-  .pfinfo p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:13px}
+  .worldmap{position:absolute;inset:14% 6% 8%;border:2px solid rgba(34,231,245,.32);border-radius:14px;overflow:hidden;
+    background:radial-gradient(120% 130% at 50% 26%, #12063a, #08021c 70%);box-shadow:inset 0 0 80px -24px rgba(34,231,245,.6)}
+  .worldmap::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background-image:linear-gradient(90deg,rgba(34,231,245,.10) 1px,transparent 1px),linear-gradient(180deg,rgba(255,46,151,.09) 1px,transparent 1px);background-size:6.66% 11.1%;opacity:.7}
+  .wsvg{position:absolute;inset:0;width:100%;height:100%;z-index:2;filter:drop-shadow(0 0 6px rgba(34,231,245,.4))}
+  .wsvg .route{animation:dash 3s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-6}}
+  .worldmap .mtag{position:absolute;top:10px;left:12px;z-index:4;font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .loc{position:absolute;transform:translate(-50%,-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;background:none;border:none;font-family:inherit;padding:4px}
+  .loc .dot{width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c),0 0 0 4px rgba(4,1,15,.55);animation:beaconPulse 1.9s ease-in-out infinite;transition:transform .12s}
+  .loc .plab{font-size:10px;letter-spacing:.03em;color:#fff;background:rgba(9,2,26,.92);border:1px solid var(--c);border-radius:6px;padding:2px 7px;white-space:nowrap;transition:.12s}
+  .loc:hover .dot,.loc:focus-visible .dot{transform:scale(1.4)}
+  .loc:hover .plab,.loc:focus-visible .plab{box-shadow:0 0 14px -3px var(--c)}
+  .loc:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:8px}
 
   /* ---------- START A PROJECT ---------- */
   .panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(560px,86%);text-align:left}
@@ -177,11 +182,12 @@
 
   @media(max-width:600px){
     .console{aspect-ratio:3/4}
-    .pfwrap{grid-template-columns:1fr;grid-template-rows:34% 1fr;inset:12% 5% 6%}
+    .worldmap{inset:13% 4% 6%}
+    .cta{padding:0 4%}
     .sun{width:72%}
   }
   @media(prefers-reduced-motion:reduce){
-    .stars,.grid,.blink,.beacon,.pyr i,.pbeacon,.runner,.rl-front,.rl-back,.ra-front,.ra-back,.speed{animation:none}
+    .city,.stars,.grid,.blink,.beacon,.pyr i,.pbeacon,.runner,.rl-front,.rl-back,.ra-front,.ra-back,.speed{animation:none}
     .btn,.pin .dot,.pin .plab{transition:none}
     .runner .run{transform:rotate(7deg) scale(1.2)}
     .rl-front{transform:rotate(34deg)}.rl-back{transform:rotate(-34deg)}
@@ -210,18 +216,29 @@
   <section class="scene on" id="s-home" aria-label="Home">
     <p class="mission">We help small businesses automate integrated marketing and operations, so you can focus on creating value for society.</p>
     <div class="cta">
-      <button class="btn" data-go="start">Start a Project</button>
       <button class="btn ghost" data-go="portfolio">Portfolio</button>
+      <button class="btn" data-go="start">Start a Project</button>
     </div>
   </section>
 
-  <!-- PORTFOLIO (own page: map + images) -->
-  <section class="scene" id="s-portfolio" aria-label="Portfolio">
+  <!-- PORTFOLIO — world map (Street-Fighter-style stage select; hover a location for info) -->
+  <section class="scene" id="s-portfolio" aria-label="Portfolio — world map">
     <button class="back" data-go="home">◂ Back</button>
-    <div class="pfhead">Portfolio</div>
-    <div class="pfwrap">
-      <div class="pfmap" id="map"><div class="mgrid" aria-hidden="true"></div><span class="mtag" aria-hidden="true">▸ The Grid — pick a project</span></div>
-      <div class="pfview" id="pfview" aria-live="polite"></div>
+    <div class="pfhead">Select a Project</div>
+    <div class="worldmap" id="worldmap">
+      <svg class="wsvg" viewBox="0 0 100 55" preserveAspectRatio="none" aria-hidden="true">
+        <defs><pattern id="dots" width="1.7" height="1.7" patternUnits="userSpaceOnUse"><circle cx="0.6" cy="0.6" r="0.46" fill="rgba(122,249,255,.55)"/></pattern></defs>
+        <g fill="url(#dots)" stroke="rgba(122,249,255,.4)" stroke-width="0.25">
+          <path d="M5 11 L27 8 L31 16 L27 24 L17 28 L9 21 Z"/>
+          <path d="M21 30 L30 30 L28 47 L22 44 Z"/>
+          <path d="M42 9 L57 8 L55 17 L43 17 Z"/>
+          <path d="M45 20 L59 20 L55 43 L49 43 L45 30 Z"/>
+          <path d="M57 7 L91 6 L88 25 L64 25 L57 16 Z"/>
+          <path d="M79 38 L93 38 L90 49 L79 47 Z"/>
+        </g>
+        <polyline class="route" points="18,18.7 24,28.6 52,24.2 48,13.2 70,22 84,16.5" fill="none" stroke="rgba(255,211,107,.6)" stroke-width="0.4" stroke-dasharray="1.6 1.4"/>
+      </svg>
+      <span class="mtag" aria-hidden="true">▸ Hover a location for info · click to visit</span>
     </div>
   </section>
 
@@ -249,7 +266,7 @@
 <div class="notes">
   <div>
     <h1><b>The Happy Endings</b> — landing concept</h1>
-    <p class="sub">Mission on top, the static neon city as the hero with a guy running through it, and two buttons side by side. The six glowing buildings are your clients — hover one and its screenshot pops up on top (nothing shifts). <b>Portfolio</b> is its own page: a neon map on the left, the project screenshots on the right.</p>
+    <p class="sub">Mission on top, the neon city scrolling behind a guy running through it, and the two buttons pinned to the top corners. The six glowing buildings are your clients — hover one (the city pauses) and its screenshot pops up on top. <b>Portfolio</b> is its own page: a Street-Fighter-style world map where each client is a location — hover for the info, click to visit the live site.</p>
   </div>
   <div class="foot">PROTOTYPE · not linked from the live site · images load from /projects/shots/ · keyboard + reduced-motion supported</div>
 </div>
@@ -259,16 +276,16 @@
   var con=document.getElementById('console'), pop=document.getElementById('pop');
   var scenes={home:document.getElementById('s-home'),portfolio:document.getElementById('s-portfolio'),start:document.getElementById('s-start')};
   var cur='home';
-  function show(name){ for(var k in scenes) scenes[k].classList.toggle('on',k===name); cur=name; hidePop(); if(name==='portfolio') selectProject(selProj); }
+  function show(name){ for(var k in scenes) scenes[k].classList.toggle('on',k===name); cur=name; hidePop(); }
 
   /* ----- projects ----- */
   var PROJ=[
-    {key:'yoga',name:"St. Mark's Yoga",type:'WELLNESS',hue:'#ff3d9a',img:'shots/yoga.jpg',href:'https://thehappyendings.org/yoga/',map:[22,60],desc:'Custom booking analytics and integrated marketing targeting platform for a yoga studio.'},
-    {key:'omar',name:'Omar Chacón',type:'ART',hue:'#7dffb0',img:'shots/omar.jpg',href:'https://omarchacon.72.60.117.113.nip.io',map:[40,33],desc:'Interactive art exhibition platform and e-portfolio for a working painter.'},
-    {key:'fabians',name:"Fabian's Tours",type:'TRAVEL',hue:'#ffd36b',img:'shots/fabians.jpg',href:'https://kdumanski.github.io/fabians-tours/',map:[58,66],desc:'Cinematic booking site for a luxury Egypt travel brand.'},
-    {key:'stark',name:'Stark Level',type:'BUILD',hue:'#22e7f5',img:'shots/stark.jpg',href:'https://starklevelsolutions.com',map:[73,42],desc:'Lead-generating brand site for a construction company.'},
-    {key:'dental',name:'Pride Dental',type:'HEALTH',hue:'#c07bff',img:'shots/dental.jpg',href:'https://kdumanski.github.io/DentalGroup/',map:[50,80],desc:'Modern patient acquisition site for a family dental practice.'},
-    {key:'spg',name:'Stark Production',type:'EVENTS',hue:'#ff6b6b',img:'shots/spg.jpg',href:'https://starkproductiongroup.nyc',map:[84,72],desc:'Integrated marketing analysis and distribution system for an NYC event production company.'}
+    {key:'stark',name:'Stark Level',type:'BUILD',hue:'#22e7f5',img:'shots/stark.jpg',href:'https://starklevelsolutions.com',world:[18,34],desc:'Lead-generating brand site for a construction company.'},
+    {key:'dental',name:'Pride Dental',type:'HEALTH',hue:'#c07bff',img:'shots/dental.jpg',href:'https://kdumanski.github.io/DentalGroup/',world:[24,52],desc:'Modern patient acquisition site for a family dental practice.'},
+    {key:'omar',name:'Omar Chacón',type:'ART',hue:'#7dffb0',img:'shots/omar.jpg',href:'https://omarchacon.72.60.117.113.nip.io',world:[48,24],desc:'Interactive art exhibition platform and e-portfolio for a working painter.'},
+    {key:'fabians',name:"Fabian's Tours",type:'TRAVEL',hue:'#ffd36b',img:'shots/fabians.jpg',href:'https://kdumanski.github.io/fabians-tours/',world:[52,44],desc:'Cinematic booking site for a luxury Egypt travel brand.'},
+    {key:'yoga',name:"St. Mark's Yoga",type:'WELLNESS',hue:'#ff3d9a',img:'shots/yoga.jpg',href:'https://thehappyendings.org/yoga/',world:[70,40],desc:'Custom booking analytics and integrated marketing targeting platform for a yoga studio.'},
+    {key:'spg',name:'Stark Production',type:'EVENTS',hue:'#ff6b6b',img:'shots/spg.jpg',href:'https://starkproductiongroup.nyc',world:[84,30],desc:'Integrated marketing analysis and distribution system for an NYC event production company.'}
   ];
   var byKey={}; PROJ.forEach(function(p){byKey[p.key]=p;});
 
@@ -280,14 +297,15 @@
     {w:46,h:88,t:'flat',proj:'stark'},{w:26,h:70,t:'step'},{w:48,h:94,t:'flat',proj:'dental'},{w:18,h:40,t:'flat'},
     {w:42,h:82,t:'flat',proj:'spg'},{w:22,h:64,t:'antenna'},{w:28,h:56,t:'pyramid'}
   ];
-  function rand(n){ return Math.floor(Math.random()*n); }
-  function makeBld(s,layer){
+  var world=document.querySelector('.world');
+  function pauseCity(on){ world.classList.toggle('pausecity', on); }
+  function makeBld(s,i,layer){
     var isProj=layer==='near'&&s.proj, p=isProj?byKey[s.proj]:null;
     var el=document.createElement(isProj?'button':'div');
     el.className='bld'+(isProj?' proj':'');
     el.style.height=s.h+'%'; el.style.width=s.w+'px';
-    el.style.setProperty('--e', p?p.hue:HUES[rand(HUES.length)]);
-    el.style.setProperty('--wx',rand(10)+'px'); el.style.setProperty('--wy',rand(14)+'px');
+    el.style.setProperty('--e', p?p.hue:HUES[i%HUES.length]);           // deterministic so both copies match (seamless loop)
+    el.style.setProperty('--wx',((i*3)%10)+'px'); el.style.setProperty('--wy',((i*5)%14)+'px');
     if(!isProj) el.setAttribute('aria-hidden','true');
     if(layer==='near'&&!isProj){
       if(s.t==='antenna'){ var a=document.createElement('span'); a.className='ant'; var b=document.createElement('i'); b.className='beacon'; a.appendChild(b); el.appendChild(a); }
@@ -297,19 +315,25 @@
     if(isProj){
       el.setAttribute('aria-label',p.name+' — '+p.type+', preview and open');
       var pb=document.createElement('span'); pb.className='pbeacon'; el.appendChild(pb);
-      el.addEventListener('mouseenter',function(){ showPop(el,p); });
-      el.addEventListener('mouseleave',hidePop);
-      el.addEventListener('focus',function(){ showPop(el,p); });
-      el.addEventListener('blur',hidePop);
-      el.addEventListener('click',function(){ openProject(p.key); });
+      el.addEventListener('mouseenter',function(){ pauseCity(true); showPop(el,p); });
+      el.addEventListener('mouseleave',function(){ pauseCity(false); hidePop(); });
+      el.addEventListener('focus',function(){ pauseCity(true); showPop(el,p); });
+      el.addEventListener('blur',function(){ pauseCity(false); hidePop(); });
+      el.addEventListener('click',function(){ openSite(p.href); });
     }
     return el;
   }
-  var near=document.getElementById('cityNear');
-  NEAR.forEach(function(s){ near.appendChild(makeBld(s,'near')); });
-  var far=document.getElementById('cityFar');
-  var fw=[24,16,30,18,22,14,28,20,26,16,22,30,18,24];
-  fw.forEach(function(w,i){ far.appendChild(makeBld({w:w,h:20+((i*13)%34),t:'flat'},'far')); });
+  function fillLayer(id, items, layer){
+    var el=document.getElementById(id);
+    for(var set=0;set<2;set++){                                          // two identical copies -> seamless scroll
+      var wrap=document.createElement('div'); wrap.className='cityset';
+      items.forEach(function(s,i){ wrap.appendChild(makeBld(s,i,layer)); });
+      el.appendChild(wrap);
+    }
+  }
+  fillLayer('cityNear', NEAR, 'near');
+  var FAR=[24,16,30,18,22,14,28,20,26,16,22,30,18,24].map(function(w,i){ return {w:w,h:20+((i*13)%34),t:'flat'}; });
+  fillLayer('cityFar', FAR, 'far');
 
   /* ----- hover preview on top (no layout shift) ----- */
   function showPop(el,p){
@@ -330,31 +354,25 @@
   }
   function hidePop(){ pop.classList.remove('on'); }
 
-  /* ----- portfolio map + view ----- */
-  var map=document.getElementById('map'), pfview=document.getElementById('pfview'), selProj=0, pins=[];
-  PROJ.forEach(function(p,i){
-    var pin=document.createElement('button'); pin.className='pin'; pin.style.setProperty('--c',p.hue);
-    pin.style.left=p.map[0]+'%'; pin.style.top=p.map[1]+'%'; pin.setAttribute('aria-label',p.name+' — '+p.type);
-    pin.innerHTML='<span class="dot" aria-hidden="true"></span><span class="plab">'+p.name+'</span>';
-    pin.addEventListener('mouseenter',function(){ selectProject(i); });
-    pin.addEventListener('focus',function(){ selectProject(i); });
-    pin.addEventListener('click',function(){ selectProject(i); });
-    map.appendChild(pin); pins.push(pin);
+  /* ----- portfolio world map (hover = info popup on top, click = visit) ----- */
+  function openSite(href){ window.open(href,'_blank','noopener'); }
+  var worldmap=document.getElementById('worldmap');
+  PROJ.forEach(function(p){
+    var loc=document.createElement('button'); loc.className='loc'; loc.style.setProperty('--c',p.hue);
+    loc.style.left=p.world[0]+'%'; loc.style.top=p.world[1]+'%';
+    loc.setAttribute('aria-label',p.name+' — '+p.type+', preview and visit');
+    loc.innerHTML='<span class="dot" aria-hidden="true"></span><span class="plab">'+p.name+'</span>';
+    loc.addEventListener('mouseenter',function(){ showPop(loc,p); });
+    loc.addEventListener('mouseleave',hidePop);
+    loc.addEventListener('focus',function(){ showPop(loc,p); });
+    loc.addEventListener('blur',hidePop);
+    loc.addEventListener('click',function(){ openSite(p.href); });
+    worldmap.appendChild(loc);
   });
-  function selectProject(i){
-    selProj=i; var p=PROJ[i];
-    pins.forEach(function(el,idx){ el.setAttribute('aria-selected',idx===i?'true':'false'); });
-    pfview.innerHTML='<img src="'+p.img+'" alt="Screenshot of the '+p.name+' website">'+
-      '<div class="pfinfo"><div class="pt">'+p.type+'</div><h3>'+p.name+'</h3><p>'+p.desc+'</p>'+
-      '<a class="btn" href="'+p.href+'" target="_blank" rel="noopener">Visit the site ▸</a></div>';
-  }
-  function openProject(key){ for(var i=0;i<PROJ.length;i++){ if(PROJ[i].key===key){ selProj=i; break; } } show('portfolio'); }
 
   /* ----- navigation ----- */
   con.addEventListener('click',function(e){ var g=e.target.closest('[data-go]'); if(g) show(g.dataset.go); });
   con.addEventListener('keydown',function(e){ if(e.key==='Escape'&&cur!=='home'){ e.preventDefault(); show('home'); } });
-
-  selectProject(0);
 })();
 </script>
 
