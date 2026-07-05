@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The Happy Endings — Console Concept (prototype)</title>
+</head>
+<body>
+<style>
+  /* ============================================================
+     THE HAPPY ENDINGS — 16-bit console concept  (v2)
+     Main screen = the shared synthwave city skyline + a running guy.
+     Boot -> menu(skyline+runner) -> portfolio level-select -> detail -> start.
+     Single-theme by design (it's a glowing CRT). No external assets
+     (host CSP blocks CDNs): scene, sun, skyline and runner are pure CSS.
+     ============================================================ */
+  :root{
+    --ink:#0b021c; --cyan:#22e7f5; --pink:#ff3d9a; --purple:#c07bff; --gold:#ffd36b;
+    --green:#7dffb0; --red:#ff6b6b;
+    --text:#f3ecff; --muted:#c3b4e6; --dim:#8a78b8;
+    --mono:ui-monospace,'Cascadia Mono','Segoe UI Mono','SFMono-Regular','Menlo','Consolas','Courier New',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:radial-gradient(120% 90% at 50% 0%, #1a0740 0%, #0b021c 60%), var(--ink);
+    color:var(--text);font-family:var(--mono);line-height:1.6;
+    min-height:100vh;padding:clamp(16px,4vw,48px) 16px;
+    display:flex;flex-direction:column;align-items:center;gap:34px;
+  }
+
+  /* ---------- Console / CRT ---------- */
+  .console{
+    position:relative;width:100%;max-width:940px;aspect-ratio:4/3;
+    border-radius:18px;overflow:hidden;isolation:isolate;background:#08021a;
+    border:1px solid rgba(192,123,255,.35);
+    box-shadow:0 0 0 8px #05010f,0 0 0 9px rgba(192,123,255,.25),
+      0 30px 80px -20px rgba(0,0,0,.9),inset 0 0 120px -30px rgba(255,61,154,.25);
+    outline:none;
+  }
+  .console:focus-visible{box-shadow:0 0 0 8px #05010f,0 0 0 11px var(--cyan),0 30px 80px -20px rgba(0,0,0,.9)}
+  .console::before{content:"";position:absolute;inset:0;z-index:40;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.20) 2px 3px)}
+  .console::after{content:"";position:absolute;inset:0;z-index:41;pointer-events:none;border-radius:18px;
+    box-shadow:inset 0 0 90px 10px rgba(4,1,15,.85);
+    background:radial-gradient(130% 110% at 50% 45%,transparent 60%,rgba(4,1,15,.6) 100%)}
+
+  /* ============ SHARED SYNTHWAVE WORLD (the shared scene) ============ */
+  .world{position:absolute;inset:0;z-index:1;overflow:hidden;
+    background:linear-gradient(180deg,#05010f 0%,#1a0833 24%,#3d1063 42%,#7a1d8f 53%,#d6217d 60%,#ff5e6c 65%,#ff8d5a 68%,#1a0833 69%)}
+  .stars{position:absolute;top:0;left:0;right:0;height:60%;z-index:1;
+    background-image:radial-gradient(1px 1px at 20% 18%,#fff,transparent),radial-gradient(1px 1px at 60% 9%,#fff,transparent),radial-gradient(1.4px 1.4px at 80% 22%,#cfe9ff,transparent),radial-gradient(1px 1px at 35% 30%,#fff,transparent),radial-gradient(1px 1px at 12% 40%,#fff,transparent),radial-gradient(1.4px 1.4px at 72% 33%,#fff,transparent),radial-gradient(1px 1px at 90% 12%,#fff,transparent),radial-gradient(1px 1px at 48% 14%,#cfe9ff,transparent),radial-gradient(1px 1px at 5% 12%,#fff,transparent),radial-gradient(1px 1px at 30% 6%,#fff,transparent);
+    opacity:.85;animation:twinkle 5s ease-in-out infinite alternate}
+  @keyframes twinkle{from{opacity:.5}to{opacity:.95}}
+  .sun{position:absolute;left:50%;bottom:30%;transform:translateX(-50%);width:min(360px,64%);aspect-ratio:1;border-radius:50%;z-index:2;
+    background:linear-gradient(180deg,#fff7c4 0%,#ffd95e 26%,#ff7eb3 60%,#ff4d6d 100%);
+    box-shadow:0 0 120px 30px rgba(255,77,135,.5),0 0 220px 60px rgba(255,120,90,.3)}
+  .sun::after{content:"";position:absolute;left:0;right:0;bottom:0;height:54%;
+    background:repeating-linear-gradient(180deg,transparent 0 7px,#08021a 7px 9px,transparent 9px 16px,#08021a 16px 19px,transparent 19px 30px,#08021a 30px 34px,transparent 34px 50px,#08021a 50px 56px);
+    -webkit-mask:linear-gradient(180deg,transparent,#000);mask:linear-gradient(180deg,transparent,#000)}
+
+  /* scrolling skyline (two copies -> seamless loop) */
+  .city{position:absolute;left:0;bottom:30%;height:32%;width:200%;z-index:3;display:flex;align-items:flex-end;
+    animation:citymove 26s linear infinite}
+  @keyframes citymove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .cityset{flex:0 0 50%;height:100%;display:flex;align-items:flex-end;justify-content:space-around;gap:5px;padding:0 6px}
+  .bld{flex:0 0 auto;border-radius:3px 3px 0 0;background:linear-gradient(180deg,#2a0f47,#0a0218);
+    border-top:2px solid var(--e);border-left:1px solid rgba(255,255,255,.06);box-shadow:0 0 13px -2px var(--e);position:relative}
+  .bld::before{content:"";position:absolute;inset:7px 3px 0;border-radius:2px;
+    background-image:radial-gradient(circle,var(--e) .9px,transparent 1.4px);background-size:8px 12px;opacity:.5}
+  .haze{position:absolute;left:0;right:0;bottom:30%;height:3px;z-index:5;background:#ffd0e6;
+    box-shadow:0 0 24px 6px rgba(255,120,180,.85),0 0 60px 12px rgba(255,80,150,.55)}
+
+  /* grid floor */
+  .floorwrap{position:absolute;left:0;right:0;bottom:0;height:30%;perspective:260px;perspective-origin:50% 0;overflow:hidden;z-index:2}
+  .grid{position:absolute;inset:-2% -50% -2% -50%;transform:rotateX(74deg);transform-origin:50% 0;
+    background-image:linear-gradient(90deg,rgba(34,231,245,.55) 1px,transparent 1px),linear-gradient(180deg,rgba(255,46,151,.55) 1px,transparent 1px);
+    background-size:44px 44px;animation:flow 2.2s linear infinite}
+  @keyframes flow{from{background-position:0 0}to{background-position:0 44px}}
+  .floorwrap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,2,28,.55),transparent 34%,transparent 76%,#0b021c)}
+
+  /* ---------- THE RUNNER (neon guy, pure CSS run cycle) ---------- */
+  .runner{position:absolute;left:42%;bottom:28%;z-index:6;width:30px;height:52px;
+    filter:drop-shadow(0 0 7px rgba(34,231,245,.95)) drop-shadow(0 0 16px rgba(34,231,245,.5));
+    animation:bob .46s linear infinite}
+  .runner .run{position:absolute;inset:0;transform:rotate(7deg) scale(1.2);transform-origin:50% 78%}
+  .runner span{position:absolute;background:var(--cyan);border-radius:2px}
+  .rhead{width:11px;height:11px;left:8px;top:0;border-radius:4px;z-index:3}
+  .rtorso{width:8px;height:21px;left:9px;top:10px;z-index:2}
+  .rl-front,.rl-back{width:6px;height:19px;left:9px;top:28px;transform-origin:50% 8%;z-index:3}
+  .rl-back{background:#12b7c8;z-index:1}
+  .ra-front,.ra-back{width:5px;height:16px;left:10px;top:12px;transform-origin:50% 10%;z-index:4}
+  .ra-back{background:#12b7c8;z-index:0}
+  .rl-front{animation:lf .46s linear infinite}
+  .rl-back{animation:lb .46s linear infinite}
+  .ra-front{animation:af .46s linear infinite}
+  .ra-back{animation:ab .46s linear infinite}
+  .speed{position:absolute;right:100%;top:34%;width:34px;height:2px;margin-right:5px;border-radius:2px;
+    background:linear-gradient(90deg,transparent,rgba(34,231,245,.85));box-shadow:0 6px 0 rgba(34,231,245,.5),0 -7px 0 rgba(34,231,245,.35);
+    animation:speed .46s linear infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  @keyframes lf{0%,100%{transform:rotate(40deg)}50%{transform:rotate(-42deg)}}
+  @keyframes lb{0%,100%{transform:rotate(-42deg)}50%{transform:rotate(40deg)}}
+  @keyframes af{0%,100%{transform:rotate(-48deg)}50%{transform:rotate(44deg)}}
+  @keyframes ab{0%,100%{transform:rotate(44deg)}50%{transform:rotate(-48deg)}}
+  @keyframes speed{0%,100%{opacity:.25;transform:scaleX(.7)}50%{opacity:.8;transform:scaleX(1.15)}}
+
+  /* ---------- scenes overlay the world ---------- */
+  .scene{position:absolute;inset:0;z-index:10;display:none;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:6% 7%}
+  .scene.on{display:flex}
+  /* boot + content scenes dim the world so text stays readable */
+  #s-boot{background:#08021a;transition:opacity .55s}
+  #s-boot.off{opacity:0;pointer-events:none}
+  #s-stages,#s-detail,#s-contact{background:radial-gradient(120% 100% at 50% 40%,rgba(11,2,28,.72),rgba(6,1,20,.9))}
+
+  .label{font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 10px rgba(34,231,245,.7)}
+  .blink{animation:blink 1.05s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ---------- BOOT / LOADING TERMINAL (the city builds while it loads) ---------- */
+  .term{width:min(620px,84%);font-size:clamp(12px,1.7vw,15px);line-height:2;color:#7af9ff;text-shadow:0 0 8px rgba(90,240,255,.6);white-space:pre-wrap;text-align:left}
+  .term .h{color:#ff71ce;font-weight:700;letter-spacing:.06em}
+  .term .ok{color:#7dffb0}
+  .term .run{color:var(--gold)}
+  .term .cur{display:inline-block;width:9px;height:15px;background:#7af9ff;margin-left:3px;vertical-align:-2px;animation:blink .8s steps(1) infinite}
+  .term .skip{margin-top:20px;font-size:12px;color:#8578b0;letter-spacing:.14em}
+
+  /* ---------- MENU (skyline + runner is the star; copy docks at the bottom) ---------- */
+  #s-menu{justify-content:flex-end;padding:0}
+  .logo{position:absolute;top:8%;left:0;right:0;text-align:center;z-index:11;
+    font-size:clamp(1.1rem,3.4vw,2rem);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;
+    text-shadow:2px 0 var(--pink),-2px 0 var(--cyan),0 3px 0 #5b1c8a,0 0 26px rgba(255,61,154,.5)}
+  .logo small{display:block;font-size:.34em;letter-spacing:.4em;color:var(--gold);margin-top:.7em;text-shadow:0 0 12px rgba(255,211,107,.6)}
+  .dock{position:relative;z-index:11;width:100%;padding:22px clamp(18px,4vw,40px) 60px;
+    display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(16px,3vw,34px);align-items:center;
+    background:linear-gradient(180deg,transparent,rgba(6,1,20,.72) 26%,rgba(6,1,20,.94))}
+  .mission-text{text-align:left;font-size:clamp(13.5px,1.9vw,17px);line-height:1.7;color:#fff;font-weight:500;text-shadow:0 1px 10px rgba(4,1,20,.95)}
+  .menu{display:flex;flex-direction:column;gap:12px;width:100%}
+  .mi{position:relative;display:flex;align-items:center;gap:11px;width:100%;text-align:left;font-family:inherit;
+    font-size:clamp(.9rem,2vw,1.12rem);font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+    cursor:pointer;background:rgba(10,3,34,.82);border:2px solid rgba(182,163,224,.34);border-radius:11px;padding:14px 15px;transition:.14s}
+  .mi .cur{color:var(--gold);opacity:0;text-shadow:0 0 12px var(--gold)}
+  .mi[aria-selected="true"]{color:#fff;border-color:var(--cyan);background:rgba(34,231,245,.12);box-shadow:0 0 22px -3px var(--cyan);text-shadow:2px 0 var(--pink),-2px 0 var(--cyan)}
+  .mi[aria-selected="true"] .cur{opacity:1}
+
+  /* bottom ticker */
+  .ticker{position:absolute;left:0;right:0;bottom:0;height:40px;z-index:12;display:flex;align-items:center;
+    border-top:2px solid rgba(192,123,255,.6);background:linear-gradient(180deg,rgba(20,4,54,.94),rgba(11,2,28,.98));box-shadow:0 -6px 26px -10px rgba(255,61,154,.6)}
+  .tick-label{flex:none;height:100%;display:flex;align-items:center;gap:8px;padding:0 14px;background:var(--pink);color:#0b021c;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .tick-label i{width:8px;height:8px;border-radius:50%;background:#0b021c;animation:blink 1.05s steps(1) infinite}
+  .tick-win{flex:1;overflow:hidden;height:100%;display:flex;align-items:center;-webkit-mask:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);mask:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
+  .tick-track{display:inline-flex;white-space:nowrap;will-change:transform;animation:marquee 24s linear infinite}
+  .tick-track span{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text)}
+  .tick-track b{color:var(--cyan);margin:0 20px;text-shadow:0 0 8px rgba(34,231,245,.6)}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ---------- STAGE SELECT ---------- */
+  .back{position:absolute;top:6%;left:7%;font-size:12px;letter-spacing:.14em;color:var(--muted);background:none;border:none;font-family:inherit;cursor:pointer;text-transform:uppercase}
+  .back:hover{color:#fff}
+  .ss-head{font-size:clamp(13px,2.2vw,17px);letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:18px;text-shadow:0 0 12px rgba(255,211,107,.5)}
+  .grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;width:100%;max-width:640px}
+  .stage{position:relative;border:2px solid rgba(182,163,224,.3);border-radius:10px;background:rgba(10,3,34,.78);padding:14px 10px 12px;text-align:center;cursor:pointer;transition:transform .12s,border-color .12s,box-shadow .12s}
+  .stage .num{font-size:12px;letter-spacing:.14em;color:var(--dim)}
+  .stage .nm{margin-top:7px;font-size:13px;font-weight:700;color:#fff;line-height:1.15;min-height:2.3em;display:flex;align-items:center;justify-content:center}
+  .stage .ty{margin-top:8px;font-size:10px;letter-spacing:.16em;color:var(--c);text-transform:uppercase}
+  .stage .clr{position:absolute;top:7px;right:8px;font-size:10px;color:var(--green);letter-spacing:.08em}
+  .stage[aria-selected="true"]{border-color:var(--c);transform:translateY(-3px);box-shadow:0 0 20px -2px var(--c),0 0 44px -10px var(--c)}
+  .stage[aria-selected="true"] .num{color:var(--gold)}
+  /* the open 'P2 - YOU?' CTA tile that lives in the roster */
+  .stage.you{border-style:dashed;border-color:rgba(34,231,245,.65);background:rgba(34,231,245,.06)}
+  .stage.you .nm{color:var(--cyan)}
+  .stage.you .q{font-size:24px;font-weight:700;color:var(--cyan);animation:blink 1.1s steps(1) infinite;line-height:1}
+  .ss-blurb{margin-top:18px;min-height:2.8em;max-width:44ch;font-size:13px;color:var(--muted);line-height:1.6}
+  .hint{position:absolute;bottom:6%;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.16em;color:var(--dim)}
+  .hint b{color:var(--muted)}
+
+  /* ---------- PANEL (detail / start) ---------- */
+  .panel{width:100%;max-width:560px;text-align:left}
+  .panel h2{font-size:clamp(1.1rem,3vw,1.6rem);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;color:#fff;text-shadow:2px 0 var(--pink),-2px 0 var(--cyan)}
+  .panel .ty{font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+  .panel p{margin-top:16px;font-size:14px;color:var(--muted);line-height:1.7}
+  .panel .fields{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+  .row{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);letter-spacing:.04em}
+  .row .k{width:88px;color:var(--cyan);text-transform:uppercase;font-size:11px;letter-spacing:.16em}
+  .row .v{flex:1;border-bottom:2px dashed rgba(182,163,224,.35);padding:6px 2px;color:#fff}
+  .act{margin-top:24px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{font-family:inherit;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;border-radius:999px;padding:11px 20px;border:2px solid var(--cyan);color:#04101a;background:var(--cyan);text-decoration:none;box-shadow:0 0 18px rgba(34,231,245,.5);transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(34,231,245,.8)}
+  .btn.ghost{background:transparent;color:#fff;border-color:var(--purple);box-shadow:0 0 16px rgba(192,123,255,.3)}
+  a:focus-visible,button:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:6px}
+
+  /* ---------- Director's notes ---------- */
+  .notes{width:100%;max-width:940px;display:flex;flex-direction:column;gap:18px}
+  .notes h1{font-size:clamp(1.3rem,3vw,1.9rem);letter-spacing:.02em;color:#fff;text-wrap:balance}
+  .notes h1 b{color:var(--pink)}
+  .notes .sub{color:var(--muted);font-size:14px;max-width:72ch;line-height:1.7}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .nc{border:1px solid rgba(192,123,255,.28);border-radius:14px;padding:18px;background:linear-gradient(170deg,rgba(23,4,54,.7),rgba(11,2,28,.85))}
+  .nc .t{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:9px}
+  .nc h3{font-size:1rem;color:#fff;margin-bottom:8px}
+  .nc p{font-size:13.5px;color:var(--muted);line-height:1.65}
+  .foot{font-size:12px;color:var(--dim);letter-spacing:.06em;text-align:center;padding-top:6px}
+
+  @media(max-width:560px){
+    .console{aspect-ratio:3/4}
+    .grid2{grid-template-columns:repeat(2,1fr)}
+    .dock{grid-template-columns:1fr;gap:16px;padding:18px 18px 56px}
+    .sun{width:74%}
+    .tick-label{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .stars,.city,.grid,.tick-track,.blink,.runner,.rl-front,.rl-back,.ra-front,.ra-back,.speed{animation:none}
+    .btn,.stage,.mi,.bld,.runner,#s-boot{transition:none}
+    .runner .run{transform:rotate(7deg) scale(1.2)}
+    .rl-front{transform:rotate(34deg)}.rl-back{transform:rotate(-34deg)}
+    .ra-front{transform:rotate(-38deg)}.ra-back{transform:rotate(38deg)}
+  }
+</style>
+
+<div class="console" id="console" tabindex="0" role="application" aria-label="The Happy Endings — 16-bit console concept. Use arrow keys and Enter.">
+  <!-- shared synthwave world -->
+  <div class="world" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="sun"></div>
+    <div class="city" id="city"></div>
+    <div class="haze"></div>
+    <div class="runner">
+      <div class="run">
+        <span class="rl-back"></span><span class="ra-back"></span>
+        <span class="rtorso"></span><span class="rhead"></span>
+        <span class="rl-front"></span><span class="ra-front"></span>
+      </div>
+      <span class="speed"></span>
+    </div>
+    <div class="floorwrap"><div class="grid"></div></div>
+  </div>
+
+  <!-- BOOT / LOADING -->
+  <section class="scene on" id="s-boot" aria-label="Loading">
+    <div class="term" id="term" role="status" aria-live="polite"></div>
+  </section>
+
+  <!-- MENU: skyline + runner is the main screen -->
+  <section class="scene" id="s-menu" aria-label="Main menu">
+    <div class="logo">The Happy Endings<small>AI Studio · Press ↓ Enter</small></div>
+    <div class="dock">
+      <p class="mission-text">We help small businesses automate integrated marketing and operations, so you can focus on creating value for society.</p>
+      <div class="menu" id="menu" role="listbox" aria-label="Main menu" tabindex="-1">
+        <button class="mi" role="option" data-action="contact"><span class="cur" aria-hidden="true">▶</span>Start a Project</button>
+        <button class="mi" role="option" data-action="stages"><span class="cur" aria-hidden="true">▶</span>Portfolio</button>
+      </div>
+    </div>
+    <div class="ticker" aria-hidden="true">
+      <span class="tick-label"><i></i> Live</span>
+      <div class="tick-win"><div class="tick-track">
+        <span><b>◆</b>THE HAPPY ENDINGS<b>◆</b>AI STUDIO · EST 2026<b>◆</b>6 CLIENTS LIVE<b>◆</b>MARKETING + AUTOMATION<b>◆</b>LIVE IN DAYS, NOT MONTHS<b>◆</b>WE END YOUR PROBLEMS<b>◆</b></span>
+        <span><b>◆</b>THE HAPPY ENDINGS<b>◆</b>AI STUDIO · EST 2026<b>◆</b>6 CLIENTS LIVE<b>◆</b>MARKETING + AUTOMATION<b>◆</b>LIVE IN DAYS, NOT MONTHS<b>◆</b>WE END YOUR PROBLEMS<b>◆</b></span>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- STAGE SELECT (portfolio) -->
+  <section class="scene" id="s-stages" aria-label="Portfolio stage select">
+    <button class="back" data-back="menu">◂ Back</button>
+    <div class="ss-head">Select a Project</div>
+    <div class="grid2" id="grid" role="listbox" aria-label="Projects" tabindex="-1"></div>
+    <div class="ss-blurb" id="ssBlurb"></div>
+    <div class="hint"><b>◀ ▶ ▲ ▼</b> MOVE &nbsp;·&nbsp; <b>ENTER</b> OPEN &nbsp;·&nbsp; <b>ESC</b> BACK</div>
+  </section>
+
+  <!-- STAGE DETAIL -->
+  <section class="scene" id="s-detail" aria-label="Project detail">
+    <button class="back" data-back="stages">◂ Back</button>
+    <div class="panel" id="detailPanel"></div>
+  </section>
+
+  <!-- START A PROJECT -->
+  <section class="scene" id="s-contact" aria-label="Start a project">
+    <button class="back" data-back="menu">◂ Back</button>
+    <div class="panel">
+      <div class="ty">New Game</div>
+      <h2>Start a Project</h2>
+      <p>Tell us what you need. You'll have a live link in days, not months — design, build, hosting, and updates handled start to finish.</p>
+      <div class="fields" aria-hidden="true">
+        <div class="row"><span class="k">Name</span><span class="v">▏</span></div>
+        <div class="row"><span class="k">Business</span><span class="v">▏</span></div>
+        <div class="row"><span class="k">Need</span><span class="v">▏</span></div>
+      </div>
+      <div class="act">
+        <a class="btn" href="mailto:keith.dumanski@gmail.com">Press Start ▸</a>
+        <button class="btn ghost" data-back="menu">Cancel</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Director's notes -->
+<div class="notes">
+  <div>
+    <h1>Concept: <b>The Happy Endings</b> as a 16-bit console</h1>
+    <p class="sub">The main screen is the shared synthwave city — stars, retro sun, neon skyline, glowing grid floor — with a <b>little guy running through it</b>. It boots on its own (no "press start"), then lands on the menu: your mission text and the two buttons (Start a Project, Portfolio) docked below the skyline, with a marquee ribbon along the bottom. Portfolio opens a stage-select where the six clients are game levels. Click the screen, then arrow keys + Enter (Esc to back out).</p>
+  </div>
+  <div class="cards">
+    <div class="nc"><div class="t">Main screen</div><h3>City skyline + runner</h3><p>The real synthwave scene from the site is the backdrop; a neon runner sprints across the horizon in front of the sun while the city scrolls and the grid floor flows.</p></div>
+    <div class="nc"><div class="t">Menu</div><h3>Mission + two buttons</h3><p>Your statement and the two options dock at the bottom over a scrim so they stay readable, with the neon ticker under them.</p></div>
+    <div class="nc"><div class="t">Portfolio</div><h3>Level select</h3><p>The six clients as stages (1-1, 1-2…) with type tags and "Cleared" flags, plus a dashed <b>P2 — YOU?</b> tile that starts a new project.</p></div>
+  </div>
+  <div class="foot">PROTOTYPE ONLY · NOT LIVE · single-theme by design (it's a screen) · keyboard + pointer + reduced-motion supported</div>
+</div>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var con = document.getElementById('console');
+  var scenes = {
+    boot:document.getElementById('s-boot'), menu:document.getElementById('s-menu'),
+    stages:document.getElementById('s-stages'), detail:document.getElementById('s-detail'),
+    contact:document.getElementById('s-contact')
+  };
+  var cur = 'boot';
+  function show(name){
+    for(var k in scenes) scenes[k].classList.toggle('on', k===name);
+    cur = name;
+    if(name==='menu'){ selMenu=0; paintMenu(); }
+    if(name==='stages'){ selStage=0; paintStages(); }
+  }
+
+  /* ---- build the scrolling skyline (two identical sets) ---- */
+  var HUES=['#22e7f5','#ff3d9a','#c07bff','#ffd36b','#7dffb0','#ff6b6b'];
+  var PLAN=[46,68,34,90,52,74,40,100,58,82,44,64,30,88,50]; // heights (% of band)
+  function buildCity(){
+    var city=document.getElementById('city');
+    for(var set=0;set<2;set++){
+      var wrap=document.createElement('div'); wrap.className='cityset';
+      PLAN.forEach(function(h,i){
+        var b=document.createElement('div'); b.className='bld';
+        b.style.height=h+'%';
+        b.style.width=(14+((i*7)%12))+'px';
+        b.style.setProperty('--e',HUES[(i+set)%HUES.length]);
+        wrap.appendChild(b);
+      });
+      city.appendChild(wrap);
+    }
+  }
+  buildCity();
+
+  /* ---- tiny WebAudio blips ---- */
+  var actx=null, sound=true;
+  function blip(freq,dur){
+    if(!sound) return;
+    try{
+      actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+      var o=actx.createOscillator(), g=actx.createGain();
+      o.type='square'; o.frequency.value=freq; g.gain.value=0.04;
+      o.connect(g); g.connect(actx.destination);
+      o.start(); g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+dur); o.stop(actx.currentTime+dur);
+    }catch(e){}
+  }
+
+  /* ---- BOOT / LOADING (terminal types the OS boot; the city builds as it loads) ---- */
+  var term=document.getElementById('term');
+  var bootLines=[
+    '<span class="h">THE HAPPY ENDINGS OS  v2.6</span>',
+    'booting neon core .............. <span class="ok">OK</span>',
+    'mounting /projects ............. <span class="ok">OK</span>',
+    'syncing 6 live clients ......... <span class="ok">OK</span>',
+    'automations ................... <span class="run">RUNNING</span>',
+    '<span class="h">READY.</span>'
+  ];
+  var bootTimer=null, bootDone=false;
+  function runBoot(){
+    if(reduce){ term.innerHTML=bootLines.join('\n'); reveal(0); return; }
+    var i=0, html='';
+    bootTimer=setInterval(function(){
+      html += bootLines[i] + '\n'; i++;
+      term.innerHTML = html + '<span class="cur"></span><div class="skip">click anywhere to skip</div>';
+      if(i>=bootLines.length){ clearInterval(bootTimer); bootTimer=null; setTimeout(function(){ reveal(820); }, 620); }
+    },300);
+  }
+  // reveal: drop the 'booting' state so the city rises + runner starts, fade the terminal, then land on the menu
+  function reveal(delay){
+    if(bootDone) return; bootDone=true;
+    if(bootTimer){ clearInterval(bootTimer); bootTimer=null; }
+    con.classList.remove('booting');
+    document.getElementById('s-boot').classList.add('off');
+    setTimeout(function(){ show('menu'); }, delay);
+  }
+
+  /* ---- MENU ---- */
+  var menuItems=[].slice.call(document.querySelectorAll('#menu .mi'));
+  var selMenu=0;
+  function paintMenu(){ menuItems.forEach(function(el,i){ el.setAttribute('aria-selected', i===selMenu?'true':'false'); }); }
+  menuItems.forEach(function(el,i){
+    el.addEventListener('mouseenter',function(){ selMenu=i; paintMenu(); });
+    el.addEventListener('click',function(){ selMenu=i; paintMenu(); chooseMenu(); });
+  });
+  function chooseMenu(){ blip(660,.12); show(menuItems[selMenu].dataset.action); }
+
+  /* ---- STAGES (6 clients + a P2-YOU CTA tile) ---- */
+  var STAGES=[
+    {n:'1-1',nm:"St. Mark's Yoga",ty:'WELLNESS',c:'#ff3d9a',href:'https://thehappyendings.org/yoga/',d:'Custom booking analytics and integrated marketing targeting platform for a yoga studio.'},
+    {n:'1-2',nm:"Fabian's Tours",ty:'TRAVEL',c:'#ffd36b',href:'https://kdumanski.github.io/fabians-tours/',d:'Cinematic booking site for a luxury Egypt travel brand.'},
+    {n:'2-1',nm:'Stark Level',ty:'BUILD',c:'#22e7f5',href:'https://starklevelsolutions.com',d:'Lead-generating brand site for a construction company.'},
+    {n:'2-2',nm:'Pride Dental',ty:'HEALTH',c:'#c07bff',href:'https://kdumanski.github.io/DentalGroup/',d:'Modern patient acquisition site for a family dental practice.'},
+    {n:'3-1',nm:'Omar Chacón',ty:'ART',c:'#7dffb0',href:'https://omarchacon.72.60.117.113.nip.io',d:'Interactive art exhibition platform and e-portfolio for a working painter.'},
+    {n:'3-2',nm:'Stark Production',ty:'EVENTS',c:'#ff6b6b',href:'https://starkproductiongroup.nyc',d:'Integrated marketing analysis and distribution system for an NYC event production company.'}
+  ];
+  var grid=document.getElementById('grid'), ssBlurb=document.getElementById('ssBlurb'), selStage=0;
+  STAGES.forEach(function(s,i){
+    var b=document.createElement('button');
+    b.className='stage'; b.setAttribute('role','option'); b.style.setProperty('--c',s.c);
+    b.innerHTML='<span class="clr">★ CLEARED</span><span class="num">STAGE '+s.n+'</span><span class="nm">'+s.nm+'</span><span class="ty">'+s.ty+'</span>';
+    b.addEventListener('mouseenter',function(){ selStage=i; paintStages(); });
+    b.addEventListener('click',function(){ selStage=i; paintStages(); openStage(); });
+    grid.appendChild(b);
+  });
+  // P2 - YOU? open roster slot = the primary CTA, living inside the lineup
+  var you=document.createElement('button');
+  you.className='stage you'; you.setAttribute('role','option'); you.style.setProperty('--c','#22e7f5');
+  you.innerHTML='<span class="q">?</span><span class="num" style="margin-top:4px">PLAYER 2</span><span class="nm">You?</span><span class="ty" style="color:#22e7f5">START A PROJECT</span>';
+  you.addEventListener('mouseenter',function(){ selStage=STAGES.length; paintStages(); });
+  you.addEventListener('click',function(){ selStage=STAGES.length; paintStages(); openStage(); });
+  grid.appendChild(you);
+
+  var stageEls=[].slice.call(grid.children);
+  var YOU_BLURB='One seat left on the roster. Start your project and claim it — a live site in days, not months.';
+  function paintStages(){
+    stageEls.forEach(function(el,i){ el.setAttribute('aria-selected', i===selStage?'true':'false'); });
+    ssBlurb.textContent = selStage<STAGES.length ? STAGES[selStage].d : YOU_BLURB;
+  }
+  function openStage(){
+    if(selStage>=STAGES.length){ blip(720,.14); show('contact'); return; }
+    blip(700,.12);
+    var s=STAGES[selStage];
+    document.getElementById('detailPanel').innerHTML=
+      '<div class="ty">STAGE '+s.n+' · '+s.ty+'</div><h2>'+s.nm+'</h2><p>'+s.d+'</p>'+
+      '<div class="act"><a class="btn" href="'+s.href+'" target="_blank" rel="noopener">Visit the site ▸</a>'+
+      '<button class="btn ghost" data-back="stages">Back to select</button></div>';
+    show('detail');
+  }
+
+  /* ---- back buttons (delegated) + click-to-skip loading ---- */
+  con.addEventListener('click',function(e){
+    if(cur==='boot' && !bootDone){ reveal(320); return; }
+    var b=e.target.closest('[data-back]'); if(b){ blip(320,.1); show(b.dataset.back); }
+  });
+
+  /* ---- keyboard ---- */
+  con.addEventListener('keydown',function(e){
+    var k=e.key;
+    if(cur==='boot'){ if(k==='Enter'||k===' '||k==='Escape'){ e.preventDefault(); reveal(320); } return; }
+    if(cur==='menu'){
+      if(k==='ArrowDown'||k==='ArrowUp'){ e.preventDefault(); selMenu=(selMenu+(k==='ArrowDown'?1:menuItems.length-1))%menuItems.length; paintMenu(); blip(440,.06); }
+      else if(k==='Enter'||k===' '){ e.preventDefault(); chooseMenu(); }
+      return;
+    }
+    if(cur==='stages'){
+      var total=stageEls.length, cols=(window.innerWidth<=560)?2:3;
+      if(k==='ArrowRight'){ e.preventDefault(); selStage=(selStage+1)%total; paintStages(); blip(440,.06); }
+      else if(k==='ArrowLeft'){ e.preventDefault(); selStage=(selStage+total-1)%total; paintStages(); blip(440,.06); }
+      else if(k==='ArrowDown'){ e.preventDefault(); selStage=(selStage+cols)%total; paintStages(); blip(440,.06); }
+      else if(k==='ArrowUp'){ e.preventDefault(); selStage=(selStage+total-cols)%total; paintStages(); blip(440,.06); }
+      else if(k==='Enter'||k===' '){ e.preventDefault(); openStage(); }
+      else if(k==='Escape'){ e.preventDefault(); show('menu'); }
+      return;
+    }
+    if(cur==='detail'){ if(k==='Escape'){ e.preventDefault(); show('stages'); } return; }
+    if(cur==='contact'){ if(k==='Escape'){ e.preventDefault(); show('menu'); } return; }
+  });
+
+  con.addEventListener('click',function(){ con.focus(); });
+  con.focus();
+  runBoot();
+})();
+</script>
+
+</body>
+</html>
