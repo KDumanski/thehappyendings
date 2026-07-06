@@ -185,6 +185,10 @@
   .wsvg{position:absolute;inset:0;width:100%;height:100%;z-index:2;filter:drop-shadow(0 0 6px rgba(34,231,245,.4))}
   .wsvg .route{animation:dash 3s linear infinite}
   @keyframes dash{to{stroke-dashoffset:-6}}
+  .wsvg .land{animation:twk 4.5s ease-in-out infinite alternate}
+  @keyframes twk{from{opacity:.82}to{opacity:1}}
+  .wsvg .plane polygon{fill:#fff;stroke:var(--gold);stroke-width:.5;paint-order:stroke}
+  .wsvg .plane .glow{fill:rgba(255,233,150,.35)}
   .worldmap .mtag{position:absolute;top:10px;left:12px;z-index:4;font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
   .loc{position:absolute;transform:translate(-50%,-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;background:none;border:none;font-family:inherit;padding:4px}
   .loc .dot{width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c),0 0 0 4px rgba(4,1,15,.55);animation:beaconPulse 1.9s ease-in-out infinite;transition:transform .12s}
@@ -228,7 +232,8 @@
     .sun{width:72%}
   }
   @media(prefers-reduced-motion:reduce){
-    .city,.stars,.grid,.blink,.beacon,.pyr i,.pbeacon,.runner,.rl-front,.rl-back,.ra-front,.ra-back,.speed,.music .eq i{animation:none}
+    .city,.stars,.grid,.blink,.beacon,.pyr i,.pbeacon,.runner,.rl-front,.rl-back,.ra-front,.ra-back,.speed,.music .eq i,.wsvg .route,.wsvg .land{animation:none}
+    .wsvg .plane{display:none}
     .btn,.pin .dot,.pin .plab{transition:none}
     .runner .run{transform:rotate(7deg) scale(1.2)}
     .rl-front{transform:rotate(34deg)}.rl-back{transform:rotate(-34deg)}
@@ -271,9 +276,9 @@
     <button class="back" data-go="home">◂ Back</button>
     <div class="pfhead">Select a Project</div>
     <div class="worldmap" id="worldmap">
-      <svg class="wsvg" viewBox="0 0 100 55" preserveAspectRatio="none" aria-hidden="true">
+      <svg class="wsvg" viewBox="0 0 100 55" preserveAspectRatio="none" aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs><pattern id="dots" width="1.7" height="1.7" patternUnits="userSpaceOnUse"><circle cx="0.6" cy="0.6" r="0.46" fill="rgba(122,249,255,.55)"/></pattern></defs>
-        <g fill="url(#dots)" stroke="rgba(122,249,255,.4)" stroke-width="0.25">
+        <g class="land" fill="url(#dots)" stroke="rgba(122,249,255,.4)" stroke-width="0.25">
           <path d="M5 11 L27 8 L31 16 L27 24 L17 28 L9 21 Z"/>
           <path d="M21 30 L30 30 L28 47 L22 44 Z"/>
           <path d="M42 9 L57 8 L55 17 L43 17 Z"/>
@@ -282,6 +287,8 @@
           <path d="M79 38 L93 38 L90 49 L79 47 Z"/>
         </g>
         <polyline class="route" points="18,18.7 24,28.6 52,24.2 48,13.2 70,22 84,16.5" fill="none" stroke="rgba(255,211,107,.6)" stroke-width="0.4" stroke-dasharray="1.6 1.4"/>
+        <path id="rt" d="M18 18.7 L24 28.6 L52 24.2 L48 13.2 L70 22 L84 16.5" fill="none" stroke="none"/>
+        <g class="plane"><circle class="glow" r="1.3"></circle><polygon points="2.1,0 -1.1,1.2 -0.2,0 -1.1,-1.2"></polygon><animateMotion dur="14s" repeatCount="indefinite" rotate="auto"><mpath href="#rt" xlink:href="#rt"></mpath></animateMotion></g>
       </svg>
       <span class="mtag" aria-hidden="true">▸ Pick a project below · hover for info · click to visit</span>
     </div>
