@@ -3,507 +3,466 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="description" content="The Happy Endings is an AI web studio helping small businesses automate integrated marketing and operations. Explore our work.">
 <title>The Happy Endings · AI Web Studio</title>
-<meta name="description" content="Let us help your small business automate integrated marketing and operations, so you can focus on creating value for society.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --cyan:#05d9e8;--pink:#ff2e97;--purple:#b967ff;--gold:#ffcf6b;
-    --ink:#0d0221;--text:#f4ecff;--muted:#c3b3e0;--maxw:1180px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-  body{background:var(--ink);color:var(--text);
-    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
-    line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;position:relative}
-  a{color:inherit;text-decoration:none}
-  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:6px}
-  .case:focus-within,.bld.proj:focus-visible{outline:3px solid #fff;outline-offset:4px}
-  .container{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 28px}
-  .skip{position:fixed;top:-100px;left:16px;z-index:10000;background:var(--cyan);color:#04101a;font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;padding:12px 18px;border-radius:10px;transition:top .2s}
-  .skip:focus{top:16px;outline:3px solid #fff;outline-offset:2px}
-  #main,#work,#contact{scroll-margin-top:80px}
-
-  /* ===== Boot intro ===== */
-  #boot{position:fixed;inset:0;z-index:9999;background:#05010f;display:flex;align-items:center;justify-content:center;
-    font-family:'Orbitron',monospace;animation:bootfail 0s linear 6s forwards}
-  #boot::after{content:"";position:absolute;inset:0;pointer-events:none;
-    background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.25) 2px 3px)}
-  #boot.off{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .5s}
-  @keyframes bootfail{to{opacity:0;visibility:hidden;pointer-events:none}}
-  .term{width:min(660px,86vw);color:#7af9ff;font-size:14px;line-height:2;text-shadow:0 0 8px rgba(5,217,232,.7);white-space:pre-wrap}
-  .term .h{color:#ff71ce;font-weight:700;letter-spacing:0.06em}
-  .term .ok{color:#7dffb0}
-  .term .cur{display:inline-block;width:9px;height:16px;background:#7af9ff;margin-left:2px;vertical-align:-2px;animation:cur .8s steps(1) infinite}
-  .term .skip{margin-top:22px;font-size:12.5px;color:#6f6a99;letter-spacing:0.15em}
-  @keyframes cur{50%{opacity:0}}
-
-  /* ===== Fixed synthwave scene ===== */
-  .scene{position:fixed;inset:0;z-index:0;overflow:hidden;
-    background:linear-gradient(180deg,#05010f 0%,#1a0833 22%,#3d1063 40%,#7a1d8f 52%,#d6217d 60%,#ff5e6c 65%,#ff8d5a 68%,#1a0833 69%)}
-  .stars{position:absolute;top:0;left:0;right:0;height:62%;
-    background-image:radial-gradient(1px 1px at 20% 18%,#fff,transparent),radial-gradient(1px 1px at 60% 8%,#fff,transparent),radial-gradient(1.4px 1.4px at 80% 22%,#cfe9ff,transparent),radial-gradient(1px 1px at 35% 30%,#fff,transparent),radial-gradient(1px 1px at 12% 40%,#fff,transparent),radial-gradient(1.4px 1.4px at 72% 35%,#fff,transparent),radial-gradient(1px 1px at 90% 12%,#fff,transparent),radial-gradient(1px 1px at 48% 14%,#cfe9ff,transparent),radial-gradient(1px 1px at 5% 12%,#fff,transparent);
-    opacity:.85;animation:twinkle 5s ease-in-out infinite alternate}
-  @keyframes twinkle{from{opacity:.55}to{opacity:.95}}
-  .sun{position:absolute;left:50%;bottom:31%;transform:translateX(-50%);width:min(430px,80vw);aspect-ratio:1;border-radius:50%;
-    background:linear-gradient(180deg,#fff7c4 0%,#ffd95e 26%,#ff7eb3 60%,#ff4d6d 100%);
-    box-shadow:0 0 120px 30px rgba(255,77,135,.55),0 0 220px 60px rgba(255,120,90,.35)}
-  .sun::after{content:"";position:absolute;left:0;right:0;bottom:0;height:52%;
-    background:repeating-linear-gradient(180deg,transparent 0 7px,var(--ink) 7px 9px,transparent 9px 16px,var(--ink) 16px 19px,transparent 19px 30px,var(--ink) 30px 34px,transparent 34px 50px,var(--ink) 50px 56px);
-    -webkit-mask:linear-gradient(180deg,transparent,#000);mask:linear-gradient(180deg,transparent,#000)}
-  .haze{position:absolute;left:0;right:0;bottom:31%;height:3px;background:#ffd0e6;box-shadow:0 0 24px 6px rgba(255,120,180,.9),0 0 60px 12px rgba(255,80,150,.6);z-index:3}
-
-  /* Interactive skyline */
-  .skyline{position:absolute;left:0;right:0;bottom:31%;height:27vh;max-height:250px;display:flex;align-items:flex-end;justify-content:center;gap:5px;padding:0 12px;z-index:5}
-  .bld{position:relative;flex:0 0 auto;border-radius:3px 3px 0 0;background:linear-gradient(180deg,#2a0f47,#0a0218);
-    border-top:2px solid var(--edge);border-left:1px solid rgba(255,255,255,.06);box-shadow:0 0 14px -2px var(--edge)}
-  .bld::before{content:"";position:absolute;inset:8px 4px 0;border-radius:2px;
-    background-image:radial-gradient(circle,var(--edge) .9px,transparent 1.4px);background-size:9px 13px;opacity:.4}
-  .bld.proj{cursor:pointer;filter:saturate(1.3)}
-  .bld.proj::before{opacity:.72}
-  .bld.proj::after{content:"";position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;
-    background:var(--edge);box-shadow:0 0 12px var(--edge);animation:beacon 1.8s ease-in-out infinite}
-  @keyframes beacon{50%{transform:translateX(-50%) scale(1.6);opacity:.6}}
-  .bld.proj:hover,.bld.proj:focus-visible{box-shadow:0 0 26px 2px var(--edge),0 0 60px -6px var(--edge)}
-  .bld.proj:hover::before,.bld.proj:focus-visible::before{opacity:1}
-  .sign{position:absolute;top:-38px;left:50%;transform:translateX(-50%) translateY(6px);white-space:nowrap;
-    font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;color:#fff;
-    background:rgba(10,3,26,.9);border:1px solid var(--edge);border-radius:8px;padding:5px 10px;
-    box-shadow:0 0 16px -2px var(--edge);opacity:0;pointer-events:none;transition:.25s}
-  .bld.proj:hover .sign,.bld.proj:focus-visible .sign{opacity:1;transform:translateX(-50%) translateY(0)}
-
-  /* Grid floor */
-  .floorwrap{position:absolute;left:0;right:0;bottom:0;height:31%;perspective:260px;perspective-origin:50% 0;overflow:hidden;z-index:1}
-  .grid{position:absolute;inset:-2% -50% -2% -50%;transform:rotateX(74deg);transform-origin:50% 0;
-    background-image:linear-gradient(90deg,rgba(5,217,232,.55) 1px,transparent 1px),linear-gradient(180deg,rgba(255,46,151,.55) 1px,transparent 1px);
-    background-size:46px 46px;animation:flow 2.6s linear infinite}
-  @keyframes flow{from{background-position:0 0}to{background-position:0 46px}}
-  .floorwrap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,2,33,.65),transparent 30%,transparent 78%,#0d0221)}
-
-  .scan{position:fixed;inset:0;z-index:60;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.16) 2px 3px);opacity:.5;mix-blend-mode:multiply}
-  .vig{position:fixed;inset:0;z-index:59;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,transparent 55%,rgba(5,1,15,.7) 100%)}
-
-  /* ===== Content ===== */
-  .nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(8px);background:linear-gradient(180deg,rgba(8,2,20,.55),transparent)}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0}
-  .brand{display:flex;align-items:center;gap:11px;font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:0.06em;font-size:15px;color:#fff;text-shadow:0 0 10px rgba(255,46,151,.8),0 0 22px rgba(185,103,255,.6)}
-  .brand .mk{color:var(--cyan);text-shadow:0 0 12px var(--cyan)}
-  .nav-cta{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#fff;border:1.5px solid var(--cyan);border-radius:999px;padding:10px 18px;box-shadow:0 0 14px rgba(5,217,232,.5),inset 0 0 12px rgba(5,217,232,.25);transition:.2s}
-  .nav-cta:hover{background:var(--cyan);color:#04101a;box-shadow:0 0 26px rgba(5,217,232,.85)}
-
-  .hero{position:relative;z-index:10;text-align:center;min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(90px,14vh,160px) 0 8vh}
-  .hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-    background:radial-gradient(ellipse 66% 52% at 50% 44%,rgba(4,1,16,.9) 0%,rgba(4,1,16,.72) 42%,rgba(4,1,16,0) 74%),
-      linear-gradient(180deg,rgba(4,1,16,.55) 0%,rgba(4,1,16,0) 26%)}
-  .kicker{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.42em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 12px rgba(5,217,232,.85);margin-bottom:22px;padding-left:.42em}
-  h1{font-family:'Orbitron',sans-serif;font-weight:900;letter-spacing:0.02em;line-height:0.94;font-size:clamp(2.6rem,8.5vw,5.4rem);
-    background:linear-gradient(180deg,#fff 0%,#ffe6f6 38%,#ff8fd0 55%,#b967ff 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    filter:drop-shadow(0 2px 0 rgba(255,46,151,.55)) drop-shadow(0 0 26px rgba(255,46,151,.65)) drop-shadow(0 0 60px rgba(185,103,255,.5))}
-  h1.mission{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
-    font-weight:800;font-size:clamp(1.6rem,3.9vw,3rem);line-height:1.28;letter-spacing:-0.015em;
-    max-width:900px;margin:0 auto;color:#fff;
-    background:none;-webkit-text-fill-color:#fff;-webkit-background-clip:border-box;background-clip:border-box;
-    filter:none;text-shadow:0 2px 22px rgba(4,1,20,.98),0 0 44px rgba(4,1,20,.85),0 0 60px rgba(185,103,255,.28);text-wrap:balance}
-  .hero-ctas{margin-top:clamp(34px,6vh,60px)}
-  .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:28px}
-  .chip{font-size:13px;font-weight:700;letter-spacing:0.04em;color:#fff;border:1px solid rgba(255,255,255,.32);border-radius:999px;padding:7px 14px;background:rgba(9,2,24,.62);backdrop-filter:blur(4px);text-transform:uppercase}
-  .chip.live{color:#06121a;background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 18px rgba(5,217,232,.7);display:inline-flex;align-items:center;gap:8px}
-  .chip.live i{width:8px;height:8px;border-radius:50%;background:#06121a;animation:blink 1.6s ease-in-out infinite}
-  @keyframes blink{50%{opacity:.3}}
-  .scrollcue{margin-top:auto;padding-top:34px;font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:0.3em;color:#cbb9ec;text-transform:uppercase;animation:bob 2s ease-in-out infinite}
-  @keyframes bob{50%{transform:translateY(7px)}}
-
-  .work{position:relative;z-index:10;background:linear-gradient(180deg,rgba(13,2,33,0) 0%,#100327 9%,#0d0221 100%);padding:10px 0 30px}
-  .sec-head{display:flex;align-items:center;gap:16px;margin:6px 0 26px}
-  .sec-head .lbl{margin:0;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.26em;text-transform:uppercase;color:var(--pink);text-shadow:0 0 14px rgba(255,46,151,.7);white-space:nowrap}
-  .sec-head .rule{flex:1;height:1px;background:linear-gradient(90deg,var(--pink),rgba(185,103,255,.2),transparent)}
-
-  .cases{display:flex;flex-direction:column;gap:26px}
-  .case{display:flex;align-items:stretch;border-radius:18px;overflow:hidden;
-    border:1px solid rgba(255,255,255,.14);background:#0c0320;box-shadow:0 0 0 1px rgba(0,0,0,.3),0 22px 50px -22px rgba(0,0,0,.8);
-    opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1),box-shadow .3s,border-color .3s}
-  .case.in{opacity:1;transform:none}
-  .case:nth-child(even){flex-direction:row-reverse}
-  .case:hover{border-color:var(--c);box-shadow:0 0 24px -2px var(--c),0 0 60px -10px var(--c),0 26px 60px -24px rgba(0,0,0,.85)}
-  .case-shot{position:relative;flex:0 0 55%;min-height:340px;display:block;overflow:hidden}
-  .case-shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1);will-change:transform}
-  .case:hover .case-shot img{transform:scale(1.05)}
-  .pill{position:absolute;top:15px;right:15px;z-index:3;display:inline-flex;align-items:center;gap:7px;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#06121a;background:var(--cyan);border-radius:999px;padding:4px 11px;box-shadow:0 0 16px rgba(5,217,232,.7)}
-  .pill i{width:7px;height:7px;border-radius:50%;background:#06121a;animation:blink 1.6s ease-in-out infinite}
-  .case-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:36px 34px;background:linear-gradient(170deg,rgba(22,7,50,.72),rgba(10,2,26,.88))}
-  .case-body h3{font-size:clamp(1.35rem,2.2vw,1.8rem);font-weight:800;letter-spacing:-0.02em;line-height:1.1;color:#fff;margin:0}
-  .case-body p{font-size:16px;line-height:1.65;color:#d9cdf0;margin:0;max-width:44ch}
-  .cat{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;color:#efe6ff}
-  .cat .dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none;box-shadow:0 0 10px var(--c)}
-  .case-link{align-self:flex-start;margin-top:6px;font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#fff;border:1.5px solid var(--c);border-radius:999px;padding:10px 18px;box-shadow:0 0 14px -4px var(--c);transition:.2s}
-  .case-link:hover{background:var(--c);color:#0a0118;box-shadow:0 0 22px var(--c)}
-
-  /* ===== Contact / start a project ===== */
-  .contact{position:relative;z-index:10;background:#0d0221;padding:34px 0 6px}
-  .cwrap{display:grid;grid-template-columns:5fr 7fr;gap:36px;align-items:start}
-  .cintro h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;color:#fff;text-shadow:0 0 18px rgba(255,46,151,.6);line-height:1.15}
-  .cintro p{margin-top:14px;font-size:15px;line-height:1.7;color:var(--muted)}
-  .cform{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:26px 24px;border:1px solid rgba(185,103,255,.3);border-radius:18px;background:rgba(12,3,32,.6);backdrop-filter:blur(6px)}
-  .cform label{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#c3b3e0}
-  .cform .full{grid-column:1/-1}
-  .cform input,.cform textarea{font-family:'Inter',sans-serif;font-size:15px;color:#fff;background:rgba(5,1,15,.6);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:12px 14px;transition:border-color .2s,box-shadow .2s}
-  .cform input:focus,.cform textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 14px rgba(5,217,232,.4)}
-  .cform ::placeholder{color:#6f6a99}
-  .cform textarea{resize:vertical;min-height:110px}
-  .cform button{grid-column:1/-1;justify-self:start;border:none;cursor:pointer}
-  .cform .note{grid-column:1/-1;font-size:13px;color:#ab9cd6;margin:0}
-  .cform .note a{color:var(--cyan)}
-  .cform .ok-msg{grid-column:1/-1;display:none;font-size:15px;font-weight:600;color:#7dffb0;margin:0}
-  .hp{display:none}
-
-  .hero-ctas{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px;margin-top:32px}
-
-  footer{position:relative;z-index:10;background:#0d0221;padding:62px 0 46px;margin-top:64px;border-top:1px solid rgba(185,103,255,.25);box-shadow:0 -1px 30px -10px rgba(185,103,255,.5)}
-  .foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px}
-  .foot h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3vw,2.1rem);font-weight:700;color:#fff;text-shadow:0 0 18px rgba(255,46,151,.6)}
-  .foot p{color:var(--muted);font-size:14px;margin-top:8px}
-  .foot-cta{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#0a0118;background:linear-gradient(90deg,var(--cyan),#7af9ff);border-radius:999px;padding:14px 28px;box-shadow:0 0 24px rgba(5,217,232,.6);transition:transform .2s,box-shadow .2s}
-  .foot-cta:hover{transform:translateY(-2px);box-shadow:0 0 38px rgba(5,217,232,.9)}
-  .foot-mini{width:100%;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:38px;font-size:13px;color:#ab9cd6}
-  .foot-mini a:hover{color:var(--cyan)}
-
-  /* ===== Cookie notice ===== */
-  .cookiebar{position:fixed;right:22px;bottom:22px;z-index:80;width:min(340px,calc(100vw - 44px));
-    background:rgba(10,3,26,.96);border:1px solid var(--purple);border-radius:14px;padding:16px 16px 14px;
-    box-shadow:0 0 26px rgba(185,103,255,.4);backdrop-filter:blur(6px)}
-  .cookiebar p{font-size:13.5px;line-height:1.55;color:#eaddfb;margin:0}
-  .cookiebar strong{color:#fff}
-  .cookie-btns{display:flex;gap:8px;margin-top:12px}
-  .cookie-btns button{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:999px;padding:8px 14px;cursor:pointer;transition:.2s}
-  #ckYes{color:#04101a;background:var(--cyan);border:1px solid var(--cyan);box-shadow:0 0 14px rgba(5,217,232,.5)}
-  #ckYes:hover{box-shadow:0 0 22px rgba(5,217,232,.8)}
-  #ckNo{color:#cbb9ec;background:transparent;border:1px solid rgba(255,255,255,.28)}
-  #ckNo:hover{color:#fff;border-color:#fff}
-
-  @media(max-width:1000px){
-    .case-shot{flex-basis:48%}
-  }
-  @media(max-width:760px){
-    .case,.case:nth-child(even){flex-direction:column}
-    .case-shot{flex:none;height:230px;min-height:0}
-    .case-body{padding:26px 22px 28px}
-    .cwrap{grid-template-columns:1fr}
-    .cform{grid-template-columns:1fr}
-    .skyline{max-height:150px}
-    .sign{font-size:13px}
-    .cookiebar{right:14px;bottom:14px}
-  }
-  @media(prefers-reduced-motion:reduce){
-    #boot{display:none}
-    .case{opacity:1;transform:none}
-    .grid,.stars,.chip.live i,.pill i,.scrollcue,.case-shot img,.bld.proj::after{animation:none;transition:none}
-    .foot-cta{transition:none}
-  }
-  @media(forced-colors:active){
-    .scene,.scan,.vig,#boot{display:none}
-    body{background:Canvas;color:CanvasText}
-    h1{background:none;-webkit-text-fill-color:CanvasText;color:CanvasText;filter:none}
-    .case{opacity:1;transform:none;border-color:CanvasText}
-    .case-body,.cform{background:Canvas}
-    .cform input,.cform textarea{border-color:CanvasText}
-  }
-</style>
 </head>
 <body>
+<style>
+  /* ============================================================
+     THE HAPPY ENDINGS — synthwave landing concept (v5)
+     Home: mission on top · static neon skyline hero + running guy ·
+     project buildings hover a preview ON TOP (no layout shift) ·
+     two buttons side by side. Portfolio: its own page, a MAP beside
+     the project screenshots. No logo, no loading, no ticker.
+     Pure CSS scene; images are ./shots/*.jpg (served from /projects/).
+     ============================================================ */
+  :root{
+    --ink:#0b021c; --cyan:#22e7f5; --pink:#ff3d9a; --purple:#c07bff; --gold:#ffd36b;
+    --green:#7dffb0; --red:#ff6b6b; --text:#f3ecff; --muted:#c3b4e6; --dim:#8a78b8;
+    --mono:ui-monospace,'Cascadia Mono','Segoe UI Mono','SFMono-Regular','Menlo','Consolas','Courier New',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:radial-gradient(120% 90% at 50% 0%, #1a0740 0%, #0b021c 60%), var(--ink);
+    color:var(--text);font-family:var(--mono);line-height:1.6;height:100vh;overflow:hidden;
+    padding:14px;display:flex;align-items:center;justify-content:center}
 
-<a class="skip" href="#main">Skip to content</a>
+  /* ---------- Console / CRT (sized to fit the viewport, no scroll) ---------- */
+  .console{position:relative;width:min(940px, calc(100vw - 28px), calc((100vh - 28px) * 4 / 3));aspect-ratio:4/3;border-radius:18px;overflow:hidden;isolation:isolate;background:#08021a;
+    border:1px solid rgba(192,123,255,.35);
+    box-shadow:0 0 0 8px #05010f,0 0 0 9px rgba(192,123,255,.25),0 30px 80px -20px rgba(0,0,0,.9),inset 0 0 120px -30px rgba(255,61,154,.25);outline:none}
+  .console:focus-visible{box-shadow:0 0 0 8px #05010f,0 0 0 11px var(--cyan),0 30px 80px -20px rgba(0,0,0,.9)}
+  .console::before{content:"";position:absolute;inset:0;z-index:38;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.18) 2px 3px)}
+  .console::after{content:"";position:absolute;inset:0;z-index:39;pointer-events:none;border-radius:18px;box-shadow:inset 0 0 90px 10px rgba(4,1,15,.8);
+    background:radial-gradient(130% 110% at 50% 45%,transparent 60%,rgba(4,1,15,.55) 100%)}
 
-<div id="boot" aria-hidden="true">
-  <div class="term" id="term"></div>
-</div>
+  /* ============ SHARED SYNTHWAVE WORLD (static skyline) ============ */
+  .world{position:absolute;inset:0;z-index:1;overflow:hidden;
+    background:linear-gradient(180deg,#05010f 0%,#1a0833 24%,#3d1063 42%,#7a1d8f 53%,#d6217d 60%,#ff5e6c 65%,#ff8d5a 68%,#1a0833 69%)}
+  .stars{position:absolute;top:0;left:0;right:0;height:60%;z-index:1;
+    background-image:radial-gradient(1px 1px at 20% 18%,#fff,transparent),radial-gradient(1px 1px at 60% 9%,#fff,transparent),radial-gradient(1.4px 1.4px at 80% 22%,#cfe9ff,transparent),radial-gradient(1px 1px at 35% 30%,#fff,transparent),radial-gradient(1px 1px at 12% 40%,#fff,transparent),radial-gradient(1.4px 1.4px at 72% 33%,#fff,transparent),radial-gradient(1px 1px at 90% 12%,#fff,transparent),radial-gradient(1px 1px at 48% 14%,#cfe9ff,transparent),radial-gradient(1px 1px at 5% 12%,#fff,transparent),radial-gradient(1px 1px at 30% 6%,#fff,transparent);
+    opacity:.85;animation:twinkle 5s ease-in-out infinite alternate}
+  @keyframes twinkle{from{opacity:.5}to{opacity:.95}}
+  .sun{position:absolute;left:50%;bottom:30%;transform:translateX(-50%);width:min(360px,62%);aspect-ratio:1;border-radius:50%;z-index:2;
+    background:linear-gradient(180deg,#fff7c4 0%,#ffd95e 26%,#ff7eb3 60%,#ff4d6d 100%);
+    box-shadow:0 0 120px 30px rgba(255,77,135,.5),0 0 220px 60px rgba(255,120,90,.3)}
+  .sun::after{content:"";position:absolute;left:0;right:0;bottom:0;height:54%;
+    background:repeating-linear-gradient(180deg,transparent 0 7px,#08021a 7px 9px,transparent 9px 16px,#08021a 16px 19px,transparent 19px 30px,#08021a 30px 34px,transparent 34px 50px,#08021a 50px 56px);
+    -webkit-mask:linear-gradient(180deg,transparent,#000);mask:linear-gradient(180deg,transparent,#000)}
 
-<div class="scene" aria-hidden="true">
-  <div class="stars"></div>
-  <div class="sun"></div>
-  <nav class="skyline" id="skyline" aria-label="Projects (skyline shortcuts)"></nav>
-  <div class="haze"></div>
-  <div class="floorwrap"><div class="grid"></div></div>
-</div>
-<div class="vig" aria-hidden="true"></div>
-<div class="scan" aria-hidden="true"></div>
+  /* skyline (scrolling, two depth layers; pauses when you hover a project) */
+  .city{position:absolute;left:0;width:200%;display:flex;align-items:flex-end}
+  @keyframes citymove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .city.far{bottom:30%;height:22%;z-index:3;opacity:.5;filter:blur(.7px);animation:citymove 60s linear infinite}
+  .city.near{bottom:30%;height:35%;z-index:4;animation:citymove 38s linear infinite}
+  .cityset{flex:0 0 50%;height:100%;display:flex;align-items:flex-end;justify-content:space-around;padding:0 8px}
+  .city.far .cityset{gap:5px}.city.near .cityset{gap:7px}
+  .world.pausecity .city{animation-play-state:paused}
+  .bld{flex:0 0 auto;position:relative;border-radius:2px 2px 0 0;
+    background:linear-gradient(180deg,#271247 0%,#0c0421 66%,#06010f 100%);
+    border-top:2px solid var(--e);box-shadow:0 0 14px -3px var(--e),inset 0 1px 0 rgba(255,255,255,.05)}
+  .bld::before{content:"";position:absolute;inset:5px 3px 0;border-radius:1px;opacity:.92;
+    background-image:
+      radial-gradient(circle at 50% 40%, rgba(205,190,255,.13) 0 .8px, transparent 1.5px),
+      radial-gradient(circle at 50% 40%, rgba(255,211,107,.95) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 50% 40%, rgba(122,249,255,.85) 0 1px, transparent 1.8px);
+    background-size:6px 9px, 19px 27px, 25px 23px;
+    background-position:var(--wx,0px) var(--wy,0px),calc(var(--wx,0px) + 3px) calc(var(--wy,0px) + 6px),calc(var(--wx,0px) + 12px) calc(var(--wy,0px) + 14px)}
+  .city.far .bld{background:linear-gradient(180deg,#180a30,#08021c);box-shadow:none;border-top-color:rgba(170,130,240,.55)}
+  .city.far .bld::before{background-image:radial-gradient(circle at 50% 40%, rgba(200,180,255,.16) 0 .8px, transparent 1.5px);background-size:7px 10px;opacity:.5}
+  /* rooftop ornaments */
+  .ant{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);width:2px;height:20px;background:linear-gradient(180deg,var(--e),transparent);box-shadow:0 0 6px var(--e)}
+  .beacon{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#ff5e6c;box-shadow:0 0 8px 1px #ff5e6c;animation:blink 1.5s steps(1) infinite}
+  .cap{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);width:58%;height:13px;background:linear-gradient(180deg,#271247,#0c0421);border-top:2px solid var(--e);box-shadow:0 0 9px -2px var(--e)}
+  .cap::after{content:"";position:absolute;left:50%;bottom:100%;transform:translateX(-50%);width:52%;height:9px;background:linear-gradient(180deg,#271247,#0c0421);border-top:2px solid var(--e)}
+  .pyr{position:absolute;left:0;bottom:100%;width:100%;height:16px;background:linear-gradient(180deg,#2a1150,#0c0421);clip-path:polygon(50% 0,0 100%,100% 100%)}
+  .pyr i{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--e);box-shadow:0 0 8px var(--e);animation:blink 1.8s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  /* project buildings (clickable, hoverable) */
+  .bld.proj{cursor:pointer;font-family:inherit;padding:0;background:linear-gradient(180deg,#3a1a5e,#0c0421 70%);filter:saturate(1.2)}
+  .bld.proj .pbeacon{position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--e);box-shadow:0 0 12px var(--e);animation:beaconPulse 1.9s ease-in-out infinite}
+  @keyframes beaconPulse{50%{transform:translateX(-50%) scale(1.5);opacity:.55}}
+  .bld.proj:hover,.bld.proj:focus-visible{box-shadow:0 0 26px -2px var(--e),0 0 60px -8px var(--e)}
+  .bld.proj:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .haze{position:absolute;left:0;right:0;bottom:30%;height:3px;z-index:5;background:#ffd0e6;box-shadow:0 0 24px 6px rgba(255,120,180,.85),0 0 60px 12px rgba(255,80,150,.55)}
 
-<header class="nav">
-  <div class="container nav-inner">
-    <a class="brand" href="/"><span class="mk" aria-hidden="true">◆</span> THE HAPPY ENDINGS</a>
-    <a class="nav-cta" href="#contact">Start a project</a>
+  /* grid floor */
+  .floorwrap{position:absolute;left:0;right:0;bottom:0;height:30%;perspective:260px;perspective-origin:50% 0;overflow:hidden;z-index:2}
+  .grid{position:absolute;inset:-2% -50% -2% -50%;transform:rotateX(74deg);transform-origin:50% 0;
+    background-image:linear-gradient(90deg,rgba(34,231,245,.55) 1px,transparent 1px),linear-gradient(180deg,rgba(255,46,151,.55) 1px,transparent 1px);
+    background-size:44px 44px;animation:flow 2.2s linear infinite}
+  @keyframes flow{from{background-position:0 0}to{background-position:0 44px}}
+  .floorwrap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,2,28,.5),transparent 34%,transparent 76%,#0b021c)}
+
+  /* ---------- the running guy ---------- */
+  .runner{position:absolute;left:42%;bottom:28%;z-index:6;width:30px;height:52px;
+    filter:drop-shadow(0 0 7px rgba(34,231,245,.95)) drop-shadow(0 0 16px rgba(34,231,245,.5));animation:bob .46s linear infinite}
+  .runner .run{position:absolute;inset:0;transform:rotate(7deg) scale(1.2);transform-origin:50% 78%}
+  .runner span{position:absolute;background:var(--cyan);border-radius:2px}
+  .rhead{width:11px;height:11px;left:8px;top:0;border-radius:4px;z-index:3}
+  .rtorso{width:8px;height:21px;left:9px;top:10px;z-index:2}
+  .rl-front,.rl-back{width:6px;height:19px;left:9px;top:28px;transform-origin:50% 8%;z-index:3}
+  .rl-back{background:#12b7c8;z-index:1}
+  .ra-front,.ra-back{width:5px;height:16px;left:10px;top:12px;transform-origin:50% 10%;z-index:4}
+  .ra-back{background:#12b7c8;z-index:0}
+  .rl-front{animation:lf .46s linear infinite}.rl-back{animation:lb .46s linear infinite}
+  .ra-front{animation:af .46s linear infinite}.ra-back{animation:ab .46s linear infinite}
+  .speed{position:absolute;right:100%;top:34%;width:34px;height:2px;margin-right:5px;border-radius:2px;
+    background:linear-gradient(90deg,transparent,rgba(34,231,245,.85));box-shadow:0 6px 0 rgba(34,231,245,.5),0 -7px 0 rgba(34,231,245,.35);animation:speed .46s linear infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  @keyframes lf{0%,100%{transform:rotate(40deg)}50%{transform:rotate(-42deg)}}
+  @keyframes lb{0%,100%{transform:rotate(-42deg)}50%{transform:rotate(40deg)}}
+  @keyframes af{0%,100%{transform:rotate(-48deg)}50%{transform:rotate(44deg)}}
+  @keyframes ab{0%,100%{transform:rotate(44deg)}50%{transform:rotate(-48deg)}}
+  @keyframes speed{0%,100%{opacity:.25;transform:scaleX(.7)}50%{opacity:.8;transform:scaleX(1.15)}}
+
+  /* ---------- hover preview (ON TOP, no layout shift) ---------- */
+  #pop{position:absolute;z-index:37;left:0;top:0;pointer-events:none;opacity:0;width:232px;
+    background:rgba(9,2,26,.97);border:2px solid var(--e,#22e7f5);border-radius:11px;box-shadow:0 0 26px -4px var(--e,#22e7f5);padding:9px;text-align:left;transition:opacity .12s}
+  #pop.on{opacity:1}
+  #pop img{display:block;width:100%;height:112px;object-fit:cover;border-radius:7px;background:#1a0833}
+  #pop .pn{display:block;margin-top:8px;font-size:13px;font-weight:700;color:#fff}
+  #pop .pt{display:block;margin-top:2px;font-size:10px;letter-spacing:.16em;color:var(--e,#22e7f5)}
+  #pop .pd{display:block;margin-top:6px;font-size:11px;line-height:1.5;color:var(--muted)}
+
+  /* ---------- scenes ---------- */
+  .scene{position:absolute;inset:0;z-index:10;display:none}
+  .scene.on{display:block}
+  /* HOME is a transparent pass-through so the skyline shows + stays hoverable */
+  #s-home{background:none;pointer-events:none}
+  #s-portfolio,#s-start{background:radial-gradient(120% 100% at 50% 32%,rgba(11,2,28,.84),rgba(6,1,20,.95))}
+
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  /* top half: mission text on the LEFT */
+  .mission{position:absolute;top:12%;left:5.5%;width:min(46%,440px);z-index:11;pointer-events:none;
+    text-align:left;font-size:clamp(13px,1.9vw,19px);line-height:1.6;color:#fff;font-weight:600;
+    background:linear-gradient(180deg,rgba(7,2,20,.62),rgba(7,2,20,.42));border-radius:14px;padding:16px 18px;
+    text-shadow:0 2px 12px rgba(4,1,20,.95),0 0 26px rgba(4,1,20,.85)}
+  /* top half: SNES-style vertical menu on the RIGHT (one button on top of the other) */
+  .cta{position:absolute;top:12%;right:5.5%;left:auto;z-index:12;pointer-events:none;display:flex;flex-direction:column;align-items:stretch;gap:12px;width:min(40%,300px)}
+  .cta .sel{width:100%;justify-content:flex-start}
+  .sel{pointer-events:auto;position:relative;display:inline-flex;align-items:center;gap:10px;font-family:inherit;cursor:pointer;
+    font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#fff;
+    background:rgba(10,3,34,.72);border:2px solid rgba(182,163,224,.45);border-radius:11px;padding:12px 20px 12px 14px;
+    transition:transform .14s,box-shadow .14s,border-color .14s,background .14s}
+  .sel .cur{color:var(--cyan);opacity:0;transform:translateX(-4px);font-size:11px;transition:opacity .14s,transform .14s}
+  .sel:hover,.sel:focus-visible{border-color:var(--cyan);background:rgba(34,231,245,.14);box-shadow:0 0 24px -5px var(--cyan);transform:translateY(-1px)}
+  .sel:hover .cur,.sel:focus-visible .cur{opacity:1;transform:translateX(0)}
+  .sel:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .sel.a-purple .cur{color:var(--purple)}
+  .sel.a-purple:hover,.sel.a-purple:focus-visible{border-color:var(--purple);background:rgba(192,123,255,.16);box-shadow:0 0 24px -5px var(--purple)}
+  /* music toggle (Rhapsody in Blue) — ADA: labeled button, pause control, keyboard */
+  .music{position:absolute;bottom:4%;left:4%;z-index:14;pointer-events:auto;display:inline-flex;align-items:center;gap:8px;
+    font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;
+    background:rgba(10,3,34,.82);border:2px solid rgba(182,163,224,.4);border-radius:999px;padding:9px 15px;transition:.14s}
+  .music .ic{font-size:15px;color:var(--gold);line-height:1}
+  .music .eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+  .music .eq i{width:2px;height:3px;background:var(--gold);border-radius:1px}
+  .music[aria-pressed="true"]{color:#fff;border-color:var(--gold);box-shadow:0 0 18px -4px var(--gold)}
+  .music[aria-pressed="true"] .eq i{animation:eq .7s ease-in-out infinite}
+  .music[aria-pressed="true"] .eq i:nth-child(2){animation-delay:.15s}
+  .music[aria-pressed="true"] .eq i:nth-child(3){animation-delay:.3s}
+  @keyframes eq{0%,100%{height:3px}50%{height:12px}}
+  .music:hover,.music:focus-visible{color:#fff;border-color:var(--gold)}
+  .music:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+  .btn{font-family:inherit;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;cursor:pointer;border-radius:999px;padding:13px 26px;border:2px solid var(--cyan);color:#04101a;background:var(--cyan);text-decoration:none;box-shadow:0 0 20px rgba(34,231,245,.5);transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(34,231,245,.85)}
+  .btn.ghost{background:transparent;color:#fff;border-color:var(--purple);box-shadow:0 0 16px rgba(192,123,255,.35)}
+  a:focus-visible,button:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:8px}
+  .back{position:absolute;top:5%;left:6%;z-index:12;font-size:12px;letter-spacing:.14em;color:var(--muted);background:none;border:none;font-family:inherit;cursor:pointer;text-transform:uppercase}
+  .back:hover{color:#fff}
+
+  /* ---------- PORTFOLIO — world map (Street-Fighter stage select) ---------- */
+  .pfhead{position:absolute;top:5%;left:0;right:0;text-align:center;font-size:clamp(13px,2.3vw,17px);letter-spacing:.3em;color:var(--gold);text-transform:uppercase;text-shadow:0 0 12px rgba(255,211,107,.5)}
+  .worldmap{position:absolute;inset:12% 5% 25% 5%;border:2px solid rgba(34,231,245,.32);border-radius:14px;overflow:hidden;
+    background:radial-gradient(120% 130% at 50% 26%, #12063a, #08021c 70%);box-shadow:inset 0 0 80px -24px rgba(34,231,245,.6)}
+  .worldmap::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background-image:linear-gradient(90deg,rgba(34,231,245,.10) 1px,transparent 1px),linear-gradient(180deg,rgba(255,46,151,.09) 1px,transparent 1px);background-size:6.66% 11.1%;opacity:.7}
+  .wsvg{position:absolute;inset:0;width:100%;height:100%;z-index:2;filter:drop-shadow(0 0 6px rgba(34,231,245,.4))}
+  .wsvg .route{animation:dash 3s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-6}}
+  .wsvg .land{animation:twk 4.5s ease-in-out infinite alternate}
+  @keyframes twk{from{opacity:.82}to{opacity:1}}
+  .wsvg .plane polygon{fill:#fff;stroke:var(--gold);stroke-width:.5;paint-order:stroke}
+  .wsvg .plane .glow{fill:rgba(255,233,150,.35)}
+  .worldmap .mtag{position:absolute;top:10px;left:12px;z-index:4;font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .loc{position:absolute;transform:translate(-50%,-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;background:none;border:none;font-family:inherit;padding:4px}
+  .loc .dot{width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c),0 0 0 4px rgba(4,1,15,.55);animation:beaconPulse 1.9s ease-in-out infinite;transition:transform .12s}
+  .loc .plab{font-size:10px;letter-spacing:.03em;color:#fff;background:rgba(9,2,26,.92);border:1px solid var(--c);border-radius:6px;padding:2px 7px;white-space:nowrap;transition:.12s}
+  .loc:hover .dot,.loc:focus-visible .dot,.loc[aria-selected="true"] .dot{transform:scale(1.5)}
+  .loc:hover .plab,.loc:focus-visible .plab,.loc[aria-selected="true"] .plab{box-shadow:0 0 14px -3px var(--c)}
+  .loc:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:8px}
+  /* character-select roster strip along the bottom (SF-style) */
+  .roster{position:absolute;left:0;right:0;bottom:4%;height:18%;z-index:11;display:flex;gap:10px;justify-content:center;align-items:stretch;padding:0 5%}
+  .char{position:relative;flex:1 1 0;max-width:150px;min-width:0;cursor:pointer;background:#0a0320;border:2px solid var(--c);border-radius:9px;overflow:hidden;font-family:inherit;padding:0;transition:transform .12s,box-shadow .12s}
+  .char img{display:block;width:100%;height:100%;object-fit:cover;opacity:.68;transition:opacity .12s}
+  .char .cn{position:absolute;left:0;right:0;bottom:0;font-size:10px;letter-spacing:.02em;color:#fff;background:linear-gradient(180deg,transparent,rgba(4,1,15,.94));padding:12px 4px 5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .char:hover,.char:focus-visible,.char[aria-selected="true"]{transform:translateY(-5px);box-shadow:0 0 20px -2px var(--c),0 0 46px -14px var(--c)}
+  .char:hover img,.char:focus-visible img,.char[aria-selected="true"] img{opacity:1}
+  .char:focus-visible{outline:3px solid #fff;outline-offset:2px}
+
+  /* ---------- START A PROJECT ---------- */
+  .panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(560px,86%);text-align:left}
+  .panel h2{font-size:clamp(1.15rem,3vw,1.7rem);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;color:#fff;text-shadow:2px 0 var(--pink),-2px 0 var(--cyan)}
+  .panel .ty{font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+  .panel p{margin-top:14px;font-size:14px;color:var(--muted);line-height:1.7}
+  .fields{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+  .row{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+  .row .k{width:88px;color:var(--cyan);text-transform:uppercase;font-size:11px;letter-spacing:.16em}
+  .row .v{flex:1;border-bottom:2px dashed rgba(182,163,224,.35);padding:6px 2px;color:#fff}
+  .act{margin-top:22px;display:flex;gap:14px;flex-wrap:wrap}
+
+  /* ---------- Director's notes ---------- */
+  .notes{width:100%;max-width:960px;display:flex;flex-direction:column;gap:16px}
+  .notes h1{font-size:clamp(1.2rem,3vw,1.7rem);color:#fff;text-wrap:balance}
+  .notes h1 b{color:var(--pink)}
+  .notes .sub{color:var(--muted);font-size:14px;max-width:74ch;line-height:1.7}
+  .foot{font-size:12px;color:var(--dim);letter-spacing:.05em;text-align:center}
+
+  @media(max-width:600px){
+    .console{aspect-ratio:3/4;width:min(94vw, calc((100vh - 28px) * 3 / 4))}
+    .worldmap{inset:10% 3% 30% 3%}
+    .roster{height:24%;gap:6px;padding:0 3%}
+    .char .cn{font-size:9px}
+    .cta{padding:0 4%}
+    .sun{width:72%}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .city,.stars,.grid,.blink,.beacon,.pyr i,.pbeacon,.runner,.rl-front,.rl-back,.ra-front,.ra-back,.speed,.music .eq i,.wsvg .route,.wsvg .land{animation:none}
+    .wsvg .plane{display:none}
+    .btn,.pin .dot,.pin .plab{transition:none}
+    .runner .run{transform:rotate(7deg) scale(1.2)}
+    .rl-front{transform:rotate(34deg)}.rl-back{transform:rotate(-34deg)}
+    .ra-front{transform:rotate(-38deg)}.ra-back{transform:rotate(38deg)}
+  }
+</style>
+
+<h1 class="sr-only">The Happy Endings — AI web studio helping small businesses automate marketing and operations</h1>
+<div class="console" id="console" role="region" aria-label="The Happy Endings interactive concept">
+  <!-- synthwave world (scrolling skyline) -->
+  <div class="world">
+    <div class="stars" aria-hidden="true"></div>
+    <div class="sun" aria-hidden="true"></div>
+    <div class="city far" id="cityFar" aria-hidden="true"></div>
+    <nav class="city near" id="cityNear" aria-label="Project shortcuts (skyline)"></nav>
+    <div class="haze" aria-hidden="true"></div>
+    <div class="runner" aria-hidden="true"><div class="run">
+      <span class="rl-back"></span><span class="ra-back"></span><span class="rtorso"></span><span class="rhead"></span><span class="rl-front"></span><span class="ra-front"></span>
+    </div><span class="speed"></span></div>
+    <div class="floorwrap" aria-hidden="true"><div class="grid"></div></div>
   </div>
-</header>
 
-<main id="main">
-<section class="hero" aria-label="Introduction">
-  <div class="container">
-    <h1 class="mission">Let us help your small business automate integrated marketing and operations, so you can focus on creating value for society.</h1>
-    <div class="hero-ctas">
-      <a class="foot-cta" href="#contact">Start a project</a>
-      <a class="nav-cta" href="#work">See the work</a>
+  <!-- hover preview overlay, sits on top of everything -->
+  <div id="pop" aria-hidden="true"></div>
+
+  <!-- background music toggle (Rhapsody in Blue) -->
+  <button class="music" id="music" aria-pressed="false" aria-label="Play Rhapsody in Blue background music"><span class="ic" aria-hidden="true">♪</span><span class="mlabel">Music</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
+
+  <!-- HOME -->
+  <section class="scene on" id="s-home" aria-label="Home">
+    <p class="mission">We help small businesses automate integrated marketing and operations, so you can focus on creating value for society.</p>
+    <div class="cta">
+      <button class="sel a-purple" data-go="portfolio"><span class="cur" aria-hidden="true">▶</span>Portfolio</button>
+      <button class="sel" data-go="start"><span class="cur" aria-hidden="true">▶</span>Start a Project</button>
     </div>
-    <div class="scrollcue" aria-hidden="true">▾ Explore the city ▾</div>
-  </div>
-</section>
+  </section>
 
-<section class="work" id="work">
-  <div class="container">
-
-    <div class="sec-head"><h2 class="lbl"><span aria-hidden="true">▶</span> Case Studies</h2><span class="rule"></span></div>
-    <div class="cases">
-
-      <article class="case" style="--c:#ff2e97;--c2:#ff8fd0" data-bob="St. Mark's Yoga: a custom tracking system that fills the room.">
-        <a class="case-shot" href="/yoga/" aria-label="St. Mark's Yoga: open the live insights dashboard">
-          <img src="shots/yoga.jpg" alt="St. Mark's Yoga bookings heatmap by day and hour" loading="eager" style="object-position:50% 50%">
-          <span class="pill"><i></i>Live</span>
-        </a>
-        <div class="case-body">
-          <span class="cat"><span class="dot"></span>Wellness · Analytics</span>
-          <h3>St. Mark's Yoga</h3>
-          <p>Custom booking analytics and integrated marketing targeting platform for a yoga studio.</p>
-          <a class="case-link" href="/yoga/" aria-label="Open the St. Mark's Yoga dashboard">Visit the site <span aria-hidden="true">↗</span></a>
-        </div>
-      </article>
-
-      <article class="case" style="--c:#ffcf6b;--c2:#ff9e64" data-bob="Fabian's Tours: a cinematic site for luxury Egypt journeys.">
-        <a class="case-shot" href="https://kdumanski.github.io/fabians-tours/" target="_blank" rel="noopener" aria-label="Fabian's Tours: visit the site">
-          <img src="shots/fabians.jpg" alt="Fabian's Tours luxury Egypt travel site" loading="eager" style="object-position:50% 38%">
-          <span class="pill"><i></i>Live</span>
-        </a>
-        <div class="case-body">
-          <span class="cat"><span class="dot"></span>Luxury travel</span>
-          <h3>Fabian's Tours</h3>
-          <p>Cinematic booking site for a luxury Egypt travel brand.</p>
-          <a class="case-link" href="https://kdumanski.github.io/fabians-tours/" target="_blank" rel="noopener" aria-label="Visit the Fabian's Tours site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
-        </div>
-      </article>
-
-      <article class="case" style="--c:#05d9e8;--c2:#7af9ff" data-bob="Stark Level: a construction brand built to win jobs.">
-        <a class="case-shot" href="https://starklevelsolutions.com" target="_blank" rel="noopener" aria-label="Stark Level Solutions: visit the site">
-          <img src="shots/stark.jpg" alt="Stark Level Solutions construction company site" loading="lazy" style="object-position:50% 0%">
-          <span class="pill"><i></i>Live</span>
-        </a>
-        <div class="case-body">
-          <span class="cat"><span class="dot"></span>Construction</span>
-          <h3>Stark Level</h3>
-          <p>Lead-generating brand site for a construction company.</p>
-          <a class="case-link" href="https://starklevelsolutions.com" target="_blank" rel="noopener" aria-label="Visit the Stark Level Solutions site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
-        </div>
-      </article>
-
-      <article class="case" style="--c:#b967ff;--c2:#e29bff" data-bob="Pride Dental: a clean, trustworthy practice site.">
-        <a class="case-shot" href="https://kdumanski.github.io/DentalGroup/" target="_blank" rel="noopener" aria-label="Pride Dental Group: visit the site">
-          <img src="shots/dental.jpg" alt="Pride Dental Group practice website" loading="lazy" style="object-position:50% 0%">
-          <span class="pill"><i></i>Live</span>
-        </a>
-        <div class="case-body">
-          <span class="cat"><span class="dot"></span>Healthcare</span>
-          <h3>Pride Dental Group</h3>
-          <p>Modern patient acquisition site for a family dental practice.</p>
-          <a class="case-link" href="https://kdumanski.github.io/DentalGroup/" target="_blank" rel="noopener" aria-label="Visit the Pride Dental Group site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
-        </div>
-      </article>
-
-      <article class="case" style="--c:#7dffb0;--c2:#b3ffd1" data-bob="Omar Chacón: a painter's portfolio with a built-in editor he updates himself.">
-        <a class="case-shot" href="https://omarchacon.72.60.117.113.nip.io" target="_blank" rel="noopener" aria-label="Omar Chacón: visit the site">
-          <img src="shots/omar.jpg" alt="Omar Chacón painter portfolio, hand-cast acrylic drips hero" loading="lazy" style="object-position:50% 0%">
-          <span class="pill"><i></i>Live</span>
-        </a>
-        <div class="case-body">
-          <span class="cat"><span class="dot"></span>Art · Portfolio + CMS</span>
-          <h3>Omar Chacón</h3>
-          <p>Interactive art exhibition platform and e-portfolio for a working painter.</p>
-          <a class="case-link" href="https://omarchacon.72.60.117.113.nip.io" target="_blank" rel="noopener" aria-label="Visit the Omar Chacón site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
-        </div>
-      </article>
-
-      <article class="case" style="--c:#ff5e6c;--c2:#ffcf6b" data-bob="Stark Production Group: a dynamic system that fills the calendar at demand times.">
-        <a class="case-shot" href="https://starkproductiongroup.nyc" target="_blank" rel="noopener" aria-label="Stark Production Group: visit the site">
-          <img src="shots/spg.jpg" alt="Stark Production Group NYC event production site" loading="lazy" style="object-position:50% 0%">
-          <span class="pill"><i></i>Live</span>
-        </a>
-        <div class="case-body">
-          <span class="cat"><span class="dot"></span>Events · Production</span>
-          <h3>Stark Production Group</h3>
-          <p>Integrated marketing analysis and distribution system for an NYC event production company.</p>
-          <a class="case-link" href="https://starkproductiongroup.nyc" target="_blank" rel="noopener" aria-label="Visit the Stark Production Group site (opens in a new tab)">Visit the site <span aria-hidden="true">↗</span></a>
-        </div>
-      </article>
-
+  <!-- PORTFOLIO — world map (Street-Fighter-style stage select; hover a location for info) -->
+  <section class="scene" id="s-portfolio" aria-label="Portfolio — world map">
+    <button class="back" data-go="home">◂ Back</button>
+    <div class="pfhead">Select a Project</div>
+    <div class="worldmap" id="worldmap">
+      <svg class="wsvg" viewBox="0 0 100 55" preserveAspectRatio="none" aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs><pattern id="dots" width="1.7" height="1.7" patternUnits="userSpaceOnUse"><circle cx="0.6" cy="0.6" r="0.46" fill="rgba(122,249,255,.55)"/></pattern></defs>
+        <g class="land" fill="url(#dots)" stroke="rgba(122,249,255,.4)" stroke-width="0.25">
+          <path d="M5 11 L27 8 L31 16 L27 24 L17 28 L9 21 Z"/>
+          <path d="M21 30 L30 30 L28 47 L22 44 Z"/>
+          <path d="M42 9 L57 8 L55 17 L43 17 Z"/>
+          <path d="M45 20 L59 20 L55 43 L49 43 L45 30 Z"/>
+          <path d="M57 7 L91 6 L88 25 L64 25 L57 16 Z"/>
+          <path d="M79 38 L93 38 L90 49 L79 47 Z"/>
+        </g>
+        <polyline class="route" points="18,18.7 24,28.6 52,24.2 48,13.2 70,22 84,16.5" fill="none" stroke="rgba(255,211,107,.6)" stroke-width="0.4" stroke-dasharray="1.6 1.4"/>
+        <path id="rt" d="M18 18.7 L24 28.6 L52 24.2 L48 13.2 L70 22 L84 16.5" fill="none" stroke="none"/>
+        <g class="plane"><circle class="glow" r="1.3"></circle><polygon points="2.1,0 -1.1,1.2 -0.2,0 -1.1,-1.2"></polygon><animateMotion dur="14s" repeatCount="indefinite" rotate="auto"><mpath href="#rt" xlink:href="#rt"></mpath></animateMotion></g>
+      </svg>
+      <span class="mtag" aria-hidden="true">▸ Pick a project below · hover for info · click to visit</span>
     </div>
+    <div class="roster" id="roster" role="group" aria-label="Projects — pick one"></div>
+  </section>
 
-  </div>
-</section>
-
-<section class="contact" id="contact">
-  <div class="container">
-    <div class="sec-head"><h2 class="lbl"><span aria-hidden="true">▶</span> Start a Project</h2><span class="rule"></span></div>
-    <div class="cwrap">
-      <div class="cintro">
-        <h2>Tell me what you need.</h2>
-        <p>You'll have a live link in days, not months. Design, build, hosting, and updates handled start to finish, with one person to call the whole way.</p>
+  <!-- START A PROJECT -->
+  <section class="scene" id="s-start" aria-label="Start a project">
+    <button class="back" data-go="home">◂ Back</button>
+    <div class="panel">
+      <div class="ty">New Project</div>
+      <h2>Start a Project</h2>
+      <p>Tell us what you need. You'll have a live link in days, not months — design, build, hosting, and updates handled start to finish.</p>
+      <div class="fields" aria-hidden="true">
+        <div class="row"><span class="k">Name</span><span class="v">▏</span></div>
+        <div class="row"><span class="k">Business</span><span class="v">▏</span></div>
+        <div class="row"><span class="k">Need</span><span class="v">▏</span></div>
       </div>
-      <form class="cform" id="cform" action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="5be6589f-6061-4870-902c-c3173d9dd3e6">
-        <input type="hidden" name="subject" value="New project inquiry · thehappyendings.org">
-        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label>Name<input type="text" name="name" required autocomplete="name"></label>
-        <label>Email<input type="email" name="email" required autocomplete="email"></label>
-        <label class="full">Business<input type="text" name="business" placeholder="What's the business?"></label>
-        <label class="full">What do you need?<textarea name="message" required placeholder="A site, a dashboard, an automation, all of it..."></textarea></label>
-        <button class="foot-cta" type="submit">Send it</button>
-        <p class="ok-msg" role="status">Got it. You'll hear back within a day.</p>
-        <p class="note">Prefer email? <a href="mailto:keith.dumanski@gmail.com">keith.dumanski@gmail.com</a></p>
-      </form>
+      <div class="act">
+        <a class="btn" href="mailto:keith.dumanski@gmail.com">Send it ▸</a>
+        <button class="btn ghost" data-go="home">Cancel</button>
+      </div>
     </div>
-  </div>
-</section>
-</main>
-
-<footer>
-  <div class="container">
-    <div class="foot-mini" style="margin-top:0">
-      <span>© <span id="year">2026</span> The Happy Endings · We end your problems.</span>
-      <a href="mailto:keith.dumanski@gmail.com">keith.dumanski@gmail.com</a>
-    </div>
-  </div>
-</footer>
-
-<!-- Cookie notice -->
-<div class="cookiebar" id="cookiebar" role="region" aria-label="Cookie notice" hidden>
-  <p><strong>One cookie, that's it.</strong> We count visits to see what's working. No ads, nothing sold, ever.</p>
-  <div class="cookie-btns">
-    <button type="button" id="ckYes">Sounds good</button>
-    <button type="button" id="ckNo">No thanks</button>
-  </div>
+  </section>
 </div>
 
 <script>
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function(){
+  var con=document.getElementById('console'), pop=document.getElementById('pop');
+  var scenes={home:document.getElementById('s-home'),portfolio:document.getElementById('s-portfolio'),start:document.getElementById('s-start')};
+  var cur='home';
+  function show(name){ for(var k in scenes) scenes[k].classList.toggle('on',k===name); cur=name; hidePop(); if(world) world.inert=(name!=='home'); }
 
-  /* ---------- Boot intro ---------- */
-  (function(){
-    var boot = document.getElementById('boot'), term = document.getElementById('term');
-    function hide(){ boot.classList.add('off'); }
-    if (reduce || sessionStorage.getItem('the_boot_v1')) { hide(); return; }
-    sessionStorage.setItem('the_boot_v1','1');
-    var lines = [
-      '<span class="h">THE HAPPY ENDINGS OS  v2.6</span>',
-      'booting neon core .............. <span class="ok">OK</span>',
-      'mounting /projects ............. <span class="ok">OK</span>',
-      'syncing 6 live clients ......... <span class="ok">OK</span>',
-      'automations ................... <span class="ok">RUNNING</span>',
-      '<span class="h">READY.</span>'
-    ];
-    var i = 0, html = '';
-    var timer = setInterval(function(){
-      html += lines[i] + '\n'; i++;
-      term.innerHTML = html + '<span class="cur"></span><div class="skip">click anywhere to skip</div>';
-      if (i >= lines.length){ clearInterval(timer); setTimeout(hide, 650); }
-    }, 340);
-    function skip(){ clearInterval(timer); hide(); document.removeEventListener('click', skip); document.removeEventListener('keydown', skip); }
-    document.addEventListener('click', skip); document.addEventListener('keydown', skip);
-  })();
+  /* ----- projects ----- */
+  var PROJ=[
+    {key:'stark',name:'Stark Level',type:'BUILD',hue:'#22e7f5',img:'shots/stark.jpg',href:'https://starklevelsolutions.com',world:[18,34],desc:'Lead-generating brand site for a construction company.'},
+    {key:'dental',name:'Pride Dental',type:'HEALTH',hue:'#c07bff',img:'shots/dental.jpg',href:'https://kdumanski.github.io/DentalGroup/',world:[24,52],desc:'Modern patient acquisition site for a family dental practice.'},
+    {key:'omar',name:'Omar Chacón',type:'ART',hue:'#7dffb0',img:'shots/omar.jpg',href:'https://omarchacon.72.60.117.113.nip.io',world:[48,24],desc:'Interactive art exhibition platform and e-portfolio for a working painter.'},
+    {key:'fabians',name:"Fabian's Tours",type:'TRAVEL',hue:'#ffd36b',img:'shots/fabians.jpg',href:'https://kdumanski.github.io/fabians-tours/',world:[52,44],desc:'Cinematic booking site for a luxury Egypt travel brand.'},
+    {key:'yoga',name:"St. Mark's Yoga",type:'WELLNESS',hue:'#ff3d9a',img:'shots/yoga.jpg',href:'https://thehappyendings.org/yoga/',world:[70,40],desc:'Custom booking analytics and integrated marketing targeting platform for a yoga studio.'},
+    {key:'spg',name:'Stark Production',type:'EVENTS',hue:'#ff6b6b',img:'shots/spg.jpg',href:'https://starkproductiongroup.nyc',world:[84,30],desc:'Integrated marketing analysis and distribution system for an NYC event production company.'}
+  ];
+  var byKey={}; PROJ.forEach(function(p){byKey[p.key]=p;});
+  function a11yLabel(p){ return p.name+', '+p.type+'. '+p.desc+' Opens the live site in a new tab.'; }
 
-  /* ---------- Interactive skyline ---------- */
-  (function(){
-    var PROJ = {
-      yoga:    {name:"St. Mark's Yoga", href:"/yoga/", ext:false, c:"var(--pink)", bob:"St. Mark's Yoga: a live analytics dashboard I built, refreshed every morning."},
-      fabians: {name:"Fabian's Tours", href:"https://kdumanski.github.io/fabians-tours/", ext:true, c:"var(--gold)", bob:"Fabian's Tours: a cinematic site for luxury Egypt journeys."},
-      stark:   {name:"Stark Level", href:"https://starklevelsolutions.com", ext:true, c:"var(--cyan)", bob:"Stark Level: a construction brand built to win jobs."},
-      dental:  {name:"Pride Dental", href:"https://kdumanski.github.io/DentalGroup/", ext:true, c:"var(--purple)", bob:"Pride Dental: a clean, trustworthy practice site."},
-      omar:    {name:"Omar Chacón", href:"https://omarchacon.72.60.117.113.nip.io", ext:true, c:"#7dffb0", bob:"Omar Chacón: a painter's portfolio with a built-in editor he updates himself."},
-      spg:     {name:"Stark Production Group", href:"https://starkproductiongroup.nyc", ext:true, c:"#ff5e6c", bob:"Stark Production Group: NYC event production, one call does it all."}
-    };
-    var LAYOUT = [
-      {w:32,h:.5},{w:24,h:.76},{w:56,h:.9,proj:'yoga'},{w:20,h:.5},{w:50,h:.86,proj:'omar'},
-      {w:58,h:.96,proj:'fabians'},{w:28,h:.46},{w:26,h:.7},{w:60,h:.9,proj:'stark'},
-      {w:22,h:.4},{w:38,h:.88,proj:'spg'},{w:58,h:.94,proj:'dental'},{w:24,h:.56},{w:34,h:.44},{w:28,h:.72}
-    ];
-    var wrap = document.getElementById('skyline');
-    LAYOUT.forEach(function(b, idx){
-      var p = b.proj ? PROJ[b.proj] : null;
-      var el = document.createElement(p ? 'a' : 'div');
-      el.className = 'bld' + (p ? ' proj' : '');
-      el.style.width = b.w + 'px';
-      el.style.height = (b.h*100) + '%';
-      el.style.setProperty('--edge', p ? p.c : (idx % 2 ? 'var(--pink)' : 'var(--cyan)'));
-      if (p){
-        el.href = p.href;
-        if (p.ext){ el.target = '_blank'; el.rel = 'noopener'; }
-        el.setAttribute('aria-label', p.name + (p.ext ? ': visit the site' : ': open the dashboard'));
-        el.setAttribute('data-bob', p.bob);
-        var sign = document.createElement('span');
-        sign.className = 'sign'; sign.textContent = p.name;
-        el.appendChild(sign);
-      } else {
-        el.setAttribute('aria-hidden', 'true');
-      }
-      wrap.appendChild(el);
-    });
-  })();
-
-  /* ---------- Case reveal ---------- */
-  (function(){
-    var cards = document.querySelectorAll('.case');
-    if ('IntersectionObserver' in window){
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(e){ if(e.isIntersecting){ var el=e.target; setTimeout(function(){ el.classList.add('in'); }, (el.dataset.i||0)*90); io.unobserve(el); } });
-      }, {threshold:0.15});
-      cards.forEach(function(c,i){ c.dataset.i=i; io.observe(c); });
-    } else { cards.forEach(function(c){ c.classList.add('in'); }); }
-  })();
-
-  /* ---------- Contact form (Web3Forms) ---------- */
-  (function(){
-    var form = document.getElementById('cform');
-    if (!form) return;
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      var btn = form.querySelector('button');
-      btn.disabled = true; btn.textContent = 'Sending...';
-      fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(form) })
-        .then(function(r){ return r.json(); })
-        .then(function(d){
-          if (d.success){ form.reset(); form.querySelector('.ok-msg').style.display = 'block'; btn.textContent = 'Sent'; }
-          else { btn.disabled = false; btn.textContent = 'Send it'; alert('Something glitched. Email keith.dumanski@gmail.com instead.'); }
-        })
-        .catch(function(){ btn.disabled = false; btn.textContent = 'Send it'; alert('Something glitched. Email keith.dumanski@gmail.com instead.'); });
-    });
-  })();
-
-  /* ---------- Cookie consent + visit counter ---------- */
-  (function(){
-    var HIT = 'https://hits.72.60.117.113.nip.io/hit';
-    var bar = document.getElementById('cookiebar');
-    function track(){
-      try{
-        var m = document.cookie.match(/(?:^|; )the_vid=([a-z0-9]+)/);
-        var id = m ? m[1] : Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-        if (!m) document.cookie = 'the_vid=' + id + '; max-age=31536000; path=/; SameSite=Lax; Secure';
-        var payload = JSON.stringify({ site: location.hostname, path: location.pathname, ref: document.referrer || null, vid: id, w: window.innerWidth });
-        if (navigator.sendBeacon) navigator.sendBeacon(HIT, payload);
-        else fetch(HIT, { method: 'POST', body: payload, keepalive: true });
-      }catch(e){}
+  /* ----- build skyline (static) ----- */
+  var HUES=['#22e7f5','#ff3d9a','#c07bff','#ffd36b','#7dffb0','#ff6b6b'];
+  var NEAR=[
+    {w:30,h:54,t:'flat'},{w:18,h:72,t:'antenna'},{w:48,h:92,t:'flat',proj:'yoga'},{w:20,h:44,t:'flat'},
+    {w:42,h:84,t:'flat',proj:'omar'},{w:22,h:62,t:'antenna'},{w:54,h:100,t:'flat',proj:'fabians'},{w:20,h:50,t:'flat'},
+    {w:46,h:88,t:'flat',proj:'stark'},{w:26,h:70,t:'step'},{w:48,h:94,t:'flat',proj:'dental'},{w:18,h:40,t:'flat'},
+    {w:42,h:82,t:'flat',proj:'spg'},{w:22,h:64,t:'antenna'},{w:28,h:56,t:'pyramid'}
+  ];
+  var world=document.querySelector('.world');
+  function pauseCity(on){ world.classList.toggle('pausecity', on); }
+  function makeBld(s,i,layer){
+    var isProj=layer==='near'&&s.proj, p=isProj?byKey[s.proj]:null;
+    var el=document.createElement(isProj?'button':'div');
+    el.className='bld'+(isProj?' proj':'');
+    el.style.height=s.h+'%'; el.style.width=s.w+'px';
+    el.style.setProperty('--e', p?p.hue:HUES[i%HUES.length]);           // deterministic so both copies match (seamless loop)
+    el.style.setProperty('--wx',((i*3)%10)+'px'); el.style.setProperty('--wy',((i*5)%14)+'px');
+    if(!isProj) el.setAttribute('aria-hidden','true');
+    if(layer==='near'&&!isProj){
+      if(s.t==='antenna'){ var a=document.createElement('span'); a.className='ant'; var b=document.createElement('i'); b.className='beacon'; a.appendChild(b); el.appendChild(a); }
+      else if(s.t==='step'){ var c=document.createElement('span'); c.className='cap'; el.appendChild(c); }
+      else if(s.t==='pyramid'){ var py=document.createElement('span'); py.className='pyr'; py.appendChild(document.createElement('i')); el.appendChild(py); }
     }
-    var choice = null;
-    try{ choice = localStorage.getItem('the_cookies'); }catch(e){}
-    if (choice === 'yes'){ track(); return; }
-    if (choice === 'no') return;
-    bar.hidden = false;
-    document.getElementById('ckYes').addEventListener('click', function(){
-      try{ localStorage.setItem('the_cookies','yes'); }catch(e){}
-      bar.hidden = true; track();
-    });
-    document.getElementById('ckNo').addEventListener('click', function(){
-      try{ localStorage.setItem('the_cookies','no'); }catch(e){}
-      bar.hidden = true;
-    });
-  })();
+    if(isProj){
+      el.setAttribute('aria-label',a11yLabel(p));
+      var pb=document.createElement('span'); pb.className='pbeacon'; el.appendChild(pb);
+      el.addEventListener('mouseenter',function(){ pauseCity(true); showPop(el,p); });
+      el.addEventListener('mouseleave',function(){ pauseCity(false); hidePop(); });
+      el.addEventListener('focus',function(){ pauseCity(true); showPop(el,p); });
+      el.addEventListener('blur',function(){ pauseCity(false); hidePop(); });
+      el.addEventListener('click',function(){ openSite(p.href); });
+    }
+    return el;
+  }
+  function fillLayer(id, items, layer){
+    var el=document.getElementById(id);
+    for(var set=0;set<2;set++){                                          // two identical copies -> seamless scroll
+      var wrap=document.createElement('div'); wrap.className='cityset';
+      items.forEach(function(s,i){ wrap.appendChild(makeBld(s,i,layer)); });
+      el.appendChild(wrap);
+    }
+  }
+  fillLayer('cityNear', NEAR, 'near');
+  var FAR=[24,16,30,18,22,14,28,20,26,16,22,30,18,24].map(function(w,i){ return {w:w,h:20+((i*13)%34),t:'flat'}; });
+  fillLayer('cityFar', FAR, 'far');
 
-  document.getElementById('year').textContent = '2026';
+  /* ----- hover preview on top (no layout shift) ----- */
+  function showPop(el,p){
+    var cr=con.getBoundingClientRect(), br=el.getBoundingClientRect();
+    pop.style.setProperty('--e',p.hue);
+    pop.innerHTML='<img src="'+p.img+'" alt=""><span class="pn">'+p.name+'</span><span class="pt">'+p.type+'</span><span class="pd">'+p.desc+'</span>';
+    var cx=br.left-cr.left+br.width/2;
+    var popW=232, popH=224;
+    var left=Math.max(popW/2+6, Math.min(cx, cr.width-popW/2-6));
+    var above=br.top-cr.top-10;
+    if(above-popH < 6){ // not enough room above -> place below the rooftop
+      pop.style.top=(br.top-cr.top+16)+'px'; pop.style.transform='translate(-50%,0)';
+    } else {
+      pop.style.top=above+'px'; pop.style.transform='translate(-50%,-100%)';
+    }
+    pop.style.left=left+'px';
+    pop.classList.add('on');
+  }
+  function hidePop(){ pop.classList.remove('on'); }
+
+  /* ----- portfolio: world map (top) + character-select roster (bottom), linked ----- */
+  function openSite(href){ window.open(href,'_blank','noopener'); }
+  var worldmap=document.getElementById('worldmap'), roster=document.getElementById('roster'), locs=[], chars=[];
+  function select(i){
+    PROJ.forEach(function(_,idx){
+      locs[idx].setAttribute('aria-selected', idx===i?'true':'false');
+      chars[idx].setAttribute('aria-selected', idx===i?'true':'false');
+    });
+    showPop(locs[i], PROJ[i]);   // info appears at the picked location on the map
+  }
+  function deselect(){
+    locs.forEach(function(el){ el.setAttribute('aria-selected','false'); });
+    chars.forEach(function(el){ el.setAttribute('aria-selected','false'); });
+    hidePop();
+  }
+  PROJ.forEach(function(p,i){
+    // map location marker
+    var loc=document.createElement('button'); loc.className='loc'; loc.style.setProperty('--c',p.hue);
+    loc.style.left=p.world[0]+'%'; loc.style.top=p.world[1]+'%';
+    loc.setAttribute('aria-label',a11yLabel(p));
+    loc.innerHTML='<span class="dot" aria-hidden="true"></span><span class="plab">'+p.name+'</span>';
+    loc.addEventListener('mouseenter',function(){ select(i); });
+    loc.addEventListener('mouseleave',deselect);
+    loc.addEventListener('focus',function(){ select(i); });
+    loc.addEventListener('blur',deselect);
+    loc.addEventListener('click',function(){ openSite(p.href); });
+    worldmap.appendChild(loc); locs.push(loc);
+    // roster character tile
+    var ch=document.createElement('button'); ch.className='char'; ch.style.setProperty('--c',p.hue);
+    ch.setAttribute('aria-label',a11yLabel(p));
+    ch.innerHTML='<img src="'+p.img+'" alt=""><span class="cn">'+p.name+'</span>';
+    ch.addEventListener('mouseenter',function(){ select(i); });
+    ch.addEventListener('mouseleave',deselect);
+    ch.addEventListener('focus',function(){ select(i); });
+    ch.addEventListener('blur',deselect);
+    ch.addEventListener('click',function(){ openSite(p.href); });
+    roster.appendChild(ch); chars.push(ch);
+  });
+
+  /* ----- Rhapsody in Blue — synthesized rendition (Gershwin's 1924 composition is public domain) ----- */
+  var audio=(function(){
+    var ctx=null, master=null, on=false, timers=[], live=[];
+    function ensure(){ if(ctx) return; ctx=new (window.AudioContext||window.webkitAudioContext)(); master=ctx.createGain(); master.gain.value=0; master.connect(ctx.destination); }
+    function tone(freq,t,dur,type,vol){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type=type; o.frequency.value=freq; g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(master); o.start(t); o.stop(t+dur+0.05); live.push(o); }
+    function gliss(t){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type='sawtooth'; o.frequency.setValueAtTime(174.6,t); o.frequency.exponentialRampToValueAtTime(1396.9,t+1.25); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.16,t+0.12); g.gain.setValueAtTime(0.16,t+1.15); g.gain.exponentialRampToValueAtTime(0.0001,t+1.55); o.connect(g); g.connect(master); o.start(t); o.stop(t+1.6); live.push(o); }
+    var M=[[466,.5],[698,.3],[831,.3],[932,.65],[831,.22],[698,.25],[622,.5],[554,.6],[0,.25],[698,.4],[554,.3],[622,.32],[698,.6],[466,.4],[0,.4]];
+    var LOOP=M.reduce(function(a,n){return a+n[1];},0);
+    function phrase(start){ var t=start; tone(116.5,start,LOOP,'sine',0.07); M.forEach(function(n){ if(n[0]) tone(n[0],t,n[1]*0.95,'triangle',0.16); t+=n[1]; }); timers.push(setTimeout(function(){ if(on) phrase(ctx.currentTime+0.02); }, LOOP*1000)); }
+    return { set:function(want){ ensure(); if(want===on) return; on=want;
+      if(on){ if(ctx.resume) ctx.resume(); master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value,ctx.currentTime); master.gain.linearRampToValueAtTime(0.55,ctx.currentTime+0.4); var t=ctx.currentTime+0.08; gliss(t); phrase(t+1.7); }
+      else { master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value,ctx.currentTime); master.gain.linearRampToValueAtTime(0,ctx.currentTime+0.35); timers.forEach(clearTimeout); timers=[]; setTimeout(function(){ live.forEach(function(o){try{o.stop();}catch(e){}}); live=[]; },420); } } };
+  })();
+  var musicBtn=document.getElementById('music'), userMuted=false, started=false;
+  function setMusic(on){ audio.set(on); musicBtn.setAttribute('aria-pressed', on?'true':'false'); musicBtn.setAttribute('aria-label', on?'Pause the background music (Rhapsody in Blue)':'Play Rhapsody in Blue background music'); }
+  musicBtn.addEventListener('click',function(){ started=true; var isOn=musicBtn.getAttribute('aria-pressed')==='true'; if(isOn) userMuted=true; setMusic(!isOn); });
+  function cleanupGesture(){ document.removeEventListener('pointerdown',firstGesture,true); document.removeEventListener('keydown',firstGesture,true); }
+  function firstGesture(e){ if(e&&e.target&&e.target.closest&&e.target.closest('#music')){ cleanupGesture(); return; } if(!started&&!userMuted){ started=true; setMusic(true); } cleanupGesture(); }
+  document.addEventListener('pointerdown',firstGesture,true); document.addEventListener('keydown',firstGesture,true);
+
+  /* ----- navigation ----- */
+  con.addEventListener('click',function(e){ var g=e.target.closest('[data-go]'); if(g) show(g.dataset.go); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&cur!=='home'){ e.preventDefault(); show('home'); } });
+})();
 </script>
+
 </body>
 </html>
