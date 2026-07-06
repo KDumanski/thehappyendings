@@ -136,12 +136,14 @@
   #s-portfolio,#s-start{background:radial-gradient(120% 100% at 50% 32%,rgba(11,2,28,.84),rgba(6,1,20,.95))}
 
   .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-  .mission{position:absolute;top:14%;left:50%;transform:translateX(-50%);width:min(760px,84%);z-index:11;pointer-events:none;
-    text-align:center;font-size:clamp(14px,2.1vw,20px);line-height:1.65;color:#fff;font-weight:600;
-    background:linear-gradient(180deg,rgba(7,2,20,.62),rgba(7,2,20,.4));border-radius:14px;padding:12px 22px;
+  /* top half: mission text on the LEFT */
+  .mission{position:absolute;top:12%;left:5.5%;width:min(46%,440px);z-index:11;pointer-events:none;
+    text-align:left;font-size:clamp(13px,1.9vw,19px);line-height:1.6;color:#fff;font-weight:600;
+    background:linear-gradient(180deg,rgba(7,2,20,.62),rgba(7,2,20,.42));border-radius:14px;padding:16px 18px;
     text-shadow:0 2px 12px rgba(4,1,20,.95),0 0 26px rgba(4,1,20,.85)}
-  /* two CTAs pinned to the top corners (Portfolio left, Start right), styled like a game menu */
-  .cta{position:absolute;top:5%;left:0;right:0;padding:0 5.5%;z-index:12;pointer-events:none;display:flex;justify-content:space-between;align-items:flex-start}
+  /* top half: SNES-style vertical menu on the RIGHT (one button on top of the other) */
+  .cta{position:absolute;top:12%;right:5.5%;left:auto;z-index:12;pointer-events:none;display:flex;flex-direction:column;align-items:stretch;gap:12px;width:min(40%,300px)}
+  .cta .sel{width:100%;justify-content:flex-start}
   .sel{pointer-events:auto;position:relative;display:inline-flex;align-items:center;gap:10px;font-family:inherit;cursor:pointer;
     font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#fff;
     background:rgba(10,3,34,.72);border:2px solid rgba(182,163,224,.45);border-radius:11px;padding:12px 20px 12px 14px;
@@ -152,6 +154,20 @@
   .sel:focus-visible{outline:3px solid #fff;outline-offset:3px}
   .sel.a-purple .cur{color:var(--purple)}
   .sel.a-purple:hover,.sel.a-purple:focus-visible{border-color:var(--purple);background:rgba(192,123,255,.16);box-shadow:0 0 24px -5px var(--purple)}
+  /* music toggle (Rhapsody in Blue) — ADA: labeled button, pause control, keyboard */
+  .music{position:absolute;bottom:4%;left:4%;z-index:14;pointer-events:auto;display:inline-flex;align-items:center;gap:8px;
+    font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;
+    background:rgba(10,3,34,.82);border:2px solid rgba(182,163,224,.4);border-radius:999px;padding:9px 15px;transition:.14s}
+  .music .ic{font-size:15px;color:var(--gold);line-height:1}
+  .music .eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+  .music .eq i{width:2px;height:3px;background:var(--gold);border-radius:1px}
+  .music[aria-pressed="true"]{color:#fff;border-color:var(--gold);box-shadow:0 0 18px -4px var(--gold)}
+  .music[aria-pressed="true"] .eq i{animation:eq .7s ease-in-out infinite}
+  .music[aria-pressed="true"] .eq i:nth-child(2){animation-delay:.15s}
+  .music[aria-pressed="true"] .eq i:nth-child(3){animation-delay:.3s}
+  @keyframes eq{0%,100%{height:3px}50%{height:12px}}
+  .music:hover,.music:focus-visible{color:#fff;border-color:var(--gold)}
+  .music:focus-visible{outline:3px solid #fff;outline-offset:3px}
 
   .btn{font-family:inherit;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;cursor:pointer;border-radius:999px;padding:13px 26px;border:2px solid var(--cyan);color:#04101a;background:var(--cyan);text-decoration:none;box-shadow:0 0 20px rgba(34,231,245,.5);transition:transform .15s,box-shadow .15s}
   .btn:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(34,231,245,.85)}
@@ -212,7 +228,7 @@
     .sun{width:72%}
   }
   @media(prefers-reduced-motion:reduce){
-    .city,.stars,.grid,.blink,.beacon,.pyr i,.pbeacon,.runner,.rl-front,.rl-back,.ra-front,.ra-back,.speed{animation:none}
+    .city,.stars,.grid,.blink,.beacon,.pyr i,.pbeacon,.runner,.rl-front,.rl-back,.ra-front,.ra-back,.speed,.music .eq i{animation:none}
     .btn,.pin .dot,.pin .plab{transition:none}
     .runner .run{transform:rotate(7deg) scale(1.2)}
     .rl-front{transform:rotate(34deg)}.rl-back{transform:rotate(-34deg)}
@@ -237,6 +253,9 @@
 
   <!-- hover preview overlay, sits on top of everything -->
   <div id="pop" aria-hidden="true"></div>
+
+  <!-- background music toggle (Rhapsody in Blue) -->
+  <button class="music" id="music" aria-pressed="false" aria-label="Play Rhapsody in Blue background music"><span class="ic" aria-hidden="true">♪</span><span class="mlabel">Music</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
 
   <!-- HOME -->
   <section class="scene on" id="s-home" aria-label="Home">
@@ -411,6 +430,26 @@
     ch.addEventListener('click',function(){ openSite(p.href); });
     roster.appendChild(ch); chars.push(ch);
   });
+
+  /* ----- Rhapsody in Blue — synthesized rendition (Gershwin's 1924 composition is public domain) ----- */
+  var audio=(function(){
+    var ctx=null, master=null, on=false, timers=[], live=[];
+    function ensure(){ if(ctx) return; ctx=new (window.AudioContext||window.webkitAudioContext)(); master=ctx.createGain(); master.gain.value=0; master.connect(ctx.destination); }
+    function tone(freq,t,dur,type,vol){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type=type; o.frequency.value=freq; g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(master); o.start(t); o.stop(t+dur+0.05); live.push(o); }
+    function gliss(t){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type='sawtooth'; o.frequency.setValueAtTime(174.6,t); o.frequency.exponentialRampToValueAtTime(1396.9,t+1.25); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.16,t+0.12); g.gain.setValueAtTime(0.16,t+1.15); g.gain.exponentialRampToValueAtTime(0.0001,t+1.55); o.connect(g); g.connect(master); o.start(t); o.stop(t+1.6); live.push(o); }
+    var M=[[466,.5],[698,.3],[831,.3],[932,.65],[831,.22],[698,.25],[622,.5],[554,.6],[0,.25],[698,.4],[554,.3],[622,.32],[698,.6],[466,.4],[0,.4]];
+    var LOOP=M.reduce(function(a,n){return a+n[1];},0);
+    function phrase(start){ var t=start; tone(116.5,start,LOOP,'sine',0.07); M.forEach(function(n){ if(n[0]) tone(n[0],t,n[1]*0.95,'triangle',0.16); t+=n[1]; }); timers.push(setTimeout(function(){ if(on) phrase(ctx.currentTime+0.02); }, LOOP*1000)); }
+    return { set:function(want){ ensure(); if(want===on) return; on=want;
+      if(on){ if(ctx.resume) ctx.resume(); master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value,ctx.currentTime); master.gain.linearRampToValueAtTime(0.55,ctx.currentTime+0.4); var t=ctx.currentTime+0.08; gliss(t); phrase(t+1.7); }
+      else { master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value,ctx.currentTime); master.gain.linearRampToValueAtTime(0,ctx.currentTime+0.35); timers.forEach(clearTimeout); timers=[]; setTimeout(function(){ live.forEach(function(o){try{o.stop();}catch(e){}}); live=[]; },420); } } };
+  })();
+  var musicBtn=document.getElementById('music'), userMuted=false, started=false;
+  function setMusic(on){ audio.set(on); musicBtn.setAttribute('aria-pressed', on?'true':'false'); musicBtn.setAttribute('aria-label', on?'Pause the background music (Rhapsody in Blue)':'Play Rhapsody in Blue background music'); }
+  musicBtn.addEventListener('click',function(){ started=true; var isOn=musicBtn.getAttribute('aria-pressed')==='true'; if(isOn) userMuted=true; setMusic(!isOn); });
+  function cleanupGesture(){ document.removeEventListener('pointerdown',firstGesture,true); document.removeEventListener('keydown',firstGesture,true); }
+  function firstGesture(e){ if(e&&e.target&&e.target.closest&&e.target.closest('#music')){ cleanupGesture(); return; } if(!started&&!userMuted){ started=true; setMusic(true); } cleanupGesture(); }
+  document.addEventListener('pointerdown',firstGesture,true); document.addEventListener('keydown',firstGesture,true);
 
   /* ----- navigation ----- */
   con.addEventListener('click',function(e){ var g=e.target.closest('[data-go]'); if(g) show(g.dataset.go); });
