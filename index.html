@@ -1,1 +1,462 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>The Happy Endings</title><meta http-equiv="refresh" content="0; url=/yoga/"><script>location.replace("/yoga/")</script></head><body style="background:#141414;color:#a7a299;font-family:Arial;padding:40px">Redirecting to <a href="/yoga/" style="color:#c8415c">/yoga</a>&hellip;</body></html>
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="description" content="The Happy Endings is an AI web studio helping small businesses automate integrated marketing and operations. Explore our work.">
+<title>The Happy Endings · AI Web Studio</title>
+</head>
+<body>
+<style>
+  /* ============================================================
+     THE HAPPY ENDINGS — synthwave landing concept (v5)
+     Home: mission on top · static neon skyline hero + running guy ·
+     project buildings hover a preview ON TOP (no layout shift) ·
+     two buttons side by side. Portfolio: its own page, a MAP beside
+     the project screenshots. No logo, no loading, no ticker.
+     Pure CSS scene; images are ./shots/*.jpg (served from /projects/).
+     ============================================================ */
+  :root{
+    --ink:#0b021c; --cyan:#22e7f5; --pink:#ff3d9a; --purple:#c07bff; --gold:#ffd36b;
+    --green:#7dffb0; --red:#ff6b6b; --text:#f3ecff; --muted:#c3b4e6; --dim:#8a78b8;
+    --mono:ui-monospace,'Cascadia Mono','Segoe UI Mono','SFMono-Regular','Menlo','Consolas','Courier New',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:#08021a;color:var(--text);font-family:var(--mono);line-height:1.6;height:100vh;overflow:hidden;padding:0;margin:0}
+
+  /* ---------- Full-screen console / CRT ---------- */
+  .console{position:relative;width:100vw;height:100vh;overflow:hidden;isolation:isolate;background:#08021a;border:none;outline:none}
+  .console::before{content:"";position:absolute;inset:0;z-index:38;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.16) 2px 3px)}
+  .console::after{content:"";position:absolute;inset:0;z-index:39;pointer-events:none;box-shadow:inset 0 0 120px 24px rgba(4,1,15,.6);
+    background:radial-gradient(130% 110% at 50% 45%,transparent 64%,rgba(4,1,15,.5) 100%)}
+
+  /* ============ SHARED SYNTHWAVE WORLD (static skyline) ============ */
+  .world{position:absolute;inset:0;z-index:1;overflow:hidden;
+    background:linear-gradient(180deg,#05010f 0%,#1a0833 24%,#3d1063 42%,#7a1d8f 53%,#d6217d 60%,#ff5e6c 65%,#ff8d5a 68%,#1a0833 69%)}
+  .stars{position:absolute;top:0;left:0;right:0;height:60%;z-index:1;
+    background-image:radial-gradient(1px 1px at 20% 18%,#fff,transparent),radial-gradient(1px 1px at 60% 9%,#fff,transparent),radial-gradient(1.4px 1.4px at 80% 22%,#cfe9ff,transparent),radial-gradient(1px 1px at 35% 30%,#fff,transparent),radial-gradient(1px 1px at 12% 40%,#fff,transparent),radial-gradient(1.4px 1.4px at 72% 33%,#fff,transparent),radial-gradient(1px 1px at 90% 12%,#fff,transparent),radial-gradient(1px 1px at 48% 14%,#cfe9ff,transparent),radial-gradient(1px 1px at 5% 12%,#fff,transparent),radial-gradient(1px 1px at 30% 6%,#fff,transparent);
+    opacity:.85;animation:twinkle 5s ease-in-out infinite alternate}
+  @keyframes twinkle{from{opacity:.5}to{opacity:.95}}
+  .sun{position:absolute;left:50%;bottom:30%;transform:translateX(-50%);width:min(360px,62%);aspect-ratio:1;border-radius:50%;z-index:2;
+    background:linear-gradient(180deg,#fff7c4 0%,#ffd95e 26%,#ff7eb3 60%,#ff4d6d 100%);
+    box-shadow:0 0 120px 30px rgba(255,77,135,.5),0 0 220px 60px rgba(255,120,90,.3)}
+  .sun::after{content:"";position:absolute;left:0;right:0;bottom:0;height:54%;
+    background:repeating-linear-gradient(180deg,transparent 0 7px,#08021a 7px 9px,transparent 9px 16px,#08021a 16px 19px,transparent 19px 30px,#08021a 30px 34px,transparent 34px 50px,#08021a 50px 56px);
+    -webkit-mask:linear-gradient(180deg,transparent,#000);mask:linear-gradient(180deg,transparent,#000)}
+
+  /* skyline (scrolling, two depth layers; pauses when you hover a project) */
+  .city{position:absolute;left:0;width:200%;display:flex;align-items:flex-end}
+  @keyframes citymove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .city.far{bottom:30%;height:22%;z-index:3;opacity:.5;filter:blur(.7px);animation:citymove 60s linear infinite}
+  .city.near{bottom:30%;height:35%;z-index:4;animation:citymove 38s linear infinite}
+  .cityset{flex:0 0 50%;height:100%;display:flex;align-items:flex-end;justify-content:space-around;padding:0 8px}
+  .city.far .cityset{gap:5px}.city.near .cityset{gap:7px}
+  .world.pausecity .city{animation-play-state:paused}
+  .bld{flex:0 0 auto;position:relative;border-radius:2px 2px 0 0;
+    background:linear-gradient(180deg,#271247 0%,#0c0421 66%,#06010f 100%);
+    border-top:2px solid var(--e);box-shadow:0 0 14px -3px var(--e),inset 0 1px 0 rgba(255,255,255,.05)}
+  .bld::before{content:"";position:absolute;inset:5px 3px 0;border-radius:1px;opacity:.92;
+    background-image:
+      radial-gradient(circle at 50% 40%, rgba(205,190,255,.13) 0 .8px, transparent 1.5px),
+      radial-gradient(circle at 50% 40%, rgba(255,211,107,.95) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 50% 40%, rgba(122,249,255,.85) 0 1px, transparent 1.8px);
+    background-size:6px 9px, 19px 27px, 25px 23px;
+    background-position:var(--wx,0px) var(--wy,0px),calc(var(--wx,0px) + 3px) calc(var(--wy,0px) + 6px),calc(var(--wx,0px) + 12px) calc(var(--wy,0px) + 14px)}
+  .city.far .bld{background:linear-gradient(180deg,#180a30,#08021c);box-shadow:none;border-top-color:rgba(170,130,240,.55)}
+  .city.far .bld::before{background-image:radial-gradient(circle at 50% 40%, rgba(200,180,255,.16) 0 .8px, transparent 1.5px);background-size:7px 10px;opacity:.5}
+  /* rooftop ornaments */
+  .ant{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);width:2px;height:20px;background:linear-gradient(180deg,var(--e),transparent);box-shadow:0 0 6px var(--e)}
+  .beacon{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#ff5e6c;box-shadow:0 0 8px 1px #ff5e6c;animation:blink 1.5s steps(1) infinite}
+  .cap{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);width:58%;height:13px;background:linear-gradient(180deg,#271247,#0c0421);border-top:2px solid var(--e);box-shadow:0 0 9px -2px var(--e)}
+  .cap::after{content:"";position:absolute;left:50%;bottom:100%;transform:translateX(-50%);width:52%;height:9px;background:linear-gradient(180deg,#271247,#0c0421);border-top:2px solid var(--e)}
+  .pyr{position:absolute;left:0;bottom:100%;width:100%;height:16px;background:linear-gradient(180deg,#2a1150,#0c0421);clip-path:polygon(50% 0,0 100%,100% 100%)}
+  .pyr i{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--e);box-shadow:0 0 8px var(--e);animation:blink 1.8s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  /* project buildings (clickable, hoverable) */
+  .bld.proj{cursor:pointer;font-family:inherit;padding:0;background:linear-gradient(180deg,#3a1a5e,#0c0421 70%);filter:saturate(1.2)}
+  .bld.proj .pbeacon{position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--e);box-shadow:0 0 12px var(--e);animation:beaconPulse 1.9s ease-in-out infinite}
+  @keyframes beaconPulse{50%{transform:translateX(-50%) scale(1.5);opacity:.55}}
+  .bld.proj:hover,.bld.proj:focus-visible{box-shadow:0 0 26px -2px var(--e),0 0 60px -8px var(--e)}
+  .bld.proj:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .haze{position:absolute;left:0;right:0;bottom:30%;height:3px;z-index:5;background:#ffd0e6;box-shadow:0 0 24px 6px rgba(255,120,180,.85),0 0 60px 12px rgba(255,80,150,.55)}
+
+  /* grid floor */
+  .floorwrap{position:absolute;left:0;right:0;bottom:0;height:30%;perspective:260px;perspective-origin:50% 0;overflow:hidden;z-index:2}
+  .grid{position:absolute;inset:-2% -50% -2% -50%;transform:rotateX(74deg);transform-origin:50% 0;
+    background-image:linear-gradient(90deg,rgba(34,231,245,.55) 1px,transparent 1px),linear-gradient(180deg,rgba(255,46,151,.55) 1px,transparent 1px);
+    background-size:44px 44px;animation:flow 2.2s linear infinite}
+  @keyframes flow{from{background-position:0 0}to{background-position:0 44px}}
+  .floorwrap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,2,28,.5),transparent 34%,transparent 76%,#0b021c)}
+
+  /* ---------- the running guy ---------- */
+  .runner{position:absolute;left:42%;bottom:28%;z-index:6;width:30px;height:52px;
+    filter:drop-shadow(0 0 7px rgba(34,231,245,.95)) drop-shadow(0 0 16px rgba(34,231,245,.5));animation:bob .46s linear infinite}
+  .runner .run{position:absolute;inset:0;transform:rotate(7deg) scale(1.2);transform-origin:50% 78%}
+  .runner span{position:absolute;background:var(--cyan);border-radius:2px}
+  .rhead{width:11px;height:11px;left:8px;top:0;border-radius:4px;z-index:3}
+  .rtorso{width:8px;height:21px;left:9px;top:10px;z-index:2}
+  .rl-front,.rl-back{width:6px;height:19px;left:9px;top:28px;transform-origin:50% 8%;z-index:3}
+  .rl-back{background:#12b7c8;z-index:1}
+  .ra-front,.ra-back{width:5px;height:16px;left:10px;top:12px;transform-origin:50% 10%;z-index:4}
+  .ra-back{background:#12b7c8;z-index:0}
+  .rl-front{animation:lf .46s linear infinite}.rl-back{animation:lb .46s linear infinite}
+  .ra-front{animation:af .46s linear infinite}.ra-back{animation:ab .46s linear infinite}
+  .speed{position:absolute;right:100%;top:34%;width:34px;height:2px;margin-right:5px;border-radius:2px;
+    background:linear-gradient(90deg,transparent,rgba(34,231,245,.85));box-shadow:0 6px 0 rgba(34,231,245,.5),0 -7px 0 rgba(34,231,245,.35);animation:speed .46s linear infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  @keyframes lf{0%,100%{transform:rotate(40deg)}50%{transform:rotate(-42deg)}}
+  @keyframes lb{0%,100%{transform:rotate(-42deg)}50%{transform:rotate(40deg)}}
+  @keyframes af{0%,100%{transform:rotate(-48deg)}50%{transform:rotate(44deg)}}
+  @keyframes ab{0%,100%{transform:rotate(44deg)}50%{transform:rotate(-48deg)}}
+  @keyframes speed{0%,100%{opacity:.25;transform:scaleX(.7)}50%{opacity:.8;transform:scaleX(1.15)}}
+
+  /* ---------- hover preview (ON TOP, no layout shift) ---------- */
+  #pop{position:absolute;z-index:37;left:0;top:0;pointer-events:none;opacity:0;width:232px;
+    background:rgba(9,2,26,.97);border:2px solid var(--e,#22e7f5);border-radius:11px;box-shadow:0 0 26px -4px var(--e,#22e7f5);padding:9px;text-align:left;transition:opacity .12s}
+  #pop.on{opacity:1}
+  #pop img{display:block;width:100%;height:112px;object-fit:cover;border-radius:7px;background:#1a0833}
+  #pop .pn{display:block;margin-top:8px;font-size:13px;font-weight:700;color:#fff}
+  #pop .pt{display:block;margin-top:2px;font-size:10px;letter-spacing:.16em;color:var(--e,#22e7f5)}
+  #pop .pd{display:block;margin-top:6px;font-size:11px;line-height:1.5;color:var(--muted)}
+
+  /* ---------- scenes ---------- */
+  .scene{position:absolute;inset:0;z-index:10;display:none}
+  .scene.on{display:block}
+  /* HOME is a transparent pass-through so the skyline shows + stays hoverable */
+  #s-home{background:none;pointer-events:none}
+  #s-portfolio,#s-start{background:radial-gradient(120% 100% at 50% 32%,rgba(11,2,28,.84),rgba(6,1,20,.95))}
+
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  /* top half: mission text on the LEFT */
+  .mission{position:absolute;top:12%;left:5.5%;width:min(46%,440px);z-index:11;pointer-events:none;
+    text-align:left;font-size:clamp(13px,1.9vw,19px);line-height:1.6;color:#fff;font-weight:600;
+    background:linear-gradient(180deg,rgba(7,2,20,.62),rgba(7,2,20,.42));border-radius:14px;padding:16px 18px;
+    text-shadow:0 2px 12px rgba(4,1,20,.95),0 0 26px rgba(4,1,20,.85)}
+  /* top half: SNES-style vertical menu on the RIGHT (one button on top of the other) */
+  .cta{position:absolute;top:12%;right:5.5%;left:auto;z-index:12;pointer-events:none;display:flex;flex-direction:column;align-items:stretch;gap:12px;width:min(40%,300px)}
+  .cta .sel{width:100%;justify-content:flex-start}
+  .sel{pointer-events:auto;position:relative;display:inline-flex;align-items:center;gap:10px;font-family:inherit;cursor:pointer;
+    font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#fff;
+    background:rgba(10,3,34,.72);border:2px solid rgba(182,163,224,.45);border-radius:11px;padding:12px 20px 12px 14px;
+    transition:transform .14s,box-shadow .14s,border-color .14s,background .14s}
+  .sel .cur{color:var(--cyan);opacity:0;transform:translateX(-4px);font-size:11px;transition:opacity .14s,transform .14s}
+  .sel:hover,.sel:focus-visible{border-color:var(--cyan);background:rgba(34,231,245,.14);box-shadow:0 0 24px -5px var(--cyan);transform:translateY(-1px)}
+  .sel:hover .cur,.sel:focus-visible .cur{opacity:1;transform:translateX(0)}
+  .sel:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .sel.a-purple .cur{color:var(--purple)}
+  .sel.a-purple:hover,.sel.a-purple:focus-visible{border-color:var(--purple);background:rgba(192,123,255,.16);box-shadow:0 0 24px -5px var(--purple)}
+  /* music toggle (Rhapsody in Blue) — ADA: labeled button, pause control, keyboard */
+  .music{position:absolute;bottom:4%;left:4%;z-index:14;pointer-events:auto;display:inline-flex;align-items:center;gap:8px;
+    font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;
+    background:rgba(10,3,34,.82);border:2px solid rgba(182,163,224,.4);border-radius:999px;padding:9px 15px;transition:.14s}
+  .music .ic{font-size:15px;color:var(--gold);line-height:1}
+  .music .eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+  .music .eq i{width:2px;height:3px;background:var(--gold);border-radius:1px}
+  .music[aria-pressed="true"]{color:#fff;border-color:var(--gold);box-shadow:0 0 18px -4px var(--gold)}
+  .music[aria-pressed="true"] .eq i{animation:eq .7s ease-in-out infinite}
+  .music[aria-pressed="true"] .eq i:nth-child(2){animation-delay:.15s}
+  .music[aria-pressed="true"] .eq i:nth-child(3){animation-delay:.3s}
+  @keyframes eq{0%,100%{height:3px}50%{height:12px}}
+  .music:hover,.music:focus-visible{color:#fff;border-color:var(--gold)}
+  .music:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+  .btn{font-family:inherit;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;cursor:pointer;border-radius:999px;padding:13px 26px;border:2px solid var(--cyan);color:#04101a;background:var(--cyan);text-decoration:none;box-shadow:0 0 20px rgba(34,231,245,.5);transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 0 32px rgba(34,231,245,.85)}
+  .btn.ghost{background:transparent;color:#fff;border-color:var(--purple);box-shadow:0 0 16px rgba(192,123,255,.35)}
+  a:focus-visible,button:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:8px}
+  .back{position:absolute;top:5%;left:6%;z-index:12;font-size:12px;letter-spacing:.14em;color:var(--muted);background:none;border:none;font-family:inherit;cursor:pointer;text-transform:uppercase}
+  .back:hover{color:#fff}
+
+  /* ---------- PORTFOLIO — world map (Street-Fighter stage select) ---------- */
+  .pfhead{position:absolute;top:5%;left:0;right:0;text-align:center;font-size:clamp(13px,2.3vw,17px);letter-spacing:.3em;color:var(--gold);text-transform:uppercase;text-shadow:0 0 12px rgba(255,211,107,.5)}
+  .worldmap{position:absolute;inset:12% 5% 25% 5%;border:2px solid rgba(34,231,245,.32);border-radius:14px;overflow:hidden;
+    background:radial-gradient(120% 130% at 50% 26%, #12063a, #08021c 70%);box-shadow:inset 0 0 80px -24px rgba(34,231,245,.6)}
+  .worldmap::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background-image:linear-gradient(90deg,rgba(34,231,245,.10) 1px,transparent 1px),linear-gradient(180deg,rgba(255,46,151,.09) 1px,transparent 1px);background-size:6.66% 11.1%;opacity:.7}
+  .wsvg{position:absolute;inset:0;width:100%;height:100%;z-index:2;filter:drop-shadow(0 0 6px rgba(34,231,245,.4))}
+  .wsvg .route{animation:dash 3s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-6}}
+  .wsvg .land{animation:twk 4.5s ease-in-out infinite alternate}
+  @keyframes twk{from{opacity:.82}to{opacity:1}}
+  .wsvg .plane polygon{fill:#fff;stroke:var(--gold);stroke-width:.5;paint-order:stroke}
+  .wsvg .plane .glow{fill:rgba(255,233,150,.35)}
+  .worldmap .mtag{position:absolute;top:10px;left:12px;z-index:4;font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .loc{position:absolute;transform:translate(-50%,-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;background:none;border:none;font-family:inherit;padding:4px}
+  .loc .dot{width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c),0 0 0 4px rgba(4,1,15,.55);animation:beaconPulse 1.9s ease-in-out infinite;transition:transform .12s}
+  .loc .plab{font-size:10px;letter-spacing:.03em;color:#fff;background:rgba(9,2,26,.92);border:1px solid var(--c);border-radius:6px;padding:2px 7px;white-space:nowrap;transition:.12s}
+  .loc:hover .dot,.loc:focus-visible .dot,.loc[aria-selected="true"] .dot{transform:scale(1.5)}
+  .loc:hover .plab,.loc:focus-visible .plab,.loc[aria-selected="true"] .plab{box-shadow:0 0 14px -3px var(--c)}
+  .loc:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:8px}
+  /* character-select roster strip along the bottom (SF-style) */
+  .roster{position:absolute;left:0;right:0;bottom:4%;height:18%;z-index:11;display:flex;gap:10px;justify-content:center;align-items:stretch;padding:0 5%}
+  .char{position:relative;flex:1 1 0;max-width:150px;min-width:0;cursor:pointer;background:#0a0320;border:2px solid var(--c);border-radius:9px;overflow:hidden;font-family:inherit;padding:0;transition:transform .12s,box-shadow .12s}
+  .char img{display:block;width:100%;height:100%;object-fit:cover;opacity:.68;transition:opacity .12s}
+  .char .cn{position:absolute;left:0;right:0;bottom:0;font-size:10px;letter-spacing:.02em;color:#fff;background:linear-gradient(180deg,transparent,rgba(4,1,15,.94));padding:12px 4px 5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .char:hover,.char:focus-visible,.char[aria-selected="true"]{transform:translateY(-5px);box-shadow:0 0 20px -2px var(--c),0 0 46px -14px var(--c)}
+  .char:hover img,.char:focus-visible img,.char[aria-selected="true"] img{opacity:1}
+  .char:focus-visible{outline:3px solid #fff;outline-offset:2px}
+
+  /* ---------- START A PROJECT ---------- */
+  .panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(560px,86%);text-align:left}
+  .panel h2{font-size:clamp(1.15rem,3vw,1.7rem);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;color:#fff;text-shadow:2px 0 var(--pink),-2px 0 var(--cyan)}
+  .panel .ty{font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+  .panel p{margin-top:14px;font-size:14px;color:var(--muted);line-height:1.7}
+  .fields{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+  .row{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+  .row .k{width:88px;color:var(--cyan);text-transform:uppercase;font-size:11px;letter-spacing:.16em}
+  .row .v{flex:1;border-bottom:2px dashed rgba(182,163,224,.35);padding:6px 2px;color:#fff}
+  .act{margin-top:22px;display:flex;gap:14px;flex-wrap:wrap}
+
+  /* ---------- Director's notes ---------- */
+  .notes{width:100%;max-width:960px;display:flex;flex-direction:column;gap:16px}
+  .notes h1{font-size:clamp(1.2rem,3vw,1.7rem);color:#fff;text-wrap:balance}
+  .notes h1 b{color:var(--pink)}
+  .notes .sub{color:var(--muted);font-size:14px;max-width:74ch;line-height:1.7}
+  .foot{font-size:12px;color:var(--dim);letter-spacing:.05em;text-align:center}
+
+  @media(max-width:600px){
+    .worldmap{inset:10% 3% 30% 3%}
+    .roster{height:24%;gap:6px;padding:0 3%}
+    .char .cn{font-size:9px}
+    .cta{padding:0 4%}
+    .sun{width:72%}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .city,.stars,.grid,.blink,.beacon,.pyr i,.pbeacon,.runner,.rl-front,.rl-back,.ra-front,.ra-back,.speed,.music .eq i,.wsvg .route,.wsvg .land{animation:none}
+    .wsvg .plane{display:none}
+    .btn,.pin .dot,.pin .plab{transition:none}
+    .runner .run{transform:rotate(7deg) scale(1.2)}
+    .rl-front{transform:rotate(34deg)}.rl-back{transform:rotate(-34deg)}
+    .ra-front{transform:rotate(-38deg)}.ra-back{transform:rotate(38deg)}
+  }
+</style>
+
+<h1 class="sr-only">The Happy Endings — AI web studio helping small businesses automate marketing and operations</h1>
+<div class="console" id="console" role="region" aria-label="The Happy Endings interactive concept">
+  <!-- synthwave world (scrolling skyline) -->
+  <div class="world">
+    <div class="stars" aria-hidden="true"></div>
+    <div class="sun" aria-hidden="true"></div>
+    <div class="city far" id="cityFar" aria-hidden="true"></div>
+    <nav class="city near" id="cityNear" aria-label="Project shortcuts (skyline)"></nav>
+    <div class="haze" aria-hidden="true"></div>
+    <div class="runner" aria-hidden="true"><div class="run">
+      <span class="rl-back"></span><span class="ra-back"></span><span class="rtorso"></span><span class="rhead"></span><span class="rl-front"></span><span class="ra-front"></span>
+    </div><span class="speed"></span></div>
+    <div class="floorwrap" aria-hidden="true"><div class="grid"></div></div>
+  </div>
+
+  <!-- hover preview overlay, sits on top of everything -->
+  <div id="pop" aria-hidden="true"></div>
+
+  <!-- background music toggle (Rhapsody in Blue) -->
+  <button class="music" id="music" aria-pressed="false" aria-label="Play Rhapsody in Blue background music"><span class="ic" aria-hidden="true">♪</span><span class="mlabel">Music</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
+
+  <!-- HOME -->
+  <section class="scene on" id="s-home" aria-label="Home">
+    <p class="mission">We help small businesses automate integrated marketing and operations, so you can focus on creating value for society.</p>
+    <div class="cta">
+      <button class="sel a-purple" data-go="portfolio"><span class="cur" aria-hidden="true">▶</span>Portfolio</button>
+      <button class="sel" data-go="start"><span class="cur" aria-hidden="true">▶</span>Start a Project</button>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO — world map (Street-Fighter-style stage select; hover a location for info) -->
+  <section class="scene" id="s-portfolio" aria-label="Portfolio — world map">
+    <button class="back" data-go="home">◂ Back</button>
+    <div class="pfhead">Select a Project</div>
+    <div class="worldmap" id="worldmap">
+      <svg class="wsvg" viewBox="0 0 100 55" preserveAspectRatio="none" aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs><pattern id="dots" width="1.7" height="1.7" patternUnits="userSpaceOnUse"><circle cx="0.6" cy="0.6" r="0.46" fill="rgba(122,249,255,.55)"/></pattern></defs>
+        <g class="land" fill="url(#dots)" stroke="rgba(122,249,255,.4)" stroke-width="0.25">
+          <path d="M5 11 L27 8 L31 16 L27 24 L17 28 L9 21 Z"/>
+          <path d="M21 30 L30 30 L28 47 L22 44 Z"/>
+          <path d="M42 9 L57 8 L55 17 L43 17 Z"/>
+          <path d="M45 20 L59 20 L55 43 L49 43 L45 30 Z"/>
+          <path d="M57 7 L91 6 L88 25 L64 25 L57 16 Z"/>
+          <path d="M79 38 L93 38 L90 49 L79 47 Z"/>
+        </g>
+        <polyline class="route" points="18,18.7 24,28.6 52,24.2 48,13.2 70,22 84,16.5" fill="none" stroke="rgba(255,211,107,.6)" stroke-width="0.4" stroke-dasharray="1.6 1.4"/>
+        <path id="rt" d="M18 18.7 L24 28.6 L52 24.2 L48 13.2 L70 22 L84 16.5" fill="none" stroke="none"/>
+        <g class="plane"><circle class="glow" r="1.3"></circle><polygon points="2.1,0 -1.1,1.2 -0.2,0 -1.1,-1.2"></polygon><animateMotion dur="14s" repeatCount="indefinite" rotate="auto"><mpath href="#rt" xlink:href="#rt"></mpath></animateMotion></g>
+      </svg>
+      <span class="mtag" aria-hidden="true">▸ Pick a project below · hover for info · click to visit</span>
+    </div>
+    <div class="roster" id="roster" role="group" aria-label="Projects — pick one"></div>
+  </section>
+
+  <!-- START A PROJECT -->
+  <section class="scene" id="s-start" aria-label="Start a project">
+    <button class="back" data-go="home">◂ Back</button>
+    <div class="panel">
+      <div class="ty">New Project</div>
+      <h2>Start a Project</h2>
+      <p>Tell us what you need. You'll have a live link in days, not months — design, build, hosting, and updates handled start to finish.</p>
+      <div class="fields" aria-hidden="true">
+        <div class="row"><span class="k">Name</span><span class="v">▏</span></div>
+        <div class="row"><span class="k">Business</span><span class="v">▏</span></div>
+        <div class="row"><span class="k">Need</span><span class="v">▏</span></div>
+      </div>
+      <div class="act">
+        <a class="btn" href="mailto:keith.dumanski@gmail.com">Send it ▸</a>
+        <button class="btn ghost" data-go="home">Cancel</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var con=document.getElementById('console'), pop=document.getElementById('pop');
+  var scenes={home:document.getElementById('s-home'),portfolio:document.getElementById('s-portfolio'),start:document.getElementById('s-start')};
+  var cur='home';
+  function show(name){ for(var k in scenes) scenes[k].classList.toggle('on',k===name); cur=name; hidePop(); if(world) world.inert=(name!=='home'); }
+
+  /* ----- projects ----- */
+  var PROJ=[
+    {key:'stark',name:'Stark Level',type:'BUILD',hue:'#22e7f5',img:'/projects/shots/stark.jpg',href:'https://starklevelsolutions.com',world:[18,34],desc:'Lead-generating brand site for a construction company.'},
+    {key:'dental',name:'Pride Dental',type:'HEALTH',hue:'#c07bff',img:'/projects/shots/dental.jpg',href:'https://kdumanski.github.io/DentalGroup/',world:[24,52],desc:'Modern patient acquisition site for a family dental practice.'},
+    {key:'omar',name:'Omar Chacón',type:'ART',hue:'#7dffb0',img:'/projects/shots/omar.jpg',href:'https://omarchacon.72.60.117.113.nip.io',world:[48,24],desc:'Interactive art exhibition platform and e-portfolio for a working painter.'},
+    {key:'fabians',name:"Fabian's Tours",type:'TRAVEL',hue:'#ffd36b',img:'/projects/shots/fabians.jpg',href:'https://kdumanski.github.io/fabians-tours/',world:[52,44],desc:'Cinematic booking site for a luxury Egypt travel brand.'},
+    {key:'yoga',name:"St. Mark's Yoga",type:'WELLNESS',hue:'#ff3d9a',img:'/projects/shots/yoga.jpg',href:'https://thehappyendings.org/yoga/',world:[70,40],desc:'Custom booking analytics and integrated marketing targeting platform for a yoga studio.'},
+    {key:'spg',name:'Stark Production',type:'EVENTS',hue:'#ff6b6b',img:'/projects/shots/spg.jpg',href:'https://starkproductiongroup.nyc',world:[84,30],desc:'Integrated marketing analysis and distribution system for an NYC event production company.'}
+  ];
+  var byKey={}; PROJ.forEach(function(p){byKey[p.key]=p;});
+  function a11yLabel(p){ return p.name+', '+p.type+'. '+p.desc+' Opens the live site in a new tab.'; }
+
+  /* ----- build skyline (static) ----- */
+  var HUES=['#22e7f5','#ff3d9a','#c07bff','#ffd36b','#7dffb0','#ff6b6b'];
+  var NEAR=[
+    {w:30,h:54,t:'flat'},{w:18,h:72,t:'antenna'},{w:48,h:92,t:'flat',proj:'yoga'},{w:20,h:44,t:'flat'},
+    {w:42,h:84,t:'flat',proj:'omar'},{w:22,h:62,t:'antenna'},{w:54,h:100,t:'flat',proj:'fabians'},{w:20,h:50,t:'flat'},
+    {w:46,h:88,t:'flat',proj:'stark'},{w:26,h:70,t:'step'},{w:48,h:94,t:'flat',proj:'dental'},{w:18,h:40,t:'flat'},
+    {w:42,h:82,t:'flat',proj:'spg'},{w:22,h:64,t:'antenna'},{w:28,h:56,t:'pyramid'}
+  ];
+  var world=document.querySelector('.world');
+  function pauseCity(on){ world.classList.toggle('pausecity', on); }
+  function makeBld(s,i,layer){
+    var isProj=layer==='near'&&s.proj, p=isProj?byKey[s.proj]:null;
+    var el=document.createElement(isProj?'button':'div');
+    el.className='bld'+(isProj?' proj':'');
+    el.style.height=s.h+'%'; el.style.width=s.w+'px';
+    el.style.setProperty('--e', p?p.hue:HUES[i%HUES.length]);           // deterministic so both copies match (seamless loop)
+    el.style.setProperty('--wx',((i*3)%10)+'px'); el.style.setProperty('--wy',((i*5)%14)+'px');
+    if(!isProj) el.setAttribute('aria-hidden','true');
+    if(layer==='near'&&!isProj){
+      if(s.t==='antenna'){ var a=document.createElement('span'); a.className='ant'; var b=document.createElement('i'); b.className='beacon'; a.appendChild(b); el.appendChild(a); }
+      else if(s.t==='step'){ var c=document.createElement('span'); c.className='cap'; el.appendChild(c); }
+      else if(s.t==='pyramid'){ var py=document.createElement('span'); py.className='pyr'; py.appendChild(document.createElement('i')); el.appendChild(py); }
+    }
+    if(isProj){
+      el.setAttribute('aria-label',a11yLabel(p));
+      var pb=document.createElement('span'); pb.className='pbeacon'; el.appendChild(pb);
+      el.addEventListener('mouseenter',function(){ pauseCity(true); showPop(el,p); });
+      el.addEventListener('mouseleave',function(){ pauseCity(false); hidePop(); });
+      el.addEventListener('focus',function(){ pauseCity(true); showPop(el,p); });
+      el.addEventListener('blur',function(){ pauseCity(false); hidePop(); });
+      el.addEventListener('click',function(){ openSite(p.href); });
+    }
+    return el;
+  }
+  function fillLayer(id, items, layer){
+    var el=document.getElementById(id);
+    for(var set=0;set<2;set++){                                          // two identical copies -> seamless scroll
+      var wrap=document.createElement('div'); wrap.className='cityset';
+      items.forEach(function(s,i){ wrap.appendChild(makeBld(s,i,layer)); });
+      el.appendChild(wrap);
+    }
+  }
+  fillLayer('cityNear', NEAR, 'near');
+  var FAR=[24,16,30,18,22,14,28,20,26,16,22,30,18,24].map(function(w,i){ return {w:w,h:20+((i*13)%34),t:'flat'}; });
+  fillLayer('cityFar', FAR, 'far');
+
+  /* ----- hover preview on top (no layout shift) ----- */
+  function showPop(el,p){
+    var cr=con.getBoundingClientRect(), br=el.getBoundingClientRect();
+    pop.style.setProperty('--e',p.hue);
+    pop.innerHTML='<img src="'+p.img+'" alt=""><span class="pn">'+p.name+'</span><span class="pt">'+p.type+'</span><span class="pd">'+p.desc+'</span>';
+    var cx=br.left-cr.left+br.width/2;
+    var popW=232, popH=224;
+    var left=Math.max(popW/2+6, Math.min(cx, cr.width-popW/2-6));
+    var above=br.top-cr.top-10;
+    if(above-popH < 6){ // not enough room above -> place below the rooftop
+      pop.style.top=(br.top-cr.top+16)+'px'; pop.style.transform='translate(-50%,0)';
+    } else {
+      pop.style.top=above+'px'; pop.style.transform='translate(-50%,-100%)';
+    }
+    pop.style.left=left+'px';
+    pop.classList.add('on');
+  }
+  function hidePop(){ pop.classList.remove('on'); }
+
+  /* ----- portfolio: world map (top) + character-select roster (bottom), linked ----- */
+  function openSite(href){ window.open(href,'_blank','noopener'); }
+  var worldmap=document.getElementById('worldmap'), roster=document.getElementById('roster'), locs=[], chars=[];
+  function select(i){
+    PROJ.forEach(function(_,idx){
+      locs[idx].setAttribute('aria-selected', idx===i?'true':'false');
+      chars[idx].setAttribute('aria-selected', idx===i?'true':'false');
+    });
+    showPop(locs[i], PROJ[i]);   // info appears at the picked location on the map
+  }
+  function deselect(){
+    locs.forEach(function(el){ el.setAttribute('aria-selected','false'); });
+    chars.forEach(function(el){ el.setAttribute('aria-selected','false'); });
+    hidePop();
+  }
+  PROJ.forEach(function(p,i){
+    // map location marker
+    var loc=document.createElement('button'); loc.className='loc'; loc.style.setProperty('--c',p.hue);
+    loc.style.left=p.world[0]+'%'; loc.style.top=p.world[1]+'%';
+    loc.setAttribute('aria-label',a11yLabel(p));
+    loc.innerHTML='<span class="dot" aria-hidden="true"></span><span class="plab">'+p.name+'</span>';
+    loc.addEventListener('mouseenter',function(){ select(i); });
+    loc.addEventListener('mouseleave',deselect);
+    loc.addEventListener('focus',function(){ select(i); });
+    loc.addEventListener('blur',deselect);
+    loc.addEventListener('click',function(){ openSite(p.href); });
+    worldmap.appendChild(loc); locs.push(loc);
+    // roster character tile
+    var ch=document.createElement('button'); ch.className='char'; ch.style.setProperty('--c',p.hue);
+    ch.setAttribute('aria-label',a11yLabel(p));
+    ch.innerHTML='<img src="'+p.img+'" alt=""><span class="cn">'+p.name+'</span>';
+    ch.addEventListener('mouseenter',function(){ select(i); });
+    ch.addEventListener('mouseleave',deselect);
+    ch.addEventListener('focus',function(){ select(i); });
+    ch.addEventListener('blur',deselect);
+    ch.addEventListener('click',function(){ openSite(p.href); });
+    roster.appendChild(ch); chars.push(ch);
+  });
+
+  /* ----- Rhapsody in Blue — synthesized rendition (Gershwin's 1924 composition is public domain) ----- */
+  var audio=(function(){
+    var ctx=null, master=null, on=false, timers=[], live=[];
+    function ensure(){ if(ctx) return; ctx=new (window.AudioContext||window.webkitAudioContext)(); master=ctx.createGain(); master.gain.value=0; master.connect(ctx.destination); }
+    function tone(freq,t,dur,type,vol){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type=type; o.frequency.value=freq; g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol,t+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(master); o.start(t); o.stop(t+dur+0.05); live.push(o); }
+    function gliss(t){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type='sawtooth'; o.frequency.setValueAtTime(174.6,t); o.frequency.exponentialRampToValueAtTime(1396.9,t+1.25); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.16,t+0.12); g.gain.setValueAtTime(0.16,t+1.15); g.gain.exponentialRampToValueAtTime(0.0001,t+1.55); o.connect(g); g.connect(master); o.start(t); o.stop(t+1.6); live.push(o); }
+    var M=[[466,.5],[698,.3],[831,.3],[932,.65],[831,.22],[698,.25],[622,.5],[554,.6],[0,.25],[698,.4],[554,.3],[622,.32],[698,.6],[466,.4],[0,.4]];
+    var LOOP=M.reduce(function(a,n){return a+n[1];},0);
+    function phrase(start){ var t=start; tone(116.5,start,LOOP,'sine',0.07); M.forEach(function(n){ if(n[0]) tone(n[0],t,n[1]*0.95,'triangle',0.16); t+=n[1]; }); timers.push(setTimeout(function(){ if(on) phrase(ctx.currentTime+0.02); }, LOOP*1000)); }
+    return { set:function(want){ ensure(); if(want===on) return; on=want;
+      if(on){ if(ctx.resume) ctx.resume(); master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value,ctx.currentTime); master.gain.linearRampToValueAtTime(0.55,ctx.currentTime+0.4); var t=ctx.currentTime+0.08; gliss(t); phrase(t+1.7); }
+      else { master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(master.gain.value,ctx.currentTime); master.gain.linearRampToValueAtTime(0,ctx.currentTime+0.35); timers.forEach(clearTimeout); timers=[]; setTimeout(function(){ live.forEach(function(o){try{o.stop();}catch(e){}}); live=[]; },420); } } };
+  })();
+  var musicBtn=document.getElementById('music'), userMuted=false, started=false;
+  function setMusic(on){ audio.set(on); musicBtn.setAttribute('aria-pressed', on?'true':'false'); musicBtn.setAttribute('aria-label', on?'Pause the background music (Rhapsody in Blue)':'Play Rhapsody in Blue background music'); }
+  musicBtn.addEventListener('click',function(){ started=true; var isOn=musicBtn.getAttribute('aria-pressed')==='true'; if(isOn) userMuted=true; setMusic(!isOn); });
+  function cleanupGesture(){ document.removeEventListener('pointerdown',firstGesture,true); document.removeEventListener('keydown',firstGesture,true); }
+  function firstGesture(e){ if(e&&e.target&&e.target.closest&&e.target.closest('#music')){ cleanupGesture(); return; } if(!started&&!userMuted){ started=true; setMusic(true); } cleanupGesture(); }
+  document.addEventListener('pointerdown',firstGesture,true); document.addEventListener('keydown',firstGesture,true);
+
+  /* ----- navigation ----- */
+  con.addEventListener('click',function(e){ var g=e.target.closest('[data-go]'); if(g) show(g.dataset.go); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&cur!=='home'){ e.preventDefault(); show('home'); } });
+})();
+</script>
+
+</body>
+</html>

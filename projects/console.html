@@ -26,18 +26,13 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
-  body{background:radial-gradient(120% 90% at 50% 0%, #1a0740 0%, #0b021c 60%), var(--ink);
-    color:var(--text);font-family:var(--mono);line-height:1.6;height:100vh;overflow:hidden;
-    padding:14px;display:flex;align-items:center;justify-content:center}
+  body{background:#08021a;color:var(--text);font-family:var(--mono);line-height:1.6;height:100vh;overflow:hidden;padding:0;margin:0}
 
-  /* ---------- Console / CRT (sized to fit the viewport, no scroll) ---------- */
-  .console{position:relative;width:min(940px, calc(100vw - 28px), calc((100vh - 28px) * 4 / 3));aspect-ratio:4/3;border-radius:18px;overflow:hidden;isolation:isolate;background:#08021a;
-    border:1px solid rgba(192,123,255,.35);
-    box-shadow:0 0 0 8px #05010f,0 0 0 9px rgba(192,123,255,.25),0 30px 80px -20px rgba(0,0,0,.9),inset 0 0 120px -30px rgba(255,61,154,.25);outline:none}
-  .console:focus-visible{box-shadow:0 0 0 8px #05010f,0 0 0 11px var(--cyan),0 30px 80px -20px rgba(0,0,0,.9)}
-  .console::before{content:"";position:absolute;inset:0;z-index:38;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.18) 2px 3px)}
-  .console::after{content:"";position:absolute;inset:0;z-index:39;pointer-events:none;border-radius:18px;box-shadow:inset 0 0 90px 10px rgba(4,1,15,.8);
-    background:radial-gradient(130% 110% at 50% 45%,transparent 60%,rgba(4,1,15,.55) 100%)}
+  /* ---------- Full-screen console / CRT ---------- */
+  .console{position:relative;width:100vw;height:100vh;overflow:hidden;isolation:isolate;background:#08021a;border:none;outline:none}
+  .console::before{content:"";position:absolute;inset:0;z-index:38;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.16) 2px 3px)}
+  .console::after{content:"";position:absolute;inset:0;z-index:39;pointer-events:none;box-shadow:inset 0 0 120px 24px rgba(4,1,15,.6);
+    background:radial-gradient(130% 110% at 50% 45%,transparent 64%,rgba(4,1,15,.5) 100%)}
 
   /* ============ SHARED SYNTHWAVE WORLD (static skyline) ============ */
   .world{position:absolute;inset:0;z-index:1;overflow:hidden;
@@ -224,7 +219,6 @@
   .foot{font-size:12px;color:var(--dim);letter-spacing:.05em;text-align:center}
 
   @media(max-width:600px){
-    .console{aspect-ratio:3/4;width:min(94vw, calc((100vh - 28px) * 3 / 4))}
     .worldmap{inset:10% 3% 30% 3%}
     .roster{height:24%;gap:6px;padding:0 3%}
     .char .cn{font-size:9px}
@@ -324,12 +318,12 @@
 
   /* ----- projects ----- */
   var PROJ=[
-    {key:'stark',name:'Stark Level',type:'BUILD',hue:'#22e7f5',img:'shots/stark.jpg',href:'https://starklevelsolutions.com',world:[18,34],desc:'Lead-generating brand site for a construction company.'},
-    {key:'dental',name:'Pride Dental',type:'HEALTH',hue:'#c07bff',img:'shots/dental.jpg',href:'https://kdumanski.github.io/DentalGroup/',world:[24,52],desc:'Modern patient acquisition site for a family dental practice.'},
-    {key:'omar',name:'Omar Chacón',type:'ART',hue:'#7dffb0',img:'shots/omar.jpg',href:'https://omarchacon.72.60.117.113.nip.io',world:[48,24],desc:'Interactive art exhibition platform and e-portfolio for a working painter.'},
-    {key:'fabians',name:"Fabian's Tours",type:'TRAVEL',hue:'#ffd36b',img:'shots/fabians.jpg',href:'https://kdumanski.github.io/fabians-tours/',world:[52,44],desc:'Cinematic booking site for a luxury Egypt travel brand.'},
-    {key:'yoga',name:"St. Mark's Yoga",type:'WELLNESS',hue:'#ff3d9a',img:'shots/yoga.jpg',href:'https://thehappyendings.org/yoga/',world:[70,40],desc:'Custom booking analytics and integrated marketing targeting platform for a yoga studio.'},
-    {key:'spg',name:'Stark Production',type:'EVENTS',hue:'#ff6b6b',img:'shots/spg.jpg',href:'https://starkproductiongroup.nyc',world:[84,30],desc:'Integrated marketing analysis and distribution system for an NYC event production company.'}
+    {key:'stark',name:'Stark Level',type:'BUILD',hue:'#22e7f5',img:'/projects/shots/stark.jpg',href:'https://starklevelsolutions.com',world:[18,34],desc:'Lead-generating brand site for a construction company.'},
+    {key:'dental',name:'Pride Dental',type:'HEALTH',hue:'#c07bff',img:'/projects/shots/dental.jpg',href:'https://kdumanski.github.io/DentalGroup/',world:[24,52],desc:'Modern patient acquisition site for a family dental practice.'},
+    {key:'omar',name:'Omar Chacón',type:'ART',hue:'#7dffb0',img:'/projects/shots/omar.jpg',href:'https://omarchacon.72.60.117.113.nip.io',world:[48,24],desc:'Interactive art exhibition platform and e-portfolio for a working painter.'},
+    {key:'fabians',name:"Fabian's Tours",type:'TRAVEL',hue:'#ffd36b',img:'/projects/shots/fabians.jpg',href:'https://kdumanski.github.io/fabians-tours/',world:[52,44],desc:'Cinematic booking site for a luxury Egypt travel brand.'},
+    {key:'yoga',name:"St. Mark's Yoga",type:'WELLNESS',hue:'#ff3d9a',img:'/projects/shots/yoga.jpg',href:'https://thehappyendings.org/yoga/',world:[70,40],desc:'Custom booking analytics and integrated marketing targeting platform for a yoga studio.'},
+    {key:'spg',name:'Stark Production',type:'EVENTS',hue:'#ff6b6b',img:'/projects/shots/spg.jpg',href:'https://starkproductiongroup.nyc',world:[84,30],desc:'Integrated marketing analysis and distribution system for an NYC event production company.'}
   ];
   var byKey={}; PROJ.forEach(function(p){byKey[p.key]=p;});
   function a11yLabel(p){ return p.name+', '+p.type+'. '+p.desc+' Opens the live site in a new tab.'; }
