@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katheryn McGaffigan · This Is My Brain</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --bg-soft: #14161c;
+    --ink: #f2f1f4;
+    --ink-dim: #9a9aa6;
+    --line: rgba(255,255,255,0.10);
+    /* MTA line colors */
+    --red:    #EE352E;  /* 1 · analytical */
+    --blue:   #0039A6;  /* A · acting */
+    --orange: #FF6319;  /* M · music */
+    --green:  #00933C;  /* 4 · memory */
+    --purple: #B933AD;  /* 7 · movement */
+    --lime:   #6CBE45;  /* G · breath */
+    --yellow: #FCCC0A;  /* N · gallery */
+    --gray:   #A7A9AC;  /* L · say hello */
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow: hidden;
+  }
+  .stage {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: clamp(12px, 2.5vh, 28px) clamp(16px, 3vw, 48px) clamp(10px, 2vh, 20px);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 3px solid #fff;
+    padding-bottom: 12px;
+  }
+  .name-row { display: flex; align-items: center; gap: 14px; }
+  .k-bullet {
+    width: clamp(34px, 4vw, 46px);
+    height: clamp(34px, 4vw, 46px);
+    border-radius: 50%;
+    background: #fff;
+    color: #0b0d12;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.6vw, 2.6rem);
+    letter-spacing: 0.01em;
+  }
+  .service {
+    text-align: right;
+    color: var(--ink-dim);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+  .service b { color: var(--ink); font-weight: 700; }
+  .brain-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+  svg.brain { width: 100%; height: 100%; max-height: 70vh; }
+
+  .region { cursor: pointer; transition: filter .25s, opacity .25s; opacity: .88; }
+  .region:hover, .region:focus-visible { opacity: 1; filter: url(#glow) brightness(1.3); outline: none; }
+  .gyri { stroke: rgba(255,255,255,.10); fill: none; stroke-width: 3; stroke-linecap: round; pointer-events: none; }
+
+  .sign { cursor: pointer; }
+  .sign rect.plate { fill: #0a0a0a; stroke: rgba(255,255,255,0.35); stroke-width: 1.5; transition: stroke .2s; }
+  .sign:hover rect.plate, .sign:focus-visible rect.plate { stroke: #fff; }
+  .sign .l1 { fill: #fff; font-weight: 700; font-size: 18px; letter-spacing: .08em; }
+  .sign .l2 { fill: var(--ink-dim); font-size: 13px; letter-spacing: .04em; }
+  .sign .blt { font-weight: 700; font-size: 18px; text-anchor: middle; }
+  .leader { fill: none; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; opacity: .8; pointer-events: none; }
+  .kline { fill: none; stroke: rgba(255,255,255,0.20); stroke-width: 5; stroke-linecap: round; pointer-events: none; }
+  .stn { fill: #fff; stroke-width: 3; pointer-events: none; }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    color: var(--ink-dim);
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+  }
+
+  .legend { display: none; gap: 8px; flex-wrap: wrap; justify-content: center; padding: 12px 0; }
+  .legend button {
+    font: 700 13px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    letter-spacing: .06em;
+    color: var(--ink);
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    padding: 9px 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+  }
+  .legend .b {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 13px; font-weight: 700; flex: none;
+  }
+  .legend .b.dark { color: #0b0d12; }
+
+  /* overlay panel */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(5,6,10,0.85);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: center; justify-content: center;
+    padding: clamp(12px, 3vw, 48px);
+    z-index: 50;
+  }
+  .overlay.open { display: flex; }
+  .panel {
+    width: min(780px, 100%);
+    max-height: 88vh;
+    overflow-y: auto;
+    background: rgba(20,20,20,0.97);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.65);
+  }
+  .panel-head {
+    position: sticky; top: 0;
+    background: #0a0a0a;
+    border-bottom: 4px solid var(--accent, #fff);
+    padding: 18px clamp(20px, 4vw, 40px);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .panel-head .b {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--accent); color: #fff;
+    font-size: 1.15rem; font-weight: 700; flex: none;
+  }
+  .panel-head .b.dark { color: #0b0d12; }
+  .panel-head .titles { min-width: 0; }
+  .panel-head h2 { font-size: clamp(1.3rem, 2.6vw, 1.7rem); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .panel-head .via { color: var(--ink-dim); font-size: 0.85rem; letter-spacing: .1em; text-transform: uppercase; margin-top: 2px; }
+  .panel-head .close {
+    margin-left: auto;
+    background: none; border: none; color: var(--ink-dim);
+    font-size: 1.7rem; cursor: pointer; line-height: 1;
+  }
+  .panel-head .close:hover { color: #fff; }
+  .panel-body { padding: clamp(20px, 4vw, 40px); }
+  .panel-body .neuro {
+    color: var(--ink-dim);
+    font-size: 0.98rem;
+    font-style: italic;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .panel-body p { line-height: 1.7; font-size: 1.05rem; margin-bottom: 14px; }
+  .panel-body ul { list-style: none; margin: 8px 0 16px; }
+  .panel-body li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    line-height: 1.6;
+    font-size: 1rem;
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .panel-body li b { font-weight: 700; }
+  .panel-body li span { color: var(--ink-dim); font-size: 0.9rem; }
+  .panel-body .btn {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 13px 26px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: .04em;
+    text-decoration: none;
+  }
+  .panel-body .btn.dark { color: #0b0d12; }
+  .stops {
+    margin: -6px 0 18px;
+    color: var(--ink-dim);
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .stops b { color: var(--ink); }
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+  .shots img { width: 100%; border-radius: 10px; display: block; }
+  .shots figcaption { font-size: 13px; color: var(--ink-dim); margin-top: 8px; text-align: center; }
+
+  @media (max-width: 760px) {
+    body { overflow-y: auto; }
+    .stage { height: auto; min-height: 100vh; }
+    svg.brain { max-height: 44vh; }
+    .sign, .leader { display: none; }
+    .legend { display: flex; }
+    .service { display: none; }
+    .shots { grid-template-columns: 1fr; }
+    footer { justify-content: center; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <header>
+    <div class="name-row">
+      <span class="k-bullet">K</span>
+      <h1>Katheryn McGaffigan</h1>
+    </div>
+    <div class="service">
+      <b>Brain line · 8 stations</b><br>
+      Welcome. You're invited. This is my brain.
+    </div>
+  </header>
+
+  <div class="brain-wrap">
+    <svg class="brain" viewBox="0 0 1130 750" role="img" aria-label="A subway map of Katheryn's brain. Each station opens a section of the site.">
+      <defs>
+        <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="10" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- outer silhouette -->
+      <path fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6" stroke-linejoin="round"
+        d="M195,400 C185,290 235,195 330,150 C430,105 570,95 670,118 C790,140 885,205 905,305 C918,375 898,432 853,462 C885,505 880,570 825,598 C775,618 715,605 698,568 C700,600 692,655 663,650 C640,645 632,618 638,590 C560,545 350,522 298,468 C250,452 203,445 195,400 Z"/>
+
+      <!-- FRONTAL LOBE : the analytical -->
+      <g class="region" data-panel="analytical" tabindex="0" role="button" aria-label="Analytical station, via prefrontal cortex">
+        <path fill="var(--red)" fill-opacity="0.26" stroke="var(--red)" stroke-width="2.5"
+          d="M195,400 C185,290 235,195 330,150 C400,118 465,110 515,118 L502,330 C478,398 420,432 350,440 C290,447 222,440 195,400 Z"/>
+        <path class="gyri" d="M240,320 C275,295 310,308 330,280 M255,230 C290,210 320,225 355,200 M340,165 C370,185 400,170 435,190 M370,300 C405,285 430,308 460,290 M300,390 C340,370 375,385 410,362"/>
+      </g>
+
+      <!-- PARIETAL / MOTOR STRIP : acting -->
+      <g class="region" data-panel="acting" tabindex="0" role="button" aria-label="Acting station, via mirror neurons">
+        <path fill="var(--blue)" fill-opacity="0.34" stroke="#3b6fd4" stroke-width="2.5"
+          d="M515,118 C580,104 640,107 692,121 L710,136 L662,362 C622,404 545,398 502,330 L515,118 Z"/>
+        <path class="gyri" d="M540,180 C575,165 605,185 640,170 M550,250 C585,235 615,257 650,240 M545,320 C580,305 610,325 640,310 M570,140 C605,152 635,140 668,152"/>
+      </g>
+
+      <!-- OCCIPITAL : gallery -->
+      <g class="region" data-panel="gallery" tabindex="0" role="button" aria-label="Gallery station, via visual cortex">
+        <path fill="var(--yellow)" fill-opacity="0.22" stroke="var(--yellow)" stroke-width="2.5"
+          d="M710,136 C800,158 885,210 905,305 C918,375 898,432 853,462 L768,468 C722,452 686,418 662,362 L710,136 Z"/>
+        <path class="gyri" d="M745,230 C780,245 798,225 830,250 M740,320 C775,335 795,315 832,340 M755,400 C785,412 808,395 838,412 M780,180 C810,195 830,180 858,200"/>
+      </g>
+
+      <!-- TEMPORAL : music -->
+      <g class="region" data-panel="music" tabindex="0" role="button" aria-label="Music station, via auditory cortex">
+        <path fill="var(--orange)" fill-opacity="0.26" stroke="var(--orange)" stroke-width="2.5"
+          d="M298,468 C302,432 360,410 440,410 C540,410 628,402 662,362 L768,468 C740,512 660,522 580,527 C480,534 348,522 298,468 Z"/>
+        <path class="gyri" d="M360,455 C400,440 440,458 480,443 M420,495 C460,480 500,498 545,483 M560,460 C600,447 640,462 680,448"/>
+      </g>
+
+      <!-- CEREBELLUM : movement -->
+      <g class="region" data-panel="movement" tabindex="0" role="button" aria-label="Movement station, via cerebellum">
+        <path fill="var(--purple)" fill-opacity="0.28" stroke="var(--purple)" stroke-width="2.5"
+          d="M700,530 C728,492 800,486 845,512 C882,538 875,585 826,600 C776,616 716,602 700,566 C695,553 695,541 700,530 Z"/>
+        <path class="gyri" d="M720,525 C750,515 780,528 812,518 M718,555 C748,545 780,560 815,550 M730,582 C758,575 788,585 818,577"/>
+      </g>
+
+      <!-- BRAINSTEM : breath -->
+      <g class="region" data-panel="breath" tabindex="0" role="button" aria-label="Breath station, via brainstem">
+        <path fill="var(--lime)" fill-opacity="0.28" stroke="var(--lime)" stroke-width="2.5"
+          d="M640,520 C654,504 682,504 692,522 L700,590 C704,625 688,655 663,650 C642,645 632,618 638,590 Z"/>
+      </g>
+
+      <!-- HIPPOCAMPUS : memory -->
+      <g class="region" data-panel="memory" tabindex="0" role="button" aria-label="Memory station, via hippocampus">
+        <path fill="var(--green)" fill-opacity="0.42" stroke="var(--green)" stroke-width="2.5"
+          d="M470,445 C495,428 540,430 555,450 C565,468 552,482 528,480 C545,488 548,502 533,508 C508,517 472,502 466,475 C464,463 465,452 470,445 Z"/>
+      </g>
+
+      <!-- BROCA'S AREA : say hello -->
+      <g class="region" data-panel="hello" tabindex="0" role="button" aria-label="Say hello station, via Broca's area">
+        <ellipse cx="368" cy="412" rx="46" ry="27" fill="var(--gray)" fill-opacity="0.30" stroke="var(--gray)" stroke-width="2.5"/>
+      </g>
+
+      <!-- the K line: one route through every station -->
+      <path class="kline" d="M368,412 C330,380 318,330 330,290 C350,230 500,210 595,235 C680,255 782,240 795,300 C812,380 800,500 780,552 C770,585 700,600 666,590 C610,575 540,500 508,470 C470,435 420,455 385,465"/>
+
+      <!-- station markers (white = transfer available) -->
+      <circle class="stn" cx="330" cy="290" r="8" stroke="var(--red)"/>
+      <circle class="stn" cx="595" cy="235" r="8" stroke="var(--blue)"/>
+      <circle class="stn" cx="795" cy="300" r="8" stroke="var(--yellow)"/>
+      <circle class="stn" cx="780" cy="552" r="8" stroke="var(--purple)"/>
+      <circle class="stn" cx="666" cy="590" r="8" stroke="var(--lime)"/>
+      <circle class="stn" cx="508" cy="470" r="8" stroke="var(--green)"/>
+      <circle class="stn" cx="385" cy="465" r="8" stroke="var(--orange)"/>
+      <circle class="stn" cx="368" cy="412" r="8" stroke="var(--gray)"/>
+
+      <!-- leaders -->
+      <polyline class="leader" points="330,290 265,225 265,184" stroke="var(--red)"/>
+      <polyline class="leader" points="595,230 595,74" stroke="var(--blue)"/>
+      <polyline class="leader" points="800,290 870,272 915,272" stroke="var(--yellow)"/>
+      <polyline class="leader" points="385,468 300,560 300,640" stroke="var(--orange)"/>
+      <polyline class="leader" points="508,478 525,600 525,678" stroke="var(--green)"/>
+      <polyline class="leader" points="785,555 880,565 940,565" stroke="var(--purple)"/>
+      <polyline class="leader" points="666,595 775,650 775,678" stroke="var(--lime)"/>
+      <polyline class="leader" points="340,420 260,452 220,452" stroke="var(--gray)"/>
+
+      <!-- station signs -->
+      <g class="sign" data-panel="analytical" tabindex="0" role="button" aria-label="Analytical station">
+        <rect class="plate" x="60" y="128" width="210" height="56" rx="6"/>
+        <circle cx="88" cy="156" r="16" fill="var(--red)"/>
+        <text class="blt" x="88" y="163" fill="#fff">1</text>
+        <text class="l1" x="114" y="152">ANALYTICAL</text>
+        <text class="l2" x="114" y="173">via Prefrontal Cortex</text>
+      </g>
+      <g class="sign" data-panel="acting" tabindex="0" role="button" aria-label="Acting station">
+        <rect class="plate" x="500" y="18" width="190" height="56" rx="6"/>
+        <circle cx="528" cy="46" r="16" fill="var(--blue)"/>
+        <text class="blt" x="528" y="53" fill="#fff">A</text>
+        <text class="l1" x="554" y="42">ACTING</text>
+        <text class="l2" x="554" y="63">via Mirror Neurons</text>
+      </g>
+      <g class="sign" data-panel="gallery" tabindex="0" role="button" aria-label="Gallery station">
+        <rect class="plate" x="915" y="244" width="190" height="56" rx="6"/>
+        <circle cx="943" cy="272" r="16" fill="var(--yellow)"/>
+        <text class="blt" x="943" y="279" fill="#0b0d12">N</text>
+        <text class="l1" x="969" y="268">GALLERY</text>
+        <text class="l2" x="969" y="289">via Visual Cortex</text>
+      </g>
+      <g class="sign" data-panel="music" tabindex="0" role="button" aria-label="Music station">
+        <rect class="plate" x="200" y="640" width="200" height="56" rx="6"/>
+        <circle cx="228" cy="668" r="16" fill="var(--orange)"/>
+        <text class="blt" x="228" y="675" fill="#fff">M</text>
+        <text class="l1" x="254" y="664">MUSIC</text>
+        <text class="l2" x="254" y="685">via Auditory Cortex</text>
+      </g>
+      <g class="sign" data-panel="memory" tabindex="0" role="button" aria-label="Memory station">
+        <rect class="plate" x="433" y="678" width="185" height="56" rx="6"/>
+        <circle cx="461" cy="706" r="16" fill="var(--green)"/>
+        <text class="blt" x="461" y="713" fill="#fff">4</text>
+        <text class="l1" x="487" y="702">MEMORY</text>
+        <text class="l2" x="487" y="723">via Hippocampus</text>
+      </g>
+      <g class="sign" data-panel="movement" tabindex="0" role="button" aria-label="Movement station">
+        <rect class="plate" x="940" y="537" width="185" height="56" rx="6"/>
+        <circle cx="968" cy="565" r="16" fill="var(--purple)"/>
+        <text class="blt" x="968" y="572" fill="#fff">7</text>
+        <text class="l1" x="994" y="561">MOVEMENT</text>
+        <text class="l2" x="994" y="582">via Cerebellum</text>
+      </g>
+      <g class="sign" data-panel="breath" tabindex="0" role="button" aria-label="Breath station">
+        <rect class="plate" x="690" y="678" width="170" height="56" rx="6"/>
+        <circle cx="718" cy="706" r="16" fill="var(--lime)"/>
+        <text class="blt" x="718" y="713" fill="#fff">G</text>
+        <text class="l1" x="744" y="702">BREATH</text>
+        <text class="l2" x="744" y="723">via Brainstem</text>
+      </g>
+      <g class="sign" data-panel="hello" tabindex="0" role="button" aria-label="Say hello station">
+        <rect class="plate" x="30" y="424" width="190" height="56" rx="6"/>
+        <circle cx="58" cy="452" r="16" fill="var(--gray)"/>
+        <text class="blt" x="58" y="459" fill="#fff">L</text>
+        <text class="l1" x="84" y="448">SAY HELLO</text>
+        <text class="l2" x="84" y="469">via Broca's Area</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="legend" aria-label="Stations">
+    <button data-panel="acting"><span class="b" style="background:var(--blue)">A</span>Acting</button>
+    <button data-panel="music"><span class="b" style="background:var(--orange)">M</span>Music</button>
+    <button data-panel="analytical"><span class="b" style="background:var(--red)">1</span>Analytical</button>
+    <button data-panel="memory"><span class="b" style="background:var(--green)">4</span>Memory</button>
+    <button data-panel="movement"><span class="b" style="background:var(--purple)">7</span>Movement</button>
+    <button data-panel="breath"><span class="b" style="background:var(--lime)">G</span>Breath</button>
+    <button data-panel="gallery"><span class="b dark" style="background:var(--yellow)">N</span>Gallery</button>
+    <button data-panel="hello"><span class="b" style="background:var(--gray)">L</span>Say Hello</button>
+  </div>
+
+  <footer>
+    <span>The K line makes all stops · click any station</span>
+    <span>Please stand clear of the closing doors</span>
+    <span><a href="https://thehappyendings.org/projects/" style="color:inherit;">Site by The Happy Endings</a></span>
+  </footer>
+</div>
+
+<!-- PANELS -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+  <div class="panel">
+    <div class="panel-head" id="panelHead">
+      <span class="b" id="panelBullet">A</span>
+      <div class="titles">
+        <h2 id="panelTitle"></h2>
+        <div class="via" id="panelVia"></div>
+      </div>
+      <button class="close" id="closeBtn" aria-label="Close">×</button>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </div>
+</div>
+
+<script>
+const PANELS = {
+  acting: {
+    accent: "var(--blue)", bullet: "A", dark: false,
+    title: "Acting", via: "via Mirror Neurons",
+    neuro: "The cells that fire whether you do the thing or watch someone else do it. The whole craft, in one neuron.",
+    html: `
+      <div class="stops"><b>Local stops:</b> Theatre Row &middot; The PIT &middot; ChaShaMa &middot; The Moth</div>
+      <p>AEA. Trained in New York by Mike Nichols and George Morrison in the M.A. acting program at The New Actors Workshop, with a Humanities degree from Harvard and a season of Chekhov, Balinese dance and masks at the Bali Conservatory in Indonesia.</p>
+      <ul>
+        <li><b>Follower</b> (solo show, writer and performer) <span>Theatre Row / United Solo Festival, 42nd St</span></li>
+        <li><b>Alwaysandforever.net</b> (solo show, writer and performer) <span>The PIT / SoloCom Festival</span></li>
+        <li><b>Celebrity Ghost Stories</b> <span>The Biography Channel</span></li>
+        <li><b>Tub Talks</b> and <b>Beard &amp; Mustache</b> (web series) <span>dir. Fritz Donnelly, Matthew Silver</span></li>
+        <li><b>The Moth</b> <span>storyteller, told live in NYC</span></li>
+      </ul>
+      <a class="btn" href="katheryn-mcgaffigan-resume.pdf" target="_blank" rel="noopener">Full resume (PDF)</a>`
+  },
+  music: {
+    accent: "var(--orange)", bullet: "M", dark: false,
+    title: "Music", via: "via Auditory Cortex",
+    neuro: "This region runs 24 hours, like the system it lives in. It never shuts off, not even in sleep.",
+    html: `
+      <p><b>Gogol Bordello</b>: performance, dance and backing vocals on international tours with the Lower East Side's own gypsy punk institution.</p>
+      <p><b>My Former Passport</b>: singer and songwriter, performed internationally.</p>
+      <p>Also in residence up here: guitar, piano, accordion, DJ sets, and a voice trained by Jennifer Hamady. Busking-grade instruments only.</p>`
+  },
+  analytical: {
+    accent: "var(--red)", bullet: "1", dark: false,
+    title: "Analytical", via: "via Prefrontal Cortex",
+    neuro: "Executive function, planning, spreadsheets. The express train of the mind. Runs local on weekends.",
+    html: `
+      <p>By day, this lobe commutes to Pfizer.</p>
+      <p>There was a time in New York you couldn't say you worked in pharma and were also a touring musician. It didn't compute. But it's one brain, and it always was. Now the rest of the map makes sense.</p>`
+  },
+  memory: {
+    accent: "var(--green)", bullet: "4", dark: false,
+    title: "Memory", via: "via Hippocampus",
+    neuro: "Shaped like a seahorse. Files everything under keep.",
+    html: `
+      <p>Some of what's stored in here: a Humanities degree from Harvard. A conservatory in Bali. Tours across Europe with an accordion in the overhead bin. Solo shows built from scratch on 42nd Street and in the basement of The PIT. Stories told live at The Moth.</p>
+      <p>Current address of the whole nervous system: New York City.</p>`
+  },
+  movement: {
+    accent: "var(--purple)", bullet: "7", dark: false,
+    title: "Movement", via: "via Cerebellum",
+    neuro: "Balance, rhythm, coordination. The part that dances before you decide to, and never waits for the walk signal.",
+    html: `
+      <ul>
+        <li><b>Balinese dance and masks</b> <span>Bali Conservatory</span></li>
+        <li><b>Modern dance</b> <span>Dance New Amsterdam, Harvard</span></li>
+        <li><b>Tango</b></li>
+        <li><b>Silk veil fans</b></li>
+        <li><b>Krav Maga</b></li>
+        <li><b>Rollerblading</b> <span>yes, in traffic</span></li>
+      </ul>`
+  },
+  breath: {
+    accent: "var(--lime)", bullet: "G", dark: false,
+    title: "Breath", via: "via Brainstem",
+    neuro: "It keeps you breathing whether or not you notice. Meditation is the noticing. In service 24/7, no planned outages.",
+    html: `
+      <p>Katheryn is a trained meditation instructor and longtime yoga practitioner, with movement work in Feldenkrais and Lucid Body.</p>
+      <p>The rest of this map is the busy brain. This is the quiet car.</p>`
+  },
+  gallery: {
+    accent: "var(--yellow)", bullet: "N", dark: true,
+    title: "Gallery", via: "via Visual Cortex",
+    neuro: "Everything you see ends up back here, upside down, and the brain flips it right side up for you.",
+    html: `
+      <div class="shots">
+        <figure><img src="kathryn-headshot.jpg" alt="Katheryn McGaffigan headshot, leather jacket"><figcaption>Headshot</figcaption></figure>
+        <figure><img src="kathryn-follower.jpg" alt="Katheryn McGaffigan in Follower"><figcaption>Follower</figcaption></figure>
+      </div>`
+  },
+  hello: {
+    accent: "var(--gray)", bullet: "L", dark: false,
+    title: "Say Hello", via: "via Broca's Area",
+    neuro: "Speech production lives here. Use yours.",
+    html: `
+      <p>For bookings, collaborations, or to compare hippocampi. No MetroCard required.</p>
+      <a class="btn" href="mailto:katheryn.m@gmail.com">katheryn.m@gmail.com</a>`
+  }
+};
+
+const overlay = document.getElementById('overlay');
+const head = document.getElementById('panelHead');
+const bulletEl = document.getElementById('panelBullet');
+const titleEl = document.getElementById('panelTitle');
+const viaEl = document.getElementById('panelVia');
+const bodyEl = document.getElementById('panelBody');
+let lastFocus = null;
+
+function openPanel(key) {
+  const p = PANELS[key];
+  if (!p) return;
+  lastFocus = document.activeElement;
+  overlay.querySelector('.panel').style.setProperty('--accent', p.accent);
+  bulletEl.textContent = p.bullet;
+  bulletEl.classList.toggle('dark', p.dark);
+  titleEl.textContent = p.title;
+  viaEl.textContent = p.via;
+  bodyEl.innerHTML = '<div class="neuro">' + p.neuro + '</div>' + p.html;
+  bodyEl.querySelectorAll('.btn').forEach(b => b.classList.toggle('dark', p.dark));
+  overlay.classList.add('open');
+  document.getElementById('closeBtn').focus();
+}
+function closePanel() {
+  overlay.classList.remove('open');
+  if (lastFocus) lastFocus.focus();
+}
+document.querySelectorAll('[data-panel]').forEach(el => {
+  el.addEventListener('click', () => openPanel(el.dataset.panel));
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPanel(el.dataset.panel); }
+  });
+});
+document.getElementById('closeBtn').addEventListener('click', closePanel);
+overlay.addEventListener('click', e => { if (e.target === overlay) closePanel(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+</script>
+</body>
+</html>
