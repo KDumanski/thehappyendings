@@ -93,8 +93,6 @@
     max-width: 520px;
   }
 
-  /* ---------- idle ---------- */
-  #screen-idle{ cursor:pointer; }
   .idle-cta{
     margin-top: 6vh;
     background:var(--red);
@@ -107,90 +105,46 @@
     box-shadow: 0 8px 26px rgba(168,50,74,0.35);
     cursor:pointer;
   }
-  .idle-pulse{
-    animation: pulse 2.6s ease-in-out infinite;
-  }
-  @keyframes pulse{
-    0%,100%{ transform:scale(1); }
-    50%{ transform:scale(1.035); }
-  }
-  @media (prefers-reduced-motion: reduce){ .idle-pulse{ animation:none; } }
 
-  /* ---------- name entry ---------- */
+  /* ---------- name entry (landing screen) ---------- */
   .name-wrap{
-    width:100%; max-width: 760px;
-    display:flex; flex-direction:column; align-items:center; gap:12px;
+    width:100%; max-width: 480px;
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    margin-top: 5vh;
   }
-  .mode-toggle{
-    display:flex; gap:8px; width:100%; max-width: 340px;
-  }
-  .mode-btn{
-    flex:1; padding:11px 14px; border-radius:10px;
-    border:2px solid rgba(244,241,234,0.22);
-    background:transparent; color:var(--muted-on-ink);
-    font:inherit; font-weight:700; font-size: clamp(12px,1.6vw,14px);
-    letter-spacing:0.05em; text-transform:uppercase;
-    cursor:pointer;
-  }
-  .mode-btn.active{ background:var(--red); border-color:var(--red); color:var(--cream); }
-  .letter-grid{
-    display:grid; grid-template-columns: repeat(7, 1fr); gap:6px;
-    width:100%; max-width: 440px;
-  }
-  .letter-btn{
-    aspect-ratio: 1; display:flex; align-items:center; justify-content:center;
-    background: rgba(244,241,234,0.09); border:2px solid rgba(244,241,234,0.16);
-    border-radius:8px; color:var(--cream);
-    font:inherit; font-weight:900; font-size: clamp(13px,1.8vw,16px);
-    cursor:pointer;
-  }
-  .letter-btn.active{ background:var(--red); border-color:var(--red); }
-  .letter-btn.empty{ opacity:0.32; }
   .name-search{
-    width:100%; max-width: 440px;
+    width:100%;
     font-family: inherit;
     background:var(--paper); color:var(--ink);
     border:3px solid transparent;
-    border-radius:12px;
-    padding: 13px 18px;
-    font-size: clamp(14px, 1.8vw, 17px);
+    border-radius:14px;
+    padding: 18px 22px;
+    font-size: clamp(18px, 2.6vw, 24px);
     font-weight:700;
     text-align:center;
     outline:none;
   }
   .name-search:focus{ border-color:var(--red); }
-  .roster{
+  .name-dropdown{
     width:100%;
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 10px;
-    max-height: 30vh;
+    display:flex; flex-direction:column; gap:8px;
+    max-height: 34vh;
     overflow-y: auto;
-    padding: 4px 2px;
   }
-  .roster-tile{
+  .dropdown-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
     background:var(--paper); color:var(--ink);
     border-radius:12px; border: 3px solid transparent;
-    padding: 14px 8px;
-    text-align:center;
-    font-weight:700; font-size: clamp(14px, 1.8vw, 17px);
+    padding: 15px 18px;
+    text-align:left;
+    font-weight:700; font-size: clamp(15px, 2vw, 19px);
     cursor:pointer;
   }
-  .roster-tile:active{ border-color:var(--red); transform: scale(0.97); }
-  .roster-empty{
-    grid-column: 1 / -1;
-    color:var(--muted-on-ink); font-weight:700;
-    font-size: clamp(14px,1.8vw,16px);
-    padding: 24px 10px; text-align:center;
-  }
-  .roster-continue{
-    grid-column: 1 / -1;
-    background:var(--red); color:var(--cream);
-    border-radius:12px; border:none;
-    padding: 16px 10px;
-    font-weight:700; font-size: clamp(14px, 1.8vw, 17px);
-    letter-spacing:0.02em;
-    cursor:pointer;
+  .dropdown-row:active{ border-color:var(--red); transform: scale(0.985); }
+  .dropdown-row .tag{
+    font-size: 0.68em; color:var(--muted); font-weight:700;
+    text-transform:uppercase; letter-spacing:0.05em;
+    white-space:nowrap;
   }
 
   /* ---------- 2-tile choices (booking status, payment method) ---------- */
@@ -356,26 +310,14 @@
 
 <div id="app">
 
-  <div class="screen active" id="screen-idle">
+  <div class="screen active" id="screen-name">
     <div class="eyebrow">12 St. Mark's Place · NYC</div>
     <h1 class="wordmark">ST. MARK'S<br>YOGA</h1>
     <div class="rule"></div>
     <div class="tagline">Wellness, with a little punk.</div>
-    <button class="idle-cta idle-pulse" id="btn-start">Tap to check in</button>
-  </div>
-
-  <div class="screen" id="screen-name">
-    <button class="back" data-back="idle">‹ Cancel</button>
-    <div class="question">What's your name?</div>
-    <div class="subquestion">Pick first or last name, then a letter</div>
     <div class="name-wrap">
-      <div class="mode-toggle" id="mode-toggle">
-        <button class="mode-btn active" type="button" data-mode="first">First Name</button>
-        <button class="mode-btn" type="button" data-mode="last">Last Name</button>
-      </div>
-      <div class="letter-grid" id="letter-grid"></div>
-      <div class="roster" id="roster-list"></div>
-      <input type="text" id="name-input" class="name-search" placeholder="Or search names…" autocomplete="off" autocapitalize="words" spellcheck="false">
+      <input type="text" id="name-input" class="name-search" placeholder="Type your name to check in…" autocomplete="off" autocapitalize="words" spellcheck="false">
+      <div class="name-dropdown" id="name-dropdown"></div>
     </div>
   </div>
 
@@ -442,7 +384,6 @@
   var PAY_URL = 'https://st-marks-yoga.recess.tv';
 
   var screens = {
-    idle: document.getElementById('screen-idle'),
     name: document.getElementById('screen-name'),
     q2: document.getElementById('screen-q2'),
     booking: document.getElementById('screen-booking'),
@@ -516,11 +457,6 @@
     var parts = full.trim().split(/\s+/);
     return mode === 'last' && parts.length > 1 ? parts[parts.length - 1] : parts[0];
   }
-  function sortedNames(mode){
-    return readNames().slice().sort(function(a, b){
-      return fieldValue(a, mode).toLowerCase().localeCompare(fieldValue(b, mode).toLowerCase());
-    });
-  }
 
   function show(name){
     Object.keys(screens).forEach(function(k){ screens[k].classList.toggle('active', k === name); });
@@ -530,13 +466,8 @@
     clearTimeout(resetTimer);
     currentName = ''; isReturningFlow = false; chosenSource = null;
     resetNameScreen();
-    show('idle');
-  }
-
-  document.getElementById('btn-start').addEventListener('click', function(){
-    resetNameScreen();
     show('name');
-  });
+  }
 
   document.querySelectorAll('[data-back]').forEach(function(btn){
     btn.addEventListener('click', function(){ show(btn.getAttribute('data-back')); });
@@ -545,116 +476,75 @@
     show(isReturningFlow ? 'name' : 'q2');
   });
   document.getElementById('btn-back-q2').addEventListener('click', function(){
-    refreshRoster();
+    renderDropdown();
     show('name');
   });
 
-  // ---- name entry: browse by first/last-name letter, or search, then tap ----
+  // ---- name entry: type-ahead search, auto-matching first OR last name ----
   var nameInput = document.getElementById('name-input');
-  var rosterEl = document.getElementById('roster-list');
-  var letterGridEl = document.getElementById('letter-grid');
-  var ROSTER_CAP = 50;
-  var LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  var browseState = { mode: 'first', letter: null, query: '' };
-
-  LETTERS.forEach(function(letter){
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'letter-btn';
-    btn.textContent = letter;
-    btn.setAttribute('data-letter', letter);
-    btn.addEventListener('click', function(){
-      browseState.letter = letter;
-      browseState.query = '';
-      nameInput.value = '';
-      refreshRoster();
-    });
-    letterGridEl.appendChild(btn);
-  });
-
-  document.querySelectorAll('.mode-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      browseState.mode = btn.getAttribute('data-mode');
-      browseState.letter = null;
-      refreshRoster();
-    });
-  });
+  var dropdownEl = document.getElementById('name-dropdown');
+  var MATCH_CAP = 8;
 
   function resetNameScreen(){
-    browseState.mode = 'first'; browseState.letter = null; browseState.query = '';
     nameInput.value = '';
-    refreshRoster();
+    renderDropdown();
+    setTimeout(function(){ nameInput.focus(); }, 100);
   }
 
-  function updateControls(){
-    document.querySelectorAll('.mode-btn').forEach(function(b){
-      b.classList.toggle('active', b.getAttribute('data-mode') === browseState.mode);
-    });
-    var available = {};
-    readNames().forEach(function(n){
-      available[fieldValue(n, browseState.mode).charAt(0).toUpperCase()] = true;
-    });
-    document.querySelectorAll('.letter-btn').forEach(function(b){
-      var letter = b.getAttribute('data-letter');
-      b.classList.toggle('active', browseState.letter === letter);
-      b.classList.toggle('empty', !available[letter]);
-    });
+  function matchRank(name, q){
+    var first = fieldValue(name, 'first').toLowerCase();
+    var last = fieldValue(name, 'last').toLowerCase();
+    if (first.indexOf(q) === 0) return 0;
+    if (last.indexOf(q) === 0) return 1;
+    return 2;
   }
 
-  function refreshRoster(){
-    updateControls();
-    var all = sortedNames(browseState.mode);
-    var q = browseState.query.trim().toLowerCase();
-    var shown;
-    rosterEl.innerHTML = '';
+  function smartMatches(q){
+    return readNames()
+      .filter(function(n){ return n.toLowerCase().indexOf(q) !== -1; })
+      .sort(function(a, b){
+        var ra = matchRank(a, q), rb = matchRank(b, q);
+        if (ra !== rb) return ra - rb;
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+      })
+      .slice(0, MATCH_CAP);
+  }
 
-    if (q){
-      shown = all.filter(function(n){ return n.toLowerCase().indexOf(q) !== -1; }).slice(0, ROSTER_CAP);
-    } else if (browseState.letter){
-      shown = all.filter(function(n){
-        return fieldValue(n, browseState.mode).toLowerCase().indexOf(browseState.letter.toLowerCase()) === 0;
-      }).slice(0, ROSTER_CAP);
-    } else {
-      shown = null;
-    }
+  function renderDropdown(){
+    var q = nameInput.value.trim().toLowerCase();
+    dropdownEl.innerHTML = '';
+    if (!q) return;
 
-    if (shown === null){
-      var prompt = document.createElement('div');
-      prompt.className = 'roster-empty';
-      prompt.textContent = readNames().length
-        ? 'Pick a letter above, or search below.'
-        : "No one's checked in on this device yet. Type your name below to be the first.";
-      rosterEl.appendChild(prompt);
-    } else if (shown.length === 0){
-      var none = document.createElement('div');
-      none.className = 'roster-empty';
-      none.textContent = 'No matches — try the search box below.';
-      rosterEl.appendChild(none);
-    } else {
-      shown.forEach(function(n){
-        var tile = document.createElement('div');
-        tile.className = 'roster-tile';
-        tile.textContent = displayName(n);
-        tile.addEventListener('click', function(){ handleNameChosen(n, true); });
-        rosterEl.appendChild(tile);
-      });
-    }
+    smartMatches(q).forEach(function(n){
+      var row = document.createElement('div');
+      row.className = 'dropdown-row';
+      var nameSpan = document.createElement('span');
+      nameSpan.textContent = displayName(n);
+      var tagSpan = document.createElement('span');
+      tagSpan.className = 'tag';
+      tagSpan.textContent = 'Welcome back';
+      row.appendChild(nameSpan); row.appendChild(tagSpan);
+      row.addEventListener('click', function(){ handleNameChosen(n, true); });
+      dropdownEl.appendChild(row);
+    });
 
-    var exactMatch = q && all.some(function(n){ return n.trim().toLowerCase() === q; });
-    if (q && !exactMatch){
-      var cont = document.createElement('button');
-      cont.className = 'roster-continue';
-      cont.textContent = 'Continue as "' + browseState.query.trim() + '" →';
-      cont.addEventListener('click', function(){ handleNameChosen(browseState.query.trim(), false); });
-      rosterEl.appendChild(cont);
+    var exactMatch = readNames().some(function(n){ return n.trim().toLowerCase() === q; });
+    if (!exactMatch){
+      var typed = nameInput.value.trim();
+      var cont = document.createElement('div');
+      cont.className = 'dropdown-row';
+      var nameSpan2 = document.createElement('span');
+      nameSpan2.textContent = 'Continue as "' + typed + '"';
+      var tagSpan2 = document.createElement('span');
+      tagSpan2.className = 'tag';
+      tagSpan2.textContent = 'New';
+      cont.appendChild(nameSpan2); cont.appendChild(tagSpan2);
+      cont.addEventListener('click', function(){ handleNameChosen(typed, false); });
+      dropdownEl.appendChild(cont);
     }
   }
 
-  nameInput.addEventListener('input', function(){
-    browseState.query = nameInput.value;
-    browseState.letter = null;
-    refreshRoster();
-  });
+  nameInput.addEventListener('input', renderDropdown);
   nameInput.addEventListener('keydown', function(e){
     if (e.key === 'Enter'){
       e.preventDefault();
@@ -725,6 +615,7 @@
   }
 
   renderTodayCount();
+  setTimeout(function(){ nameInput.focus(); }, 300);
 })();
 </script>
 </body>
