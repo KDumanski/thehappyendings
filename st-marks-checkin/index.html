@@ -106,45 +106,81 @@
     cursor:pointer;
   }
 
-  /* ---------- name entry (landing screen) ---------- */
+  /* ---------- name entry (landing screen) ----------
+     Top-aligned on purpose: auto-focus opens the iPad keyboard, which shrinks
+     the visual viewport — a centered layout would push the suggestions under it. */
+  #screen-name{
+    justify-content: flex-start;
+    padding: 3.5vh 5vw 0;
+  }
+  .name-header{
+    display:flex; flex-direction:column; align-items:center;
+    flex: 0 0 auto;
+  }
+  .name-header .eyebrow{ margin:0 0 6px; }
+  .name-header h1.wordmark{ font-size: clamp(26px, 4.2vw, 40px); }
   .name-wrap{
-    width:100%; max-width: 480px;
-    display:flex; flex-direction:column; align-items:center; gap:10px;
-    margin-top: 5vh;
+    width:100%; max-width: 720px;
+    display:flex; flex-direction:column; align-items:stretch; gap:14px;
+    margin-top: 3vh;
+    flex: 1 1 auto; min-height: 0;
+  }
+  .search-shell{ position:relative; flex: 0 0 auto; }
+  .search-shell .search-icon{
+    position:absolute; left:20px; top:50%; transform:translateY(-50%);
+    width:24px; height:24px; color:var(--muted); pointer-events:none;
   }
   .name-search{
     width:100%;
     font-family: inherit;
     background:var(--paper); color:var(--ink);
     border:3px solid transparent;
-    border-radius:14px;
-    padding: 18px 22px;
-    font-size: clamp(18px, 2.6vw, 24px);
+    border-radius:16px;
+    padding: 20px 22px 20px 58px;
+    font-size: clamp(19px, 2.6vw, 25px);
     font-weight:700;
-    text-align:center;
+    text-align:left;
     outline:none;
   }
   .name-search:focus{ border-color:var(--red); }
+  .dropdown-label{
+    font-size: clamp(12px,1.5vw,14px);
+    letter-spacing:0.12em; text-transform:uppercase;
+    font-weight:700; color:var(--muted-on-ink);
+    flex: 0 0 auto;
+  }
   .name-dropdown{
-    width:100%;
-    display:flex; flex-direction:column; gap:8px;
-    max-height: 34vh;
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px;
+    align-content: start;
+    flex: 1 1 auto; min-height: 0;
     overflow-y: auto;
+    padding-bottom: 3vh;
   }
   .dropdown-row{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
     background:var(--paper); color:var(--ink);
-    border-radius:12px; border: 3px solid transparent;
-    padding: 15px 18px;
+    border-radius:14px; border: 3px solid transparent;
+    padding: 18px 20px;
+    min-height: 62px;
     text-align:left;
-    font-weight:700; font-size: clamp(15px, 2vw, 19px);
+    font-weight:700; font-size: clamp(16px, 2vw, 20px);
     cursor:pointer;
   }
   .dropdown-row:active{ border-color:var(--red); transform: scale(0.985); }
+  .dropdown-row.is-new{ background:var(--red); color:var(--cream); }
+  .dropdown-row.is-new .tag{ color: rgba(244,241,234,0.75); }
   .dropdown-row .tag{
-    font-size: 0.68em; color:var(--muted); font-weight:700;
+    font-size: 0.66em; color:var(--muted); font-weight:700;
     text-transform:uppercase; letter-spacing:0.05em;
     white-space:nowrap;
+  }
+  .dropdown-empty{
+    grid-column: 1 / -1;
+    color:var(--muted-on-ink); font-weight:700;
+    font-size: clamp(14px,1.8vw,17px);
+    padding: 20px 4px; text-align:center;
   }
 
   /* ---------- 2-tile choices (booking status, payment method) ---------- */
@@ -311,12 +347,17 @@
 <div id="app">
 
   <div class="screen active" id="screen-name">
-    <div class="eyebrow">12 St. Mark's Place · NYC</div>
-    <h1 class="wordmark">ST. MARK'S<br>YOGA</h1>
-    <div class="rule"></div>
-    <div class="tagline">Wellness, with a little punk.</div>
+    <div class="name-header">
+      <div class="eyebrow">12 St. Mark's Place · NYC</div>
+      <h1 class="wordmark">ST. MARK'S YOGA</h1>
+      <div class="rule"></div>
+    </div>
     <div class="name-wrap">
-      <input type="text" id="name-input" class="name-search" placeholder="Type your name to check in…" autocomplete="off" autocapitalize="words" spellcheck="false">
+      <div class="search-shell">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <input type="text" id="name-input" class="name-search" placeholder="Type your name to check in…" autocomplete="off" autocapitalize="words" spellcheck="false" aria-label="Type your name to check in">
+      </div>
+      <div class="dropdown-label" id="dropdown-label">Recent check-ins</div>
       <div class="name-dropdown" id="name-dropdown"></div>
     </div>
   </div>
@@ -483,7 +524,9 @@
   // ---- name entry: type-ahead search, auto-matching first OR last name ----
   var nameInput = document.getElementById('name-input');
   var dropdownEl = document.getElementById('name-dropdown');
+  var dropdownLabel = document.getElementById('dropdown-label');
   var MATCH_CAP = 8;
+  var RECENT_CAP = 6;
 
   function resetNameScreen(){
     nameInput.value = '';
@@ -510,37 +553,73 @@
       .slice(0, MATCH_CAP);
   }
 
+  // Most-recently-checked-in names first — at a front desk the same regulars
+  // reappear constantly, so recency beats alphabetical for the no-query menu.
+  function recentNames(){
+    var seen = {}, out = [];
+    var log = readLog();
+    for (var i = log.length - 1; i >= 0 && out.length < RECENT_CAP; i--){
+      var n = log[i].name;
+      if (!n) continue;
+      var key = n.trim().toLowerCase();
+      if (seen[key]) continue;
+      seen[key] = true;
+      out.push(n);
+    }
+    return out;
+  }
+
+  function makeRow(label, tagText, isNew, onPick){
+    var row = document.createElement('div');
+    row.className = 'dropdown-row' + (isNew ? ' is-new' : '');
+    var nameSpan = document.createElement('span');
+    nameSpan.textContent = label;
+    var tagSpan = document.createElement('span');
+    tagSpan.className = 'tag';
+    tagSpan.textContent = tagText;
+    row.appendChild(nameSpan); row.appendChild(tagSpan);
+    row.addEventListener('click', onPick);
+    return row;
+  }
+
   function renderDropdown(){
     var q = nameInput.value.trim().toLowerCase();
     dropdownEl.innerHTML = '';
-    if (!q) return;
 
-    smartMatches(q).forEach(function(n){
-      var row = document.createElement('div');
-      row.className = 'dropdown-row';
-      var nameSpan = document.createElement('span');
-      nameSpan.textContent = displayName(n);
-      var tagSpan = document.createElement('span');
-      tagSpan.className = 'tag';
-      tagSpan.textContent = 'Welcome back';
-      row.appendChild(nameSpan); row.appendChild(tagSpan);
-      row.addEventListener('click', function(){ handleNameChosen(n, true); });
-      dropdownEl.appendChild(row);
+    if (!q){
+      var recent = recentNames();
+      dropdownLabel.textContent = recent.length ? 'Recent check-ins' : '';
+      if (!recent.length){
+        var hint = document.createElement('div');
+        hint.className = 'dropdown-empty';
+        hint.textContent = 'Start typing your name above to check in.';
+        dropdownEl.appendChild(hint);
+        return;
+      }
+      recent.forEach(function(n){
+        dropdownEl.appendChild(makeRow(displayName(n), 'Welcome back', false, function(){
+          handleNameChosen(n, true);
+        }));
+      });
+      return;
+    }
+
+    var matches = smartMatches(q);
+    dropdownLabel.textContent = matches.length ? 'Matches' : '';
+    matches.forEach(function(n){
+      dropdownEl.appendChild(makeRow(displayName(n), 'Welcome back', false, function(){
+        handleNameChosen(n, true);
+      }));
     });
 
+    // Hold the "new person" row back until there's enough typed to be a real
+    // name — after one letter it's almost always a mis-tap waiting to happen.
     var exactMatch = readNames().some(function(n){ return n.trim().toLowerCase() === q; });
-    if (!exactMatch){
+    if (!exactMatch && q.length >= 2){
       var typed = nameInput.value.trim();
-      var cont = document.createElement('div');
-      cont.className = 'dropdown-row';
-      var nameSpan2 = document.createElement('span');
-      nameSpan2.textContent = 'Continue as "' + typed + '"';
-      var tagSpan2 = document.createElement('span');
-      tagSpan2.className = 'tag';
-      tagSpan2.textContent = 'New';
-      cont.appendChild(nameSpan2); cont.appendChild(tagSpan2);
-      cont.addEventListener('click', function(){ handleNameChosen(typed, false); });
-      dropdownEl.appendChild(cont);
+      dropdownEl.appendChild(makeRow('Continue as "' + typed + '"', 'New', true, function(){
+        handleNameChosen(typed, false);
+      }));
     }
   }
 
@@ -615,6 +694,7 @@
   }
 
   renderTodayCount();
+  renderDropdown();
   setTimeout(function(){ nameInput.focus(); }, 300);
 })();
 </script>
