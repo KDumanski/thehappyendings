@@ -9,7 +9,6 @@
     --ink:#1a1a1a;
     --cream:#f4f1ea;
     --red:#a8324a;
-    --red-press:#8a2740;
     --paper:#ffffff;
     --muted:#5a5a5a;
     --muted-on-ink:#a8a29a;
@@ -26,10 +25,7 @@
     user-select:none;
     -webkit-user-select:none;
   }
-  #app{
-    position:fixed; inset:0;
-    display:flex; flex-direction:column;
-  }
+  #app{ position:fixed; inset:0; }
   .screen{
     position:absolute; inset:0;
     display:flex; flex-direction:column;
@@ -37,262 +33,236 @@
     padding: 6vh 6vw;
     opacity:0; pointer-events:none;
     transform: scale(0.98);
-    transition: opacity .32s ease, transform .32s ease;
+    transition: opacity .3s ease, transform .3s ease;
     overflow-y:auto;
   }
   .screen.active{ opacity:1; pointer-events:auto; transform:scale(1); }
-  @media (prefers-reduced-motion: reduce){
-    .screen{ transition:none; }
-  }
+  @media (prefers-reduced-motion: reduce){ .screen{ transition:none; } }
 
-  /* ---------- shared bits ---------- */
+  /* ---------- shared ---------- */
   .eyebrow{
-    font-size: clamp(13px, 1.6vw, 16px);
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    font-weight:700;
-    color:var(--red);
-    margin:0 0 14px;
-  }
-  .rule{
-    width:64px; height:4px; background:var(--red); border-radius:2px;
-    margin: 18px 0;
-  }
-  h1.wordmark{
-    font-size: clamp(34px, 7vw, 68px);
-    font-weight:900; letter-spacing:-0.02em;
-    margin:0; text-align:center; line-height:1;
-  }
-  .tagline{
-    font-size: clamp(15px, 2vw, 20px);
-    color:var(--muted-on-ink);
-    font-weight:700;
-    margin: 10px 0 0;
-    text-align:center;
+    font-size: clamp(13px,1.6vw,16px);
+    letter-spacing:0.14em; text-transform:uppercase;
+    font-weight:700; color:var(--red); margin:0 0 8px;
   }
   .back{
-    position:absolute; top: 4.5vh; left: 4vw;
+    position:absolute; top:4vh; left:4vw;
     font-size: clamp(13px,1.6vw,15px);
     font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
-    color: var(--muted-on-ink);
-    background:none; border:none; padding: 12px 14px;
-    cursor:pointer;
+    color:var(--muted-on-ink);
+    background:none; border:none; padding:12px 14px; cursor:pointer;
   }
   .back:active{ color:var(--cream); }
-
   .question{
-    font-size: clamp(24px, 4.2vw, 40px);
+    font-size: clamp(24px,4.2vw,40px);
     font-weight:900; letter-spacing:-0.01em;
-    text-align:center; margin: 0 0 8px;
-    text-wrap: balance;
+    text-align:center; margin:0 0 8px; text-wrap:balance;
   }
   .subquestion{
-    font-size: clamp(14px, 1.9vw, 18px);
+    font-size: clamp(14px,1.9vw,18px);
     color:var(--muted-on-ink); font-weight:700;
-    text-align:center; margin:0 0 5vh;
-    max-width: 520px;
+    text-align:center; margin:0 0 4vh; max-width:560px;
+  }
+  .section-label{
+    font-size: clamp(12px,1.5vw,14px);
+    letter-spacing:0.12em; text-transform:uppercase;
+    font-weight:700; color:var(--muted-on-ink);
+    align-self:flex-start; flex:0 0 auto;
   }
 
-  .idle-cta{
-    margin-top: 6vh;
-    background:var(--red);
-    color:var(--cream);
-    border:none;
-    padding: 22px 48px;
-    border-radius:14px;
-    font-size: clamp(16px, 2.2vw, 20px);
-    font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
-    box-shadow: 0 8px 26px rgba(168,50,74,0.35);
-    cursor:pointer;
+  /* ---------- class picker ---------- */
+  .class-list{
+    width:100%; max-width:760px;
+    display:flex; flex-direction:column; gap:10px;
+    overflow-y:auto; flex:1 1 auto; min-height:0;
+  }
+  .class-row{
+    display:flex; align-items:center; gap:18px;
+    background:var(--paper); color:var(--ink);
+    border-radius:14px; border:3px solid transparent;
+    padding:16px 20px; min-height:70px; cursor:pointer; text-align:left;
+  }
+  .class-row:active{ border-color:var(--red); transform:scale(0.99); }
+  .class-row.is-now{ border-color:var(--red); }
+  .class-row .c-time{
+    flex:0 0 auto; min-width:92px;
+    font-weight:900; font-size: clamp(16px,2vw,20px);
+    font-variant-numeric: tabular-nums;
+  }
+  .class-row .c-main{ flex:1 1 auto; min-width:0; }
+  .class-row .c-name{ font-weight:900; font-size: clamp(16px,2vw,20px); }
+  .class-row .c-meta{
+    font-size: clamp(13px,1.6vw,15px); color:var(--muted); font-weight:700;
+    margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .class-row .c-flag{
+    flex:0 0 auto; font-size: clamp(11px,1.3vw,12px); font-weight:700;
+    text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--red); white-space:nowrap;
   }
 
-  /* ---------- name entry (landing screen) ----------
+  /* ---------- name entry ----------
      Top-aligned on purpose: auto-focus opens the iPad keyboard, which shrinks
-     the visual viewport — a centered layout would push the suggestions under it. */
-  #screen-name{
-    justify-content: flex-start;
-    padding: 3.5vh 5vw 0;
+     the visual viewport — a centered layout pushes suggestions out of sight. */
+  #screen-name{ justify-content:flex-start; padding:3vh 5vw 0; }
+  .class-chip{
+    display:flex; align-items:center; gap:12px;
+    background:rgba(244,241,234,0.08);
+    border:2px solid rgba(244,241,234,0.18);
+    border-radius:999px; padding:9px 18px;
+    color:var(--cream); font:inherit; font-weight:700;
+    font-size: clamp(13px,1.7vw,16px);
+    cursor:pointer; flex:0 0 auto; max-width:100%;
   }
-  .name-header{
-    display:flex; flex-direction:column; align-items:center;
-    flex: 0 0 auto;
+  .class-chip:active{ border-color:var(--red); }
+  .class-chip .chip-dot{
+    width:8px; height:8px; border-radius:50%; background:var(--red); flex:0 0 auto;
   }
-  .name-header .eyebrow{ margin:0 0 6px; }
-  .name-header h1.wordmark{ font-size: clamp(26px, 4.2vw, 40px); }
+  .class-chip .chip-text{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .class-chip .chip-change{
+    color:var(--muted-on-ink); font-size:0.82em;
+    text-transform:uppercase; letter-spacing:0.06em; flex:0 0 auto;
+  }
   .name-wrap{
-    width:100%; max-width: 720px;
-    display:flex; flex-direction:column; align-items:stretch; gap:14px;
-    margin-top: 3vh;
-    flex: 1 1 auto; min-height: 0;
+    width:100%; max-width:760px;
+    display:flex; flex-direction:column; align-items:stretch; gap:12px;
+    margin-top:2.5vh; flex:1 1 auto; min-height:0;
   }
-  .search-shell{ position:relative; flex: 0 0 auto; }
+  .search-shell{ position:relative; flex:0 0 auto; }
   .search-shell .search-icon{
     position:absolute; left:20px; top:50%; transform:translateY(-50%);
     width:24px; height:24px; color:var(--muted); pointer-events:none;
   }
   .name-search{
-    width:100%;
-    font-family: inherit;
+    width:100%; font-family:inherit;
     background:var(--paper); color:var(--ink);
-    border:3px solid transparent;
-    border-radius:16px;
-    padding: 20px 22px 20px 58px;
-    font-size: clamp(19px, 2.6vw, 25px);
-    font-weight:700;
-    text-align:left;
-    outline:none;
+    border:3px solid transparent; border-radius:16px;
+    padding:20px 22px 20px 58px;
+    font-size: clamp(19px,2.6vw,25px); font-weight:700;
+    text-align:left; outline:none;
   }
   .name-search:focus{ border-color:var(--red); }
-  .dropdown-label{
-    font-size: clamp(12px,1.5vw,14px);
-    letter-spacing:0.12em; text-transform:uppercase;
-    font-weight:700; color:var(--muted-on-ink);
-    flex: 0 0 auto;
-  }
   .name-dropdown{
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 10px;
-    align-content: start;
-    flex: 1 1 auto; min-height: 0;
-    overflow-y: auto;
-    padding-bottom: 3vh;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+    gap:10px; align-content:start;
+    flex:1 1 auto; min-height:0; overflow-y:auto; padding-bottom:3vh;
   }
   .dropdown-row{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
     background:var(--paper); color:var(--ink);
-    border-radius:14px; border: 3px solid transparent;
-    padding: 18px 20px;
-    min-height: 62px;
-    text-align:left;
-    font-weight:700; font-size: clamp(16px, 2vw, 20px);
-    cursor:pointer;
+    border-radius:14px; border:3px solid transparent;
+    padding:18px 20px; min-height:62px; text-align:left;
+    font-weight:700; font-size: clamp(16px,2vw,20px); cursor:pointer;
   }
-  .dropdown-row:active{ border-color:var(--red); transform: scale(0.985); }
+  .dropdown-row:active{ border-color:var(--red); transform:scale(0.985); }
   .dropdown-row.is-new{ background:var(--red); color:var(--cream); }
-  .dropdown-row.is-new .tag{ color: rgba(244,241,234,0.75); }
+  .dropdown-row.is-new .tag{ color:rgba(244,241,234,0.75); }
   .dropdown-row .tag{
-    font-size: 0.66em; color:var(--muted); font-weight:700;
-    text-transform:uppercase; letter-spacing:0.05em;
-    white-space:nowrap;
+    font-size:0.66em; color:var(--muted); font-weight:700;
+    text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;
   }
   .dropdown-empty{
-    grid-column: 1 / -1;
-    color:var(--muted-on-ink); font-weight:700;
-    font-size: clamp(14px,1.8vw,17px);
-    padding: 20px 4px; text-align:center;
+    grid-column:1 / -1; color:var(--muted-on-ink); font-weight:700;
+    font-size: clamp(14px,1.8vw,17px); padding:20px 4px; text-align:center;
   }
 
-  /* ---------- 2-tile choices (booking status, payment method) ---------- */
+  /* ---------- 2-tile choices ---------- */
   .tiles-2{
-    display:grid; grid-template-columns: 1fr 1fr; gap: 20px;
-    width:100%; max-width: 820px;
+    display:grid; grid-template-columns:1fr 1fr; gap:20px;
+    width:100%; max-width:820px;
   }
   .tile2{
     background:var(--paper); color:var(--ink);
-    border-radius:16px; border: 3px solid transparent;
-    padding: 5vh 3vw;
+    border-radius:16px; border:3px solid transparent;
+    padding:5vh 3vw;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:14px;
-    font-weight:900; font-size: clamp(17px, 2.4vw, 24px);
-    letter-spacing:-0.01em;
-    text-align:center;
-    cursor:pointer;
+    gap:12px; font-weight:900; font-size: clamp(17px,2.4vw,24px);
+    letter-spacing:-0.01em; text-align:center; cursor:pointer;
   }
   .tile2 .glyph{ font-size: clamp(28px,4.6vw,40px); color:var(--red); }
-  .tile2 .tile-note{ font-size: clamp(12px,1.5vw,14px); font-weight:700; color:var(--muted); text-transform:none; letter-spacing:0; }
-  .tile2:active{ border-color:var(--red); transform: scale(0.98); }
-
-  /* ---------- source tiles (numbered list) ---------- */
-  .tiles-list{
-    width:100%; max-width: 620px;
-    display:flex; flex-direction:column; gap:14px;
+  .tile2 .tile-note{
+    font-size: clamp(12px,1.5vw,14px); font-weight:700; color:var(--muted);
+    text-transform:none; letter-spacing:0;
   }
+  .tile2:active{ border-color:var(--red); transform:scale(0.98); }
+
+  /* ---------- source tiles ---------- */
+  .tiles-list{ width:100%; max-width:620px; display:flex; flex-direction:column; gap:12px; }
   .tile-src{
     display:flex; align-items:center; gap:18px;
     background:var(--paper); color:var(--ink);
-    border-radius:14px; border: 3px solid transparent;
-    padding: 18px 22px;
-    cursor:pointer;
-    text-align:left;
+    border-radius:14px; border:3px solid transparent;
+    padding:18px 22px; cursor:pointer; text-align:left;
   }
-  .tile-src:active{ border-color:var(--red); transform: scale(0.985); }
+  .tile-src:active{ border-color:var(--red); transform:scale(0.985); }
   .tile-src .num{
-    flex:0 0 auto;
-    width:42px; height:42px; border-radius:10px;
+    flex:0 0 auto; width:42px; height:42px; border-radius:10px;
     background:var(--ink); color:var(--cream);
     display:flex; align-items:center; justify-content:center;
     font-weight:900; font-size:16px;
   }
-  .tile-src .label{
-    font-weight:700; font-size: clamp(15px, 2vw, 19px);
-    line-height:1.25;
-  }
+  .tile-src .label{ font-weight:700; font-size: clamp(15px,2vw,19px); line-height:1.25; }
 
-  /* ---------- QR / pay screen ---------- */
-  .qr-box{
-    display:flex; flex-direction:column; align-items:center; gap:18px;
-  }
+  /* ---------- QR ---------- */
+  .qr-box{ display:flex; flex-direction:column; align-items:center; gap:16px; }
   .qr-img-wrap{
     background:var(--paper); padding:18px; border-radius:18px;
-    width: min(260px, 60vw); height: min(260px, 60vw);
+    width:min(240px,55vw); height:min(240px,55vw);
     display:flex; align-items:center; justify-content:center;
   }
   .qr-img-wrap img{ width:100%; height:100%; object-fit:contain; }
   .qr-fallback{
-    font-size: clamp(13px,1.6vw,15px); color:var(--muted-on-ink); font-weight:700;
-    text-align:center;
+    font-size: clamp(13px,1.6vw,15px); color:var(--muted-on-ink);
+    font-weight:700; text-align:center;
   }
   .qr-fallback a{ color:var(--cream); }
+  .cta{
+    background:var(--red); color:var(--cream); border:none;
+    padding:20px 44px; border-radius:14px;
+    font-size: clamp(15px,2vw,19px); font-weight:700;
+    letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;
+  }
 
   /* ---------- confirm ---------- */
   .check{
-    width:84px; height:84px; border-radius:50%;
-    background:var(--red);
-    display:flex; align-items:center; justify-content:center;
-    margin-bottom: 26px;
+    width:84px; height:84px; border-radius:50%; background:var(--red);
+    display:flex; align-items:center; justify-content:center; margin-bottom:24px;
   }
   .check svg{ width:42px; height:42px; }
   .confirm-title{
-    font-size: clamp(26px, 4vw, 38px);
-    font-weight:900; text-align:center; margin:0 0 10px;
-    text-wrap:balance;
+    font-size: clamp(26px,4vw,38px); font-weight:900;
+    text-align:center; margin:0 0 10px; text-wrap:balance;
   }
   .confirm-sub{
-    font-size: clamp(14px, 1.8vw, 17px);
-    color:var(--muted-on-ink); font-weight:700; text-align:center;
-    max-width: 480px;
+    font-size: clamp(14px,1.8vw,17px); color:var(--muted-on-ink);
+    font-weight:700; text-align:center; max-width:520px;
   }
   .reset-track{
-    position:absolute; bottom: 5vh; left:50%; transform:translateX(-50%);
-    width: 180px; height:4px; background:rgba(244,241,234,0.18); border-radius:2px;
-    overflow:hidden;
+    position:absolute; bottom:5vh; left:50%; transform:translateX(-50%);
+    width:180px; height:4px; background:rgba(244,241,234,0.18);
+    border-radius:2px; overflow:hidden;
   }
   .reset-fill{
     height:100%; width:100%; background:var(--red);
-    transform-origin:left; transform: scaleX(1);
-    transition: transform 5s linear;
+    transform-origin:left; transform:scaleX(1);
+    transition:transform 5s linear;
   }
-
   .today{
-    position:fixed; bottom: 14px; right: 16px;
-    font-size:12px; color: rgba(244,241,234,0.32);
-    font-weight:700; letter-spacing:0.04em;
-    pointer-events:none;
+    position:fixed; bottom:14px; right:16px;
+    font-size:12px; color:rgba(244,241,234,0.32);
+    font-weight:700; letter-spacing:0.04em; pointer-events:none;
   }
 
   /* ---------- staff gate ---------- */
   #gate{
-    position:fixed; inset:0; z-index:99999;
-    background:var(--ink);
-    display:flex; align-items:center; justify-content:center;
-    padding:24px;
+    position:fixed; inset:0; z-index:99999; background:var(--ink);
+    display:flex; align-items:center; justify-content:center; padding:24px;
   }
   .gate-card{
     background:var(--paper); color:var(--ink);
-    border-radius:16px; padding: 40px 36px;
-    width:min(360px, 90vw); text-align:center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    border-radius:16px; padding:40px 36px;
+    width:min(360px,90vw); text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.45);
   }
   .gate-title{ font-weight:900; font-size:1.5rem; letter-spacing:-0.02em; }
   .gate-sub{ color:var(--muted); font-size:0.85rem; font-weight:700; margin:8px 0 22px; }
@@ -328,13 +298,15 @@
   var GATE_KEY = 'smy_checkin_gate', PW = 'agora';
   var gate = document.getElementById('gate');
   var pwInput = document.getElementById('gate-pw');
-  function unlock(){ gate.style.display = 'none'; }
-  if (sessionStorage.getItem(GATE_KEY) === '1'){ unlock(); }
+  if (sessionStorage.getItem(GATE_KEY) === '1'){ gate.style.display = 'none'; }
   else { setTimeout(function(){ pwInput.focus(); }, 50); }
   function tryUnlock(){
     var v = (pwInput.value || '').trim().toLowerCase();
-    if (v === PW){ sessionStorage.setItem(GATE_KEY, '1'); unlock(); }
-    else {
+    if (v === PW){
+      sessionStorage.setItem(GATE_KEY, '1');
+      gate.style.display = 'none';
+      document.dispatchEvent(new CustomEvent('smy:unlocked'));
+    } else {
       document.getElementById('gate-err').textContent = 'Wrong password';
       pwInput.value = '';
     }
@@ -346,27 +318,35 @@
 
 <div id="app">
 
-  <div class="screen active" id="screen-name">
-    <div class="name-header">
-      <div class="eyebrow">12 St. Mark's Place · NYC</div>
-      <h1 class="wordmark">ST. MARK'S YOGA</h1>
-      <div class="rule"></div>
-    </div>
+  <div class="screen" id="screen-class">
+    <button class="back" id="btn-class-back" style="display:none;">‹ Back</button>
+    <div class="eyebrow">St. Mark's Yoga</div>
+    <div class="question">Which class?</div>
+    <div class="subquestion" id="class-sub">Happening right now</div>
+    <div class="class-list" id="class-list"></div>
+  </div>
+
+  <div class="screen" id="screen-name">
+    <button class="class-chip" id="class-chip" type="button">
+      <span class="chip-dot"></span>
+      <span class="chip-text" id="chip-text"></span>
+      <span class="chip-change">Change</span>
+    </button>
     <div class="name-wrap">
       <div class="search-shell">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
         <input type="text" id="name-input" class="name-search" placeholder="Type your name to check in…" autocomplete="off" autocapitalize="words" spellcheck="false" aria-label="Type your name to check in">
       </div>
-      <div class="dropdown-label" id="dropdown-label">Recent check-ins</div>
+      <div class="section-label" id="dropdown-label"></div>
       <div class="name-dropdown" id="name-dropdown"></div>
     </div>
   </div>
 
-  <div class="screen" id="screen-q2">
-    <button class="back" id="btn-back-q2">‹ Back</button>
+  <div class="screen" id="screen-source">
+    <button class="back" id="btn-back-source">‹ Back</button>
     <div class="question">Welcome! How'd you hear about us?</div>
     <div class="subquestion">Pick the one that fits best</div>
-    <div class="tiles-list" id="source-tiles">
+    <div class="tiles-list">
       <div class="tile-src" data-source="friend"><span class="num">01</span><span class="label">A friend told me about it</span></div>
       <div class="tile-src" data-source="google"><span class="num">02</span><span class="label">Searched for a studio on Google</span></div>
       <div class="tile-src" data-source="ig-organic"><span class="num">03</span><span class="label">Found the page browsing Instagram</span></div>
@@ -377,8 +357,8 @@
 
   <div class="screen" id="screen-booking">
     <button class="back" id="btn-back-booking">‹ Back</button>
-    <div class="question">Do you already have a class booked?</div>
-    <div class="subquestion">Booked online or have a package? You're all set. Showing up without one? Let's get you paid up.</div>
+    <div class="question">Do you already have this class booked?</div>
+    <div class="subquestion">Booked online or on a membership? You're all set. Otherwise let's get you paid up.</div>
     <div class="tiles-2">
       <div class="tile2" id="btn-booked"><span class="glyph">✓</span>Yes, I'm booked</div>
       <div class="tile2" id="btn-walkin"><span class="glyph">◆</span>No — I'm a walk-in</div>
@@ -400,11 +380,9 @@
     <div class="question">Scan to pay</div>
     <div class="subquestion">Use your phone's camera to open the payment page</div>
     <div class="qr-box">
-      <div class="qr-img-wrap">
-        <img id="qr-img" alt="QR code linking to the St. Mark's Yoga booking &amp; payment page">
-      </div>
-      <div class="qr-fallback" id="qr-fallback">Or visit <a href="https://st-marks-yoga.recess.tv" id="qr-link">st-marks-yoga.recess.tv</a></div>
-      <button class="idle-cta" id="btn-paid-continue" style="margin-top:8px;">I've paid — continue</button>
+      <div class="qr-img-wrap"><img id="qr-img" alt="QR code to the St. Mark's Yoga booking and payment page"></div>
+      <div class="qr-fallback">Or visit <a href="https://st-marks-yoga.recess.tv">st-marks-yoga.recess.tv</a></div>
+      <button class="cta" id="btn-paid-continue">I've paid — continue</button>
     </div>
   </div>
 
@@ -424,18 +402,32 @@
   var NAMES_KEY = 'smy_known_names';
   var PAY_URL = 'https://st-marks-yoga.recess.tv';
 
-  var screens = {
-    name: document.getElementById('screen-name'),
-    q2: document.getElementById('screen-q2'),
-    booking: document.getElementById('screen-booking'),
-    payment: document.getElementById('screen-payment'),
-    qr: document.getElementById('screen-qr'),
-    confirm: document.getElementById('screen-confirm')
-  };
+  // Real St. Mark's Thursday schedule, read off the Recess dashboard 2026-08-06.
+  // Instructors left blank where the dashboard truncated the name — nothing invented.
+  // TODO: pull live so every weekday is right, not just Thursday's line-up.
+  var CLASSES = [
+    { id:'c0730p', start:'07:30', name:'Mat Pilates', instructor:'Macy Alday',         room:'Studio 4F' },
+    { id:'c0730v', start:'07:30', name:'Vinyasa',     instructor:'Chauncie Parchment', room:'Studio 2R' },
+    { id:'c0800',  start:'08:00', name:'Vinyasa',     instructor:'Andrea Arnold',      room:'Studio 4R' },
+    { id:'c1100',  start:'11:00', name:'Vinyasa',     instructor:'Greg Stavrakas',     room:'Studio 2R' },
+    { id:'c1200',  start:'12:00', name:'Vinyasa',     instructor:'Amanda Van Kessel',  room:'Studio 4R' },
+    { id:'c1300',  start:'13:00', name:'Mat Pilates', instructor:'',                   room:'Studio 4F' },
+    { id:'c1400',  start:'14:00', name:'Vinyasa',     instructor:'',                   room:'Studio 4R' },
+    { id:'c1730',  start:'17:30', name:'Vinyasa',     instructor:'Brian P.',           room:'Studio 2R' },
+    { id:'c1800v', start:'18:00', name:'Vinyasa',     instructor:'',                   room:'Studio 4R' },
+    { id:'c1800b', start:'18:00', name:'Basics',      instructor:'',                   room:'Studio 4F' }
+  ];
+  // Teachers host from 30 min out (studio SOP), so a class is checkable early; the
+  // grace window mirrors Recess's own "keep showing a class after it starts" setting.
+  var EARLY_WINDOW = 45, GRACE_WINDOW = 20, SUGGEST_CAP = 6, MATCH_CAP = 8;
+
+  var screens = {};
+  ['class','name','source','booking','payment','qr','confirm'].forEach(function(k){
+    screens[k] = document.getElementById('screen-' + k);
+  });
+
   var resetTimer = null;
-  var currentName = '';
-  var isReturningFlow = false;
-  var chosenSource = null;
+  var currentName = '', isReturningFlow = false, chosenSource = null, selectedClass = null;
 
   var SOURCE_COPY = {
     'friend': 'So glad a friend sent you our way.',
@@ -445,21 +437,38 @@
     'walk-by': 'Glad you stopped in off the street.'
   };
 
-  // ---- QR code ----
-  var qrImg = document.getElementById('qr-img');
-  qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=' + encodeURIComponent(PAY_URL);
-  qrImg.addEventListener('error', function(){
-    document.querySelector('.qr-img-wrap').style.display = 'none';
-  });
+  // ---- time helpers ----
+  function toMin(hhmm){ var p = hhmm.split(':'); return (+p[0]) * 60 + (+p[1]); }
+  function nowMin(){ var d = new Date(); return d.getHours() * 60 + d.getMinutes(); }
+  function pretty(hhmm){
+    var m = toMin(hhmm), h = Math.floor(m / 60), mm = m % 60;
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    var h12 = h % 12; if (h12 === 0) h12 = 12;
+    return h12 + ':' + (mm < 10 ? '0' + mm : mm) + ' ' + ampm;
+  }
+  function classesNow(){
+    var n = nowMin();
+    return CLASSES.filter(function(c){
+      return n >= toMin(c.start) - EARLY_WINDOW && n <= toMin(c.start) + GRACE_WINDOW;
+    });
+  }
+  function classesLater(){
+    var n = nowMin();
+    return CLASSES.filter(function(c){ return toMin(c.start) - EARLY_WINDOW > n; });
+  }
+  function classLabel(c){
+    var bits = [c.name];
+    if (c.instructor) bits.push(c.instructor);
+    bits.push(c.room);
+    return bits.join(' · ');
+  }
 
-  // ---- log storage ----
+  // ---- storage ----
   function readLog(){
-    try { return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); }
-    catch(e){ return []; }
+    try { return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); } catch(e){ return []; }
   }
   function writeEntry(entry){
-    var log = readLog();
-    log.push(entry);
+    var log = readLog(); log.push(entry);
     try { localStorage.setItem(LOG_KEY, JSON.stringify(log)); } catch(e){}
     renderTodayCount();
   }
@@ -468,15 +477,11 @@
     var n = readLog().filter(function(e){ return new Date(e.ts).toDateString() === today; }).length;
     document.getElementById('today-count').textContent = n ? (n + ' checked in today') : '';
   }
-
-  // ---- known names (local, per-device) ----
   function readNames(){
-    try { return JSON.parse(localStorage.getItem(NAMES_KEY) || '[]'); }
-    catch(e){ return []; }
+    try { return JSON.parse(localStorage.getItem(NAMES_KEY) || '[]'); } catch(e){ return []; }
   }
   function saveName(name){
-    var names = readNames();
-    var key = name.trim().toLowerCase();
+    var names = readNames(), key = name.trim().toLowerCase();
     if (!names.some(function(n){ return n.trim().toLowerCase() === key; })){
       names.push(name.trim());
       try { localStorage.setItem(NAMES_KEY, JSON.stringify(names)); } catch(e){}
@@ -484,64 +489,103 @@
   }
   function findExisting(name){
     var key = name.trim().toLowerCase();
-    var found = readNames().find(function(n){ return n.trim().toLowerCase() === key; });
-    return found || null;
+    return readNames().filter(function(n){ return n.trim().toLowerCase() === key; })[0] || null;
   }
+
+  // ---- name formatting ----
   function firstName(full){ return (full || '').trim().split(/\s+/)[0] || full; }
   function displayName(full){
     var parts = full.trim().split(/\s+/);
-    var first = parts[0] || full;
-    var lastInitial = parts.length > 1 ? (parts[parts.length - 1][0] || '').toUpperCase() + '.' : '';
-    return lastInitial ? (first + ' ' + lastInitial) : first;
+    var last = parts.length > 1 ? (parts[parts.length - 1].charAt(0) || '').toUpperCase() + '.' : '';
+    return last ? parts[0] + ' ' + last : parts[0];
   }
-  function fieldValue(full, mode){
+  function fieldValue(full, which){
     var parts = full.trim().split(/\s+/);
-    return mode === 'last' && parts.length > 1 ? parts[parts.length - 1] : parts[0];
+    return which === 'last' && parts.length > 1 ? parts[parts.length - 1] : parts[0];
   }
 
   function show(name){
     Object.keys(screens).forEach(function(k){ screens[k].classList.toggle('active', k === name); });
   }
 
-  function goIdle(){
-    clearTimeout(resetTimer);
-    currentName = ''; isReturningFlow = false; chosenSource = null;
+  // ---- class picker ----
+  function renderClassList(){
+    var listEl = document.getElementById('class-list');
+    var now = classesNow(), later = classesLater();
+    listEl.innerHTML = '';
+
+    function addRow(c, flag){
+      var row = document.createElement('div');
+      row.className = 'class-row' + (flag ? ' is-now' : '');
+      var t = document.createElement('span');
+      t.className = 'c-time'; t.textContent = pretty(c.start);
+      var main = document.createElement('span'); main.className = 'c-main';
+      var nm = document.createElement('div'); nm.className = 'c-name'; nm.textContent = c.name;
+      var mt = document.createElement('div'); mt.className = 'c-meta';
+      mt.textContent = (c.instructor ? c.instructor + ' · ' : '') + c.room;
+      main.appendChild(nm); main.appendChild(mt);
+      var fl = document.createElement('span'); fl.className = 'c-flag'; fl.textContent = flag || '';
+      row.appendChild(t); row.appendChild(main); row.appendChild(fl);
+      row.addEventListener('click', function(){ pickClass(c); });
+      listEl.appendChild(row);
+    }
+
+    if (now.length){
+      var lbl = document.createElement('div');
+      lbl.className = 'section-label'; lbl.textContent = 'Happening now';
+      listEl.appendChild(lbl);
+      now.forEach(function(c){ addRow(c, 'Now'); });
+    }
+    if (later.length){
+      var lbl2 = document.createElement('div');
+      lbl2.className = 'section-label';
+      lbl2.style.marginTop = now.length ? '14px' : '0';
+      lbl2.textContent = now.length ? 'Later today' : 'Next up today';
+      listEl.appendChild(lbl2);
+      later.forEach(function(c){ addRow(c, ''); });
+    }
+    if (!now.length && !later.length){
+      var done = document.createElement('div');
+      done.className = 'dropdown-empty';
+      done.textContent = "That's every class for today.";
+      listEl.appendChild(done);
+    }
+
+    document.getElementById('class-sub').textContent = now.length
+      ? "Pick the class you're here for"
+      : 'No class starting right now — pick one below';
+  }
+
+  function pickClass(c){
+    selectedClass = c;
+    document.getElementById('chip-text').textContent = pretty(c.start) + ' · ' + classLabel(c);
     resetNameScreen();
     show('name');
   }
 
-  document.querySelectorAll('[data-back]').forEach(function(btn){
-    btn.addEventListener('click', function(){ show(btn.getAttribute('data-back')); });
+  document.getElementById('class-chip').addEventListener('click', function(){
+    renderClassList();
+    document.getElementById('btn-class-back').style.display = 'block';
+    show('class');
   });
-  document.getElementById('btn-back-booking').addEventListener('click', function(){
-    show(isReturningFlow ? 'name' : 'q2');
-  });
-  document.getElementById('btn-back-q2').addEventListener('click', function(){
-    renderDropdown();
-    show('name');
-  });
+  document.getElementById('btn-class-back').addEventListener('click', function(){ show('name'); });
 
-  // ---- name entry: type-ahead search, auto-matching first OR last name ----
+  // ---- name entry ----
   var nameInput = document.getElementById('name-input');
   var dropdownEl = document.getElementById('name-dropdown');
   var dropdownLabel = document.getElementById('dropdown-label');
-  var MATCH_CAP = 8;
-  var RECENT_CAP = 6;
 
   function resetNameScreen(){
     nameInput.value = '';
     renderDropdown();
-    setTimeout(function(){ nameInput.focus(); }, 100);
+    setTimeout(function(){ nameInput.focus(); }, 120);
   }
 
   function matchRank(name, q){
-    var first = fieldValue(name, 'first').toLowerCase();
-    var last = fieldValue(name, 'last').toLowerCase();
-    if (first.indexOf(q) === 0) return 0;
-    if (last.indexOf(q) === 0) return 1;
+    if (fieldValue(name, 'first').toLowerCase().indexOf(q) === 0) return 0;
+    if (fieldValue(name, 'last').toLowerCase().indexOf(q) === 0) return 1;
     return 2;
   }
-
   function smartMatches(q){
     return readNames()
       .filter(function(n){ return n.toLowerCase().indexOf(q) !== -1; })
@@ -553,31 +597,39 @@
       .slice(0, MATCH_CAP);
   }
 
-  // Most-recently-checked-in names first — at a front desk the same regulars
-  // reappear constantly, so recency beats alphabetical for the no-query menu.
-  function recentNames(){
-    var seen = {}, out = [];
-    var log = readLog();
-    for (var i = log.length - 1; i >= 0 && out.length < RECENT_CAP; i--){
-      var n = log[i].name;
-      if (!n) continue;
-      var key = n.trim().toLowerCase();
-      if (seen[key]) continue;
-      seen[key] = true;
-      out.push(n);
-    }
-    return out;
+  // No-query suggestions: people who attend THIS class slot rank above general
+  // regulars, and anyone already checked into it today drops off the list.
+  function suggestions(){
+    var log = readLog(), today = new Date().toDateString();
+    var alreadyIn = {}, scored = {};
+    var classId = selectedClass ? selectedClass.id : null;
+    log.forEach(function(e){
+      if (e.name && e.classId === classId && new Date(e.ts).toDateString() === today){
+        alreadyIn[e.name.trim().toLowerCase()] = true;
+      }
+    });
+    log.forEach(function(e){
+      if (!e.name) return;
+      var k = e.name.trim().toLowerCase();
+      if (alreadyIn[k]) return;
+      if (!scored[k]) scored[k] = { name: e.name, lastTs: 0, sameClass: 0 };
+      if (e.ts > scored[k].lastTs) scored[k].lastTs = e.ts;
+      if (classId && e.classId === classId) scored[k].sameClass++;
+    });
+    return Object.keys(scored).map(function(k){ return scored[k]; })
+      .sort(function(a, b){
+        if (b.sameClass !== a.sameClass) return b.sameClass - a.sameClass;
+        return b.lastTs - a.lastTs;
+      })
+      .slice(0, SUGGEST_CAP);
   }
 
   function makeRow(label, tagText, isNew, onPick){
     var row = document.createElement('div');
     row.className = 'dropdown-row' + (isNew ? ' is-new' : '');
-    var nameSpan = document.createElement('span');
-    nameSpan.textContent = label;
-    var tagSpan = document.createElement('span');
-    tagSpan.className = 'tag';
-    tagSpan.textContent = tagText;
-    row.appendChild(nameSpan); row.appendChild(tagSpan);
+    var a = document.createElement('span'); a.textContent = label;
+    var b = document.createElement('span'); b.className = 'tag'; b.textContent = tagText;
+    row.appendChild(a); row.appendChild(b);
     row.addEventListener('click', onPick);
     return row;
   }
@@ -587,19 +639,20 @@
     dropdownEl.innerHTML = '';
 
     if (!q){
-      var recent = recentNames();
-      dropdownLabel.textContent = recent.length ? 'Recent check-ins' : '';
-      if (!recent.length){
+      var sug = suggestions();
+      dropdownLabel.textContent = sug.length ? 'Regulars for this class' : '';
+      if (!sug.length){
         var hint = document.createElement('div');
         hint.className = 'dropdown-empty';
         hint.textContent = 'Start typing your name above to check in.';
         dropdownEl.appendChild(hint);
         return;
       }
-      recent.forEach(function(n){
-        dropdownEl.appendChild(makeRow(displayName(n), 'Welcome back', false, function(){
-          handleNameChosen(n, true);
-        }));
+      sug.forEach(function(s){
+        dropdownEl.appendChild(makeRow(displayName(s.name),
+          s.sameClass ? 'Regular' : 'Welcome back', false, function(){
+            handleNameChosen(s.name, true);
+          }));
       });
       return;
     }
@@ -614,8 +667,8 @@
 
     // Hold the "new person" row back until there's enough typed to be a real
     // name — after one letter it's almost always a mis-tap waiting to happen.
-    var exactMatch = readNames().some(function(n){ return n.trim().toLowerCase() === q; });
-    if (!exactMatch && q.length >= 2){
+    var exact = readNames().some(function(n){ return n.trim().toLowerCase() === q; });
+    if (!exact && q.length >= 2){
       var typed = nameInput.value.trim();
       dropdownEl.appendChild(makeRow('Continue as "' + typed + '"', 'New', true, function(){
         handleNameChosen(typed, false);
@@ -637,46 +690,59 @@
   function handleNameChosen(name, isReturning){
     currentName = name;
     isReturningFlow = isReturning;
-    if (isReturning){
-      show('booking');
-    } else {
-      saveName(name);
-      show('q2');
-    }
+    if (isReturning){ show('booking'); }
+    else { saveName(name); show('source'); }
   }
 
-  // ---- source (new clients only) ----
+  // ---- remaining steps ----
   document.querySelectorAll('.tile-src').forEach(function(tile){
     tile.addEventListener('click', function(){
       chosenSource = tile.getAttribute('data-source');
       show('booking');
     });
   });
+  document.getElementById('btn-back-source').addEventListener('click', function(){
+    renderDropdown(); show('name');
+  });
+  document.getElementById('btn-back-booking').addEventListener('click', function(){
+    if (isReturningFlow){ renderDropdown(); show('name'); } else { show('source'); }
+  });
+  document.querySelectorAll('[data-back]').forEach(function(btn){
+    btn.addEventListener('click', function(){ show(btn.getAttribute('data-back')); });
+  });
 
-  // ---- booking status ----
-  document.getElementById('btn-booked').addEventListener('click', function(){ finalizeCheckin('booked'); });
+  document.getElementById('btn-booked').addEventListener('click', function(){ finalize('booked'); });
   document.getElementById('btn-walkin').addEventListener('click', function(){ show('payment'); });
-
-  // ---- payment method ----
-  document.getElementById('btn-pay-card').addEventListener('click', function(){ finalizeCheckin('card'); });
+  document.getElementById('btn-pay-card').addEventListener('click', function(){ finalize('card'); });
   document.getElementById('btn-pay-qr').addEventListener('click', function(){ show('qr'); });
-  document.getElementById('btn-paid-continue').addEventListener('click', function(){ finalizeCheckin('qr'); });
+  document.getElementById('btn-paid-continue').addEventListener('click', function(){ finalize('qr'); });
 
-  function finalizeCheckin(paymentMethod){
-    var entry = { ts: Date.now(), name: currentName, type: isReturningFlow ? 'returning' : 'new' };
+  function finalize(payment){
+    var entry = {
+      ts: Date.now(), name: currentName,
+      type: isReturningFlow ? 'returning' : 'new',
+      classId: selectedClass ? selectedClass.id : null,
+      className: selectedClass ? selectedClass.name : null,
+      classStart: selectedClass ? selectedClass.start : null
+    };
     if (!isReturningFlow) entry.source = chosenSource;
-    if (paymentMethod !== 'booked') entry.payment = paymentMethod;
+    if (payment !== 'booked') entry.payment = payment;
     writeEntry(entry);
 
     var first = firstName(currentName);
-    var title = isReturningFlow ? ('Welcome back, ' + first) : ("Welcome to St. Mark's, " + first);
-    var sub;
-    if (paymentMethod === 'card') sub = "Pay at the front desk with your card, then you're all set.";
-    else if (paymentMethod === 'qr') sub = 'Thanks for paying online — enjoy your practice!';
-    else sub = isReturningFlow ? 'Enjoy your practice.' : (SOURCE_COPY[chosenSource] || 'Enjoy your practice.');
+    document.getElementById('confirm-title').textContent =
+      isReturningFlow ? ('Welcome back, ' + first) : ("Welcome to St. Mark's, " + first);
 
-    document.getElementById('confirm-title').textContent = title;
+    var where = selectedClass
+      ? (selectedClass.name + ' · ' + pretty(selectedClass.start) + ' · ' + selectedClass.room)
+      : 'Enjoy your practice.';
+    var sub;
+    if (payment === 'card') sub = 'Pay at the front desk with your card. ' + where;
+    else if (payment === 'qr') sub = 'Thanks for paying online! ' + where;
+    else if (!isReturningFlow && SOURCE_COPY[chosenSource]) sub = SOURCE_COPY[chosenSource] + ' ' + where;
+    else sub = where;
     document.getElementById('confirm-sub').textContent = sub;
+
     showConfirmAndReset();
   }
 
@@ -690,12 +756,37 @@
       fill.style.transform = 'scaleX(0)';
     });
     clearTimeout(resetTimer);
-    resetTimer = setTimeout(goIdle, 5000);
+    resetTimer = setTimeout(backToStart, 5000);
   }
 
-  renderTodayCount();
-  renderDropdown();
-  setTimeout(function(){ nameInput.focus(); }, 300);
+  // Between people the class stays put — the next person in line is almost always
+  // for the same class, and staff can still change it from the chip.
+  function backToStart(){
+    clearTimeout(resetTimer);
+    currentName = ''; isReturningFlow = false; chosenSource = null;
+    if (selectedClass){ resetNameScreen(); show('name'); }
+    else { renderClassList(); show('class'); }
+  }
+
+  function boot(){
+    var now = classesNow();
+    if (now.length === 1){ pickClass(now[0]); }
+    else {
+      renderClassList();
+      document.getElementById('btn-class-back').style.display = 'none';
+      show('class');
+    }
+    renderTodayCount();
+  }
+
+  var qrImg = document.getElementById('qr-img');
+  qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=' + encodeURIComponent(PAY_URL);
+  qrImg.addEventListener('error', function(){
+    document.querySelector('.qr-img-wrap').style.display = 'none';
+  });
+
+  document.addEventListener('smy:unlocked', function(){ if (selectedClass) resetNameScreen(); });
+  boot();
 })();
 </script>
 </body>
