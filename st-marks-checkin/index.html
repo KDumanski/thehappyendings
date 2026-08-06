@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>St. Mark's Yoga — Front Desk Check-In</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<style>
+  :root{
+    --ink:#1a1a1a;
+    --cream:#f4f1ea;
+    --red:#a8324a;
+    --red-press:#8a2740;
+    --paper:#ffffff;
+    --muted:#5a5a5a;
+    --muted-on-ink:#a8a29a;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--cream);
+    font-family:Calibri,"Helvetica Neue",Arial,sans-serif;
+    overflow:hidden;
+    overscroll-behavior:none;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  #app{
+    position:fixed; inset:0;
+    display:flex; flex-direction:column;
+  }
+  .screen{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding: 6vh 6vw;
+    opacity:0; pointer-events:none;
+    transform: scale(0.98);
+    transition: opacity .32s ease, transform .32s ease;
+  }
+  .screen.active{ opacity:1; pointer-events:auto; transform:scale(1); }
+  @media (prefers-reduced-motion: reduce){
+    .screen{ transition:none; }
+  }
+
+  /* ---------- shared bits ---------- */
+  .eyebrow{
+    font-size: clamp(13px, 1.6vw, 16px);
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--red);
+    margin:0 0 14px;
+  }
+  .rule{
+    width:64px; height:4px; background:var(--red); border-radius:2px;
+    margin: 18px 0;
+  }
+  h1.wordmark{
+    font-size: clamp(34px, 7vw, 68px);
+    font-weight:900; letter-spacing:-0.02em;
+    margin:0; text-align:center; line-height:1;
+  }
+  .tagline{
+    font-size: clamp(15px, 2vw, 20px);
+    color:var(--muted-on-ink);
+    font-weight:700;
+    margin: 10px 0 0;
+    text-align:center;
+  }
+  .steps{
+    position:absolute; top: 5vh; left:50%; transform:translateX(-50%);
+    display:flex; gap:10px;
+  }
+  .steps .dot{
+    width:9px; height:9px; border-radius:50%;
+    background: rgba(244,241,234,0.25);
+  }
+  .steps .dot.on{ background: var(--red); }
+  .back{
+    position:absolute; top: 4.5vh; left: 4vw;
+    font-size: clamp(13px,1.6vw,15px);
+    font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+    color: var(--muted-on-ink);
+    background:none; border:none; padding: 12px 14px;
+    cursor:pointer;
+  }
+  .back:active{ color:var(--cream); }
+
+  .question{
+    font-size: clamp(26px, 4.4vw, 42px);
+    font-weight:900; letter-spacing:-0.01em;
+    text-align:center; margin: 0 0 8px;
+    text-wrap: balance;
+  }
+  .subquestion{
+    font-size: clamp(14px, 1.9vw, 18px);
+    color:var(--muted-on-ink); font-weight:700;
+    text-align:center; margin:0 0 5vh;
+  }
+
+  /* ---------- idle ---------- */
+  #screen-idle{ cursor:pointer; }
+  .idle-cta{
+    margin-top: 6vh;
+    background:var(--red);
+    color:var(--cream);
+    border:none;
+    padding: 22px 48px;
+    border-radius:14px;
+    font-size: clamp(16px, 2.2vw, 20px);
+    font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+    box-shadow: 0 8px 26px rgba(168,50,74,0.35);
+  }
+  .idle-pulse{
+    animation: pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.035); }
+  }
+  @media (prefers-reduced-motion: reduce){ .idle-pulse{ animation:none; } }
+
+  /* ---------- choice tiles (q1) ---------- */
+  .tiles-2{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    width:100%; max-width: 820px;
+  }
+  .tile2{
+    background:var(--paper); color:var(--ink);
+    border-radius:16px; border: 3px solid transparent;
+    padding: 5vh 3vw;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:14px;
+    font-weight:900; font-size: clamp(18px, 2.6vw, 26px);
+    letter-spacing:-0.01em;
+    text-align:center;
+    cursor:pointer;
+  }
+  .tile2 .glyph{ font-size: clamp(30px,5vw,44px); }
+  .tile2:active{ border-color:var(--red); transform: scale(0.98); }
+
+  /* ---------- source tiles (q2) ---------- */
+  .tiles-list{
+    width:100%; max-width: 620px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .tile-src{
+    display:flex; align-items:center; gap:18px;
+    background:var(--paper); color:var(--ink);
+    border-radius:14px; border: 3px solid transparent;
+    padding: 18px 22px;
+    cursor:pointer;
+    text-align:left;
+  }
+  .tile-src:active{ border-color:var(--red); transform: scale(0.985); }
+  .tile-src .num{
+    flex:0 0 auto;
+    width:42px; height:42px; border-radius:10px;
+    background:var(--ink); color:var(--cream);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:16px;
+  }
+  .tile-src .label{
+    font-weight:700; font-size: clamp(15px, 2vw, 19px);
+    line-height:1.25;
+  }
+
+  /* ---------- confirm ---------- */
+  .check{
+    width:84px; height:84px; border-radius:50%;
+    background:var(--red);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 26px;
+  }
+  .check svg{ width:42px; height:42px; }
+  .confirm-title{
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight:900; text-align:center; margin:0 0 10px;
+    text-wrap:balance;
+  }
+  .confirm-sub{
+    font-size: clamp(14px, 1.8vw, 17px);
+    color:var(--muted-on-ink); font-weight:700; text-align:center;
+    max-width: 480px;
+  }
+  .reset-track{
+    position:absolute; bottom: 5vh; left:50%; transform:translateX(-50%);
+    width: 180px; height:4px; background:rgba(244,241,234,0.18); border-radius:2px;
+    overflow:hidden;
+  }
+  .reset-fill{
+    height:100%; width:100%; background:var(--red);
+    transform-origin:left; transform: scaleX(1);
+    transition: transform 4s linear;
+  }
+
+  .today{
+    position:fixed; bottom: 14px; right: 16px;
+    font-size:12px; color: rgba(244,241,234,0.32);
+    font-weight:700; letter-spacing:0.04em;
+    pointer-events:none;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="screen active" id="screen-idle">
+    <div class="eyebrow">12 St. Mark's Place · NYC</div>
+    <h1 class="wordmark">ST. MARK'S<br>YOGA</h1>
+    <div class="rule"></div>
+    <div class="tagline">Wellness, with a little punk.</div>
+    <button class="idle-cta idle-pulse" id="btn-start">Tap to check in</button>
+  </div>
+
+  <div class="screen" id="screen-q1">
+    <button class="back" data-back="idle">‹ Cancel</button>
+    <div class="steps"><span class="dot on"></span><span class="dot"></span></div>
+    <div class="question">Have you been to St. Mark's before?</div>
+    <div class="subquestion">Just tap one to check in</div>
+    <div class="tiles-2">
+      <div class="tile2" id="btn-new"><span class="glyph">✦</span>First time here</div>
+      <div class="tile2" id="btn-returning"><span class="glyph">↺</span>Been here before</div>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-q2">
+    <button class="back" data-back="q1">‹ Back</button>
+    <div class="steps"><span class="dot on"></span><span class="dot on"></span></div>
+    <div class="question">Welcome! How'd you hear about us?</div>
+    <div class="subquestion">Pick the one that fits best</div>
+    <div class="tiles-list" id="source-tiles">
+      <div class="tile-src" data-source="friend"><span class="num">01</span><span class="label">A friend told me about it</span></div>
+      <div class="tile-src" data-source="google"><span class="num">02</span><span class="label">Searched for a studio on Google</span></div>
+      <div class="tile-src" data-source="ig-organic"><span class="num">03</span><span class="label">Found the page browsing Instagram</span></div>
+      <div class="tile-src" data-source="ig-ad"><span class="num">04</span><span class="label">Saw an Instagram ad and tapped it</span></div>
+      <div class="tile-src" data-source="walk-by"><span class="num">05</span><span class="label">Walked by and saw the studio</span></div>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-confirm">
+    <div class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="#f4f1ea" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="confirm-title" id="confirm-title">You're checked in</div>
+    <div class="confirm-sub" id="confirm-sub">Enjoy your practice.</div>
+    <div class="reset-track"><div class="reset-fill" id="reset-fill"></div></div>
+  </div>
+
+  <div class="today" id="today-count"></div>
+</div>
+
+<script>
+(function(){
+  var LOG_KEY = 'smy_checkin_log';
+  var screens = {
+    idle: document.getElementById('screen-idle'),
+    q1: document.getElementById('screen-q1'),
+    q2: document.getElementById('screen-q2'),
+    confirm: document.getElementById('screen-confirm')
+  };
+  var resetTimer = null;
+
+  var SOURCE_COPY = {
+    'friend': 'So glad a friend sent you our way.',
+    'google': 'Glad a search led you here.',
+    'ig-organic': 'Glad you found us on Instagram.',
+    'ig-ad': 'Glad that ad caught your eye.',
+    'walk-by': 'Glad you stopped in off the street.'
+  };
+
+  function readLog(){
+    try { return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); }
+    catch(e){ return []; }
+  }
+  function writeEntry(entry){
+    var log = readLog();
+    log.push(entry);
+    try { localStorage.setItem(LOG_KEY, JSON.stringify(log)); } catch(e){}
+    renderTodayCount();
+  }
+  function renderTodayCount(){
+    var today = new Date().toDateString();
+    var n = readLog().filter(function(e){ return new Date(e.ts).toDateString() === today; }).length;
+    document.getElementById('today-count').textContent = n ? (n + ' checked in today') : '';
+  }
+
+  function show(name){
+    Object.keys(screens).forEach(function(k){ screens[k].classList.toggle('active', k === name); });
+  }
+
+  function goIdle(){
+    clearTimeout(resetTimer);
+    show('idle');
+  }
+
+  document.getElementById('btn-start').addEventListener('click', function(){ show('q1'); });
+
+  document.querySelectorAll('[data-back]').forEach(function(btn){
+    btn.addEventListener('click', function(){ show(btn.getAttribute('data-back')); });
+  });
+
+  document.getElementById('btn-returning').addEventListener('click', function(){
+    writeEntry({ ts: Date.now(), type: 'returning' });
+    document.getElementById('confirm-title').textContent = 'Welcome back';
+    document.getElementById('confirm-sub').textContent = 'Enjoy your practice.';
+    showConfirmAndReset();
+  });
+
+  document.getElementById('btn-new').addEventListener('click', function(){ show('q2'); });
+
+  document.querySelectorAll('.tile-src').forEach(function(tile){
+    tile.addEventListener('click', function(){
+      var source = tile.getAttribute('data-source');
+      writeEntry({ ts: Date.now(), type: 'new', source: source });
+      document.getElementById('confirm-title').textContent = 'Welcome to St. Mark\'s';
+      document.getElementById('confirm-sub').textContent = SOURCE_COPY[source] || 'Enjoy your practice.';
+      showConfirmAndReset();
+    });
+  });
+
+  function showConfirmAndReset(){
+    show('confirm');
+    var fill = document.getElementById('reset-fill');
+    fill.style.transition = 'none';
+    fill.style.transform = 'scaleX(1)';
+    requestAnimationFrame(function(){
+      fill.style.transition = 'transform 4s linear';
+      fill.style.transform = 'scaleX(0)';
+    });
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(goIdle, 4000);
+  }
+
+  renderTodayCount();
+})();
+</script>
+</body>
+</html>
