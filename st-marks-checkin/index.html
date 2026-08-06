@@ -255,9 +255,69 @@
     font-weight:700; letter-spacing:0.04em;
     pointer-events:none;
   }
+
+  /* ---------- staff gate ---------- */
+  #gate{
+    position:fixed; inset:0; z-index:99999;
+    background:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .gate-card{
+    background:var(--paper); color:var(--ink);
+    border-radius:16px; padding: 40px 36px;
+    width:min(360px, 90vw); text-align:center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+  .gate-title{ font-weight:900; font-size:1.5rem; letter-spacing:-0.02em; }
+  .gate-sub{ color:var(--muted); font-size:0.85rem; font-weight:700; margin:8px 0 22px; }
+  .gate-input{
+    width:100%; padding:14px 16px; border-radius:10px;
+    border:2px solid rgba(0,0,0,0.12);
+    background:var(--cream); color:var(--ink);
+    font:inherit; font-size:1rem; text-align:center;
+  }
+  .gate-input:focus{ outline:none; border-color:var(--red); }
+  .gate-btn{
+    width:100%; margin-top:12px; padding:14px; border:0; border-radius:10px;
+    background:var(--red); color:var(--cream);
+    font:inherit; font-weight:800; font-size:1rem; cursor:pointer;
+    letter-spacing:0.04em; text-transform:uppercase;
+  }
+  .gate-err{ color:var(--red); font-size:0.8rem; font-weight:700; margin-top:10px; min-height:1em; }
 </style>
 </head>
 <body>
+
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-title">St. Mark's Check-In</div>
+    <div class="gate-sub">Staff password to unlock the kiosk</div>
+    <input id="gate-pw" class="gate-input" type="password" placeholder="Password" autocomplete="current-password">
+    <button id="gate-btn" class="gate-btn">Unlock</button>
+    <div id="gate-err" class="gate-err"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var GATE_KEY = 'smy_checkin_gate', PW = 'agora';
+  var gate = document.getElementById('gate');
+  var pwInput = document.getElementById('gate-pw');
+  function unlock(){ gate.style.display = 'none'; }
+  if (sessionStorage.getItem(GATE_KEY) === '1'){ unlock(); }
+  else { setTimeout(function(){ pwInput.focus(); }, 50); }
+  function tryUnlock(){
+    var v = (pwInput.value || '').trim().toLowerCase();
+    if (v === PW){ sessionStorage.setItem(GATE_KEY, '1'); unlock(); }
+    else {
+      document.getElementById('gate-err').textContent = 'Wrong password';
+      pwInput.value = '';
+    }
+  }
+  document.getElementById('gate-btn').addEventListener('click', tryUnlock);
+  pwInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') tryUnlock(); });
+})();
+</script>
 
 <div id="app">
 
