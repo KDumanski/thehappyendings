@@ -118,43 +118,53 @@
 
   /* ---------- name entry ---------- */
   .name-wrap{
-    width:100%; max-width: 560px;
+    width:100%; max-width: 760px;
     display:flex; flex-direction:column; align-items:center; gap:14px;
   }
-  .name-input{
+  .name-search{
     width:100%;
     font-family: inherit;
     background:var(--paper); color:var(--ink);
     border:3px solid transparent;
     border-radius:14px;
-    padding: 20px 22px;
-    font-size: clamp(20px, 3vw, 28px);
+    padding: 16px 20px;
+    font-size: clamp(17px, 2.4vw, 22px);
     font-weight:700;
     text-align:center;
     outline:none;
   }
-  .name-input:focus{ border-color:var(--red); }
-  .suggestions{
-    width:100%; display:flex; flex-direction:column; gap:10px;
+  .name-search:focus{ border-color:var(--red); }
+  .roster{
+    width:100%;
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    max-height: 42vh;
+    overflow-y: auto;
+    padding: 4px 2px;
   }
-  .suggestion-item{
-    display:flex; align-items:center; gap:14px;
-    background: rgba(244,241,234,0.08);
-    border: 2px solid rgba(244,241,234,0.16);
-    border-radius:12px;
-    padding: 14px 18px;
+  .roster-tile{
+    background:var(--paper); color:var(--ink);
+    border-radius:12px; border: 3px solid transparent;
+    padding: 14px 8px;
+    text-align:center;
+    font-weight:700; font-size: clamp(14px, 1.8vw, 17px);
     cursor:pointer;
-    font-weight:700; font-size: clamp(15px, 2vw, 19px);
   }
-  .suggestion-item:active{ border-color:var(--red); }
-  .suggestion-item .sugg-glyph{ color:var(--red); font-weight:900; }
-  .continue-btn{
-    display:none;
-    margin-top:8px;
-    background:var(--red); color:var(--cream); border:none;
-    padding: 18px 30px; border-radius:14px;
-    font-size: clamp(15px, 2vw, 18px);
-    font-weight:700; letter-spacing:0.04em;
+  .roster-tile:active{ border-color:var(--red); transform: scale(0.97); }
+  .roster-empty{
+    grid-column: 1 / -1;
+    color:var(--muted-on-ink); font-weight:700;
+    font-size: clamp(14px,1.8vw,16px);
+    padding: 24px 10px; text-align:center;
+  }
+  .roster-continue{
+    grid-column: 1 / -1;
+    background:var(--red); color:var(--cream);
+    border-radius:12px; border:none;
+    padding: 16px 10px;
+    font-weight:700; font-size: clamp(14px, 1.8vw, 17px);
+    letter-spacing:0.02em;
     cursor:pointer;
   }
 
@@ -332,16 +342,15 @@
   <div class="screen" id="screen-name">
     <button class="back" data-back="idle">‹ Cancel</button>
     <div class="question">What's your name?</div>
-    <div class="subquestion">Start typing — we'll recognize you if you've checked in here before.</div>
+    <div class="subquestion">Tap your name below, or search</div>
     <div class="name-wrap">
-      <input type="text" id="name-input" class="name-input" placeholder="Start typing your name…" autocomplete="off" autocapitalize="words" spellcheck="false">
-      <div class="suggestions" id="suggestions"></div>
-      <button class="continue-btn" id="btn-continue-name">Continue as <span id="continue-name-label"></span> →</button>
+      <input type="text" id="name-input" class="name-search" placeholder="Search names…" autocomplete="off" autocapitalize="words" spellcheck="false">
+      <div class="roster" id="roster-list"></div>
     </div>
   </div>
 
   <div class="screen" id="screen-q2">
-    <button class="back" data-back="name">‹ Back</button>
+    <button class="back" id="btn-back-q2">‹ Back</button>
     <div class="question">Welcome! How'd you hear about us?</div>
     <div class="subquestion">Pick the one that fits best</div>
     <div class="tiles-list" id="source-tiles">
@@ -467,9 +476,15 @@
     return found || null;
   }
   function firstName(full){ return (full || '').trim().split(/\s+/)[0] || full; }
-  function escapeHtml(s){
-    return s.replace(/[&<>"']/g, function(c){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  function displayName(full){
+    var parts = full.trim().split(/\s+/);
+    var first = parts[0] || full;
+    var lastInitial = parts.length > 1 ? (parts[parts.length - 1][0] || '').toUpperCase() + '.' : '';
+    return lastInitial ? (first + ' ' + lastInitial) : first;
+  }
+  function sortedNames(){
+    return readNames().slice().sort(function(a, b){
+      return a.trim().toLowerCase().localeCompare(b.trim().toLowerCase());
     });
   }
 
@@ -481,12 +496,13 @@
     clearTimeout(resetTimer);
     currentName = ''; isReturningFlow = false; chosenSource = null;
     nameInput.value = '';
-    renderSuggestions('');
-    continueBtn.style.display = 'none';
+    renderRoster('');
     show('idle');
   }
 
   document.getElementById('btn-start').addEventListener('click', function(){
+    nameInput.value = '';
+    renderRoster('');
     show('name');
     setTimeout(function(){ nameInput.focus(); }, 350);
   });
@@ -497,33 +513,51 @@
   document.getElementById('btn-back-booking').addEventListener('click', function(){
     show(isReturningFlow ? 'name' : 'q2');
   });
+  document.getElementById('btn-back-q2').addEventListener('click', function(){
+    renderRoster(nameInput.value);
+    show('name');
+  });
 
-  // ---- name entry ----
+  // ---- name entry: tappable roster, filtered by the search field ----
   var nameInput = document.getElementById('name-input');
-  var suggestionsEl = document.getElementById('suggestions');
-  var continueBtn = document.getElementById('btn-continue-name');
-  var continueLabel = document.getElementById('continue-name-label');
+  var rosterEl = document.getElementById('roster-list');
+  var ROSTER_CAP = 50;
 
-  function renderSuggestions(val){
-    var q = val.trim().toLowerCase();
-    suggestionsEl.innerHTML = '';
-    if (q.length < 1) return;
-    var matches = readNames().filter(function(n){ return n.toLowerCase().indexOf(q) === 0; }).slice(0, 5);
-    matches.forEach(function(n){
-      var row = document.createElement('div');
-      row.className = 'suggestion-item';
-      row.innerHTML = '<span class="sugg-glyph">↺</span><span>' + escapeHtml(n) + '</span>';
-      row.addEventListener('click', function(){ handleNameChosen(n, true); });
-      suggestionsEl.appendChild(row);
-    });
+  function renderRoster(query){
+    var q = (query || '').trim().toLowerCase();
+    var all = sortedNames();
+    var filtered = q
+      ? all.filter(function(n){ return n.toLowerCase().indexOf(q) !== -1; })
+      : all;
+    var shown = filtered.slice(0, ROSTER_CAP);
+    rosterEl.innerHTML = '';
+
+    if (shown.length === 0 && !q){
+      var empty = document.createElement('div');
+      empty.className = 'roster-empty';
+      empty.textContent = "No one's checked in on this device yet. Type your name below to be the first.";
+      rosterEl.appendChild(empty);
+    } else {
+      shown.forEach(function(n){
+        var tile = document.createElement('div');
+        tile.className = 'roster-tile';
+        tile.textContent = displayName(n);
+        tile.addEventListener('click', function(){ handleNameChosen(n, true); });
+        rosterEl.appendChild(tile);
+      });
+    }
+
+    var exactMatch = q && all.some(function(n){ return n.trim().toLowerCase() === q; });
+    if (q && !exactMatch){
+      var cont = document.createElement('button');
+      cont.className = 'roster-continue';
+      cont.textContent = 'Continue as "' + query.trim() + '" →';
+      cont.addEventListener('click', function(){ handleNameChosen(query.trim(), false); });
+      rosterEl.appendChild(cont);
+    }
   }
 
-  nameInput.addEventListener('input', function(){
-    var val = nameInput.value;
-    renderSuggestions(val);
-    continueBtn.style.display = val.trim().length >= 1 ? 'inline-block' : 'none';
-    continueLabel.textContent = val.trim();
-  });
+  nameInput.addEventListener('input', function(){ renderRoster(nameInput.value); });
   nameInput.addEventListener('keydown', function(e){
     if (e.key === 'Enter'){
       e.preventDefault();
@@ -532,12 +566,6 @@
       var existing = findExisting(val);
       handleNameChosen(existing || val, !!existing);
     }
-  });
-  continueBtn.addEventListener('click', function(){
-    var val = nameInput.value.trim();
-    if (!val) return;
-    var existing = findExisting(val);
-    handleNameChosen(existing || val, !!existing);
   });
 
   function handleNameChosen(name, isReturning){
