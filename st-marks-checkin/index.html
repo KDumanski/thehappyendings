@@ -143,9 +143,16 @@
   }
   .name-search:focus{ border-color:var(--red); }
   .name-dropdown{
-    display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
     gap:10px; align-content:start;
     flex:1 1 auto; min-height:0; overflow-y:auto; padding-bottom:3vh;
+  }
+  .grid-heading{
+    grid-column:1 / -1;
+    font-size: clamp(12px,1.5vw,14px);
+    letter-spacing:0.12em; text-transform:uppercase;
+    font-weight:700; color:var(--muted-on-ink);
+    padding:14px 2px 2px;
   }
   .dropdown-row{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
@@ -186,22 +193,30 @@
   }
   .tile2:active{ border-color:var(--red); transform:scale(0.98); }
 
-  /* ---------- source tiles ---------- */
+  /* ---------- source / motivation tiles ---------- */
   .tiles-list{ width:100%; max-width:620px; display:flex; flex-direction:column; gap:12px; }
-  .tile-src{
+  .tile-src, .tile-mot{
     display:flex; align-items:center; gap:18px;
     background:var(--paper); color:var(--ink);
     border-radius:14px; border:3px solid transparent;
     padding:18px 22px; cursor:pointer; text-align:left;
   }
-  .tile-src:active{ border-color:var(--red); transform:scale(0.985); }
-  .tile-src .num{
+  .tile-src:active, .tile-mot:active{ border-color:var(--red); transform:scale(0.985); }
+  .tile-src .num, .tile-mot .num{
     flex:0 0 auto; width:42px; height:42px; border-radius:10px;
     background:var(--ink); color:var(--cream);
     display:flex; align-items:center; justify-content:center;
     font-weight:900; font-size:16px;
   }
-  .tile-src .label{ font-weight:700; font-size: clamp(15px,2vw,19px); line-height:1.25; }
+  .tile-src .label, .tile-mot .label{ font-weight:700; font-size: clamp(15px,2vw,19px); line-height:1.25; }
+  .skip-link{
+    margin-top:18px; background:none; border:none;
+    color:var(--muted-on-ink); font:inherit; font-weight:700;
+    font-size: clamp(13px,1.6vw,15px);
+    letter-spacing:0.06em; text-transform:uppercase;
+    padding:12px 20px; cursor:pointer;
+  }
+  .skip-link:active{ color:var(--cream); }
 
   /* ---------- QR ---------- */
   .qr-box{ display:flex; flex-direction:column; align-items:center; gap:16px; }
@@ -352,7 +367,24 @@
       <div class="tile-src" data-source="ig-organic"><span class="num">03</span><span class="label">Found the page browsing Instagram</span></div>
       <div class="tile-src" data-source="ig-ad"><span class="num">04</span><span class="label">Saw an Instagram ad and tapped it</span></div>
       <div class="tile-src" data-source="walk-by"><span class="num">05</span><span class="label">Walked by and saw the studio</span></div>
+      <div class="tile-src" data-source="classpass"><span class="num">06</span><span class="label">Found it on ClassPass</span></div>
     </div>
+  </div>
+
+  <div class="screen" id="screen-motivation">
+    <button class="back" id="btn-back-motivation">‹ Back</button>
+    <div class="question" id="motivation-q">What got you in today?</div>
+    <div class="subquestion">One tap — it tells us which reminders are actually worth sending</div>
+    <div class="tiles-list">
+      <div class="tile-mot" data-motivation="habit"><span class="num">01</span><span class="label">Nothing — I just always come</span></div>
+      <div class="tile-mot" data-motivation="email"><span class="num">02</span><span class="label">An email from the studio</span></div>
+      <div class="tile-mot" data-motivation="app"><span class="num">03</span><span class="label">App or text reminder</span></div>
+      <div class="tile-mot" data-motivation="ig-organic"><span class="num">04</span><span class="label">Saw an Instagram post or story</span></div>
+      <div class="tile-mot" data-motivation="ig-ad"><span class="num">05</span><span class="label">Saw an ad for the studio again</span></div>
+      <div class="tile-mot" data-motivation="friend"><span class="num">06</span><span class="label">A friend or classmate asked me</span></div>
+      <div class="tile-mot" data-motivation="promo"><span class="num">07</span><span class="label">A deal, promo, or class package</span></div>
+    </div>
+    <button class="skip-link" id="btn-skip-motivation">Skip</button>
   </div>
 
   <div class="screen" id="screen-booking">
@@ -420,22 +452,42 @@
   // Teachers host from 30 min out (studio SOP), so a class is checkable early; the
   // grace window mirrors Recess's own "keep showing a class after it starts" setting.
   var EARLY_WINDOW = 45, GRACE_WINDOW = 20, SUGGEST_CAP = 6, MATCH_CAP = 8;
+  // Roughly a full class roster — past this, scrolling is slower than typing.
+  var ROSTER_CAP = 50;
 
   var screens = {};
-  ['class','name','source','booking','payment','qr','confirm'].forEach(function(k){
+  ['class','name','source','motivation','booking','payment','qr','confirm'].forEach(function(k){
     screens[k] = document.getElementById('screen-' + k);
   });
 
   var resetTimer = null;
-  var currentName = '', isReturningFlow = false, chosenSource = null, selectedClass = null;
+  var currentName = '', isReturningFlow = false, chosenSource = null, chosenMotivation = null, selectedClass = null;
 
   var SOURCE_COPY = {
     'friend': 'So glad a friend sent you our way.',
     'google': 'Glad a search led you here.',
     'ig-organic': 'Glad you found us on Instagram.',
     'ig-ad': 'Glad that ad caught your eye.',
-    'walk-by': 'Glad you stopped in off the street.'
+    'walk-by': 'Glad you stopped in off the street.',
+    'classpass': 'Glad ClassPass brought you in.'
   };
+
+  // What pulled a returning student back in — a channel question, not a mood question,
+  // so it lines up with the same channels the new-visitor question measures.
+  var MOTIVATION_COPY = {
+    'habit': 'Same time next week?',
+    'email': 'Glad the email caught you.',
+    'app': 'Glad the reminder worked.',
+    'ig-organic': 'Glad you spotted us on Instagram.',
+    'ig-ad': 'Glad that ad found you again.',
+    'friend': 'Bring them again anytime.',
+    'promo': 'Glad the offer brought you in.'
+  };
+
+  // A four-times-a-week regular asked the same question every visit stops reading it
+  // and just taps the first tile — so only ask again after this many days.
+  // Set to 0 to ask on every single check-in.
+  var MOTIVATION_COOLDOWN_DAYS = 14;
 
   // ---- time helpers ----
   function toMin(hhmm){ var p = hhmm.split(':'); return (+p[0]) * 60 + (+p[1]); }
@@ -624,6 +676,24 @@
       .slice(0, SUGGEST_CAP);
   }
 
+  // Everyone known to this iPad, A-Z by first name (last name breaks ties).
+  function namesAZ(){
+    return readNames().slice().sort(function(a, b){
+      var af = fieldValue(a, 'first').toLowerCase(), bf = fieldValue(b, 'first').toLowerCase();
+      if (af !== bf) return af < bf ? -1 : 1;
+      var al = fieldValue(a, 'last').toLowerCase(), bl = fieldValue(b, 'last').toLowerCase();
+      return al < bl ? -1 : (al > bl ? 1 : 0);
+    }).slice(0, ROSTER_CAP);
+  }
+
+  // Full-width divider inside the name grid.
+  function sectionHeading(text){
+    var h = document.createElement('div');
+    h.className = 'grid-heading';
+    h.textContent = text;
+    return h;
+  }
+
   function makeRow(label, tagText, isNew, onPick){
     var row = document.createElement('div');
     row.className = 'dropdown-row' + (isNew ? ' is-new' : '');
@@ -639,21 +709,38 @@
     dropdownEl.innerHTML = '';
 
     if (!q){
+      // Regulars for this class float to the top (they are who is most likely
+      // standing there), then everyone else A-Z so any name can be found by eye
+      // without typing. Both sections are tappable straight through.
       var sug = suggestions();
-      dropdownLabel.textContent = sug.length ? 'Regulars for this class' : '';
-      if (!sug.length){
+      var top = {};
+      sug.forEach(function(s){ top[s.name.trim().toLowerCase()] = true; });
+      var rest = namesAZ().filter(function(n){ return !top[n.trim().toLowerCase()]; });
+
+      if (!sug.length && !rest.length){
+        dropdownLabel.textContent = '';
         var hint = document.createElement('div');
         hint.className = 'dropdown-empty';
-        hint.textContent = 'Start typing your name above to check in.';
+        hint.textContent = 'No one has checked in on this iPad yet — type a name above to start.';
         dropdownEl.appendChild(hint);
         return;
       }
+
+      dropdownLabel.textContent = sug.length ? 'Regulars for this class' : 'Tap your name';
       sug.forEach(function(s){
         dropdownEl.appendChild(makeRow(displayName(s.name),
           s.sameClass ? 'Regular' : 'Welcome back', false, function(){
             handleNameChosen(s.name, true);
           }));
       });
+      if (rest.length){
+        if (sug.length) dropdownEl.appendChild(sectionHeading('Everyone else · A–Z'));
+        rest.forEach(function(n){
+          dropdownEl.appendChild(makeRow(displayName(n), '', false, function(){
+            handleNameChosen(n, true);
+          }));
+        });
+      }
       return;
     }
 
@@ -687,11 +774,24 @@
     }
   });
 
+  // Has this person already told us why they come, recently enough to not re-ask?
+  function motivationIsFresh(name){
+    if (!MOTIVATION_COOLDOWN_DAYS) return false;
+    var key = (name || '').trim().toLowerCase();
+    var cutoff = Date.now() - MOTIVATION_COOLDOWN_DAYS * 864e5;
+    return readLog().some(function(e){
+      return e.returnChannel && e.ts > cutoff && (e.name || '').trim().toLowerCase() === key;
+    });
+  }
+
   function handleNameChosen(name, isReturning){
     currentName = name;
     isReturningFlow = isReturning;
-    if (isReturning){ show('booking'); }
-    else { saveName(name); show('source'); }
+    if (!isReturning){ saveName(name); show('source'); return; }
+    if (motivationIsFresh(name)){ show('booking'); return; }
+    document.getElementById('motivation-q').textContent =
+      'Welcome back, ' + firstName(name) + ' — what got you in today?';
+    show('motivation');
   }
 
   // ---- remaining steps ----
@@ -701,11 +801,26 @@
       show('booking');
     });
   });
+  document.querySelectorAll('.tile-mot').forEach(function(tile){
+    tile.addEventListener('click', function(){
+      chosenMotivation = tile.getAttribute('data-motivation');
+      show('booking');
+    });
+  });
+  document.getElementById('btn-skip-motivation').addEventListener('click', function(){
+    chosenMotivation = null;
+    show('booking');
+  });
   document.getElementById('btn-back-source').addEventListener('click', function(){
     renderDropdown(); show('name');
   });
+  document.getElementById('btn-back-motivation').addEventListener('click', function(){
+    renderDropdown(); show('name');
+  });
   document.getElementById('btn-back-booking').addEventListener('click', function(){
-    if (isReturningFlow){ renderDropdown(); show('name'); } else { show('source'); }
+    if (!isReturningFlow){ show('source'); }
+    else if (motivationIsFresh(currentName)){ renderDropdown(); show('name'); }
+    else { show('motivation'); }
   });
   document.querySelectorAll('[data-back]').forEach(function(btn){
     btn.addEventListener('click', function(){ show(btn.getAttribute('data-back')); });
@@ -726,6 +841,7 @@
       classStart: selectedClass ? selectedClass.start : null
     };
     if (!isReturningFlow) entry.source = chosenSource;
+    if (isReturningFlow && chosenMotivation) entry.returnChannel = chosenMotivation;
     if (payment !== 'booked') entry.payment = payment;
     writeEntry(entry);
 
@@ -740,6 +856,7 @@
     if (payment === 'card') sub = 'Pay at the front desk with your card. ' + where;
     else if (payment === 'qr') sub = 'Thanks for paying online! ' + where;
     else if (!isReturningFlow && SOURCE_COPY[chosenSource]) sub = SOURCE_COPY[chosenSource] + ' ' + where;
+    else if (isReturningFlow && MOTIVATION_COPY[chosenMotivation]) sub = MOTIVATION_COPY[chosenMotivation] + ' ' + where;
     else sub = where;
     document.getElementById('confirm-sub').textContent = sub;
 
@@ -763,7 +880,7 @@
   // for the same class, and staff can still change it from the chip.
   function backToStart(){
     clearTimeout(resetTimer);
-    currentName = ''; isReturningFlow = false; chosenSource = null;
+    currentName = ''; isReturningFlow = false; chosenSource = null; chosenMotivation = null;
     if (selectedClass){ resetNameScreen(); show('name'); }
     else { renderClassList(); show('class'); }
   }
