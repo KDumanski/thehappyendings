@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>St. Mark's &amp; Agora</title>
+<title>Yoga in the East Village &amp; Astoria — St. Mark's &amp; Agora</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Two independent New York yoga studios on one account — St. Mark's Yoga in the East Village and Yoga Agora in Astoria. Vinyasa, Pilates, Tai Chi, dance, breathwork and ceremony. Classes from $12; two weeks unlimited for $40.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23a8324a'/%3E%3Cpath d='M6 12c4-4 8-4 12 0s8 4 8 0' stroke='%23fff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M6 20c4-4 8-4 12 0s8 4 8 0' stroke='%23fff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -100,11 +100,20 @@
   .progress{position:absolute;left:0;bottom:-1px;height:2px;background:var(--sm);width:0;transition:width .08s linear;}
   @media(max-width:980px){
     .nav-links a.nl{display:none;}
+    /* The Sign up pill must collapse too. Left visible it is ~110px wide, which
+       pushed the menu button past the right edge of a 390px screen with no way to
+       scroll to it — every nav link became unreachable on a phone. */
+    .nav-links .btn{display:none;}
     .menu-btn{display:flex;}
     .mobile-open .nav-links{position:absolute;top:var(--nav-h);left:0;right:0;background:var(--paper);
       border-bottom:1px solid var(--line);flex-direction:column;gap:0;padding:8px 26px 18px;align-items:stretch;}
     .mobile-open .nav-links a.nl{display:block;padding:14px 12px;font-size:15px;}
-    .mobile-open .nav-links .btn{margin-top:10px;}
+    .mobile-open .nav-links .btn{display:inline-flex;margin-top:10px;}
+  }
+  /* Narrow phones: buy back horizontal room so nothing can crowd the controls. */
+  @media(max-width:430px){
+    .nav-in{gap:10px;padding:0 16px;}
+    .logo{font-size:16.5px;}
   }
 
   /* ============ MASTHEAD: words + the map ============ */
@@ -291,6 +300,11 @@
 
   footer{border-top:1px solid var(--line);padding:44px 0 40px;background:var(--paper);}
   .foot-base{font-size:12.5px;color:var(--muted);text-align:center;}
+  .foot-nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;}
+  .foot-nav a{font-size:14px;font-weight:700;color:var(--ink);text-decoration:none;
+              padding:11px 16px;border-radius:999px;border:1px solid var(--line);min-height:44px;
+              display:inline-flex;align-items:center;}
+  .foot-nav a:hover{border-color:var(--sm);color:var(--sm);}
 
   /* map */
   .rmap{position:relative;width:100%;overflow:hidden;background:var(--cream);}
@@ -408,6 +422,11 @@
                  font:inherit;font-weight:700;font-size:13.5px;color:var(--muted);cursor:pointer;min-height:44px;}
   .viewbar .back:hover{color:var(--ink);border-color:var(--ink);}
   /* mobile bar CTA becomes the primary route to booking */
+
+  .preview-note{background:var(--sm);color:#fff;font-size:13.5px;line-height:1.5;padding:11px 20px;text-align:center;}
+  .preview-note a{color:#fff;font-weight:800;display:inline-block;padding:12px 6px;min-height:44px;line-height:20px;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+  .fld-label{display:block;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
 </style>
 </head>
 <body>
@@ -434,6 +453,8 @@
   
 </nav>
 
+<div class="preview-note" role="note"><strong>Preview site.</strong> A new design in progress — class times are indicative and booking is not live here yet. To book today use <a href="https://st-marks-yoga.recess.tv" target="_blank" rel="noopener">St.&nbsp;Mark's</a> or <a href="https://yoga-agora.recess.tv" target="_blank" rel="noopener">Yoga&nbsp;Agora</a>.</div>
+<div id="live" aria-live="polite" class="sr-only"></div>
 <main id="main">
 <div class="view on" id="v-home">
 <header class="masthead wrap" id="top">
@@ -483,7 +504,7 @@
     <div class="scell"><div class="n">from <span class="cur">$12</span></div><div class="l">Drop-in, either room</div></div>
     <div class="scell"><div class="n">2</div><div class="l">Locations, one account</div></div>
     <div class="scell"><div class="n">12</div><div class="l">Ways to practice</div></div>
-    <div class="scell"><div class="n">15<span class="cur">yrs</span></div><div class="l">In the neighborhood</div></div>
+    <div class="scell"><div class="n">16<span class="cur">yrs</span></div><div class="l">Agora in Astoria since 2010</div></div>
   </div>
 </header>
 <section class="wrap" style="padding-top:0">
@@ -555,7 +576,7 @@
 <section id="pricing" class="wrap">
   <div class="split-head">
     <div><div class="kicker">Simple pricing</div><h2 class="big serif">Start with two weeks</h2></div>
-    <div class="right"><p class="lede">One account, both rooms. Nothing to keep track of twice.</p></div>
+    <div class="right"><p class="lede">Drop in at either studio. The unlimited membership covers St. Mark's; Agora also runs donation classes.</p></div>
   </div>
   <div class="offer-grid">
     <div class="offer">
@@ -590,7 +611,7 @@
       <div style="margin-top:20px"><a href="#" class="btn accent" id="apply-btn">Request the syllabus</a></div>
     </div>
     <div class="tt-facts">
-      <div class="fact"><span>Next cohort</span><b>Jan 10 – Mar 21</b></div>
+      <div class="fact"><span>Next cohort</span><b>Jan 10 – Mar 21, 2027</b></div>
       <div class="fact"><span>Format</span><b>10 weekends + Zoom</b></div>
       <div class="fact"><span>Tuition</span><b>from $3,200</b></div>
       <div class="fact"><span>Included</span><b>Unlimited classes</b></div>
@@ -649,6 +670,15 @@
 </main>
 
 <footer>
+  <!-- Permanent navigation fallback. The header menu is the primary route, but every
+       section must stay reachable even if that control is ever hidden or fails. -->
+  <nav class="wrap foot-nav" aria-label="Sections">
+    <a href="#classes" data-view="classes">Classes</a>
+    <a href="#schedule" data-view="schedule">Schedule</a>
+    <a href="#pricing" data-view="pricing">Pricing</a>
+    <a href="#training" data-view="training">Training</a>
+    <a href="#contact" data-view="contact">Contact</a>
+  </nav>
   <div class="wrap foot-base">One community, two rooms · Drop-ins from $12 · New students always welcome</div>
 </footer>
 
@@ -705,8 +735,9 @@
 
   /* ---------- schedule ---------- */
   var STUDIOS = { sm: { name: "St. Mark's Yoga", hood: 'East Village' }, ag: { name: 'Yoga Agora', hood: 'Astoria' } };
-  var SMT = ['Macy Alday', 'Chauncie Parchment', 'Andrea Arnold', 'Greg Stavrakas', 'Amanda Van Kessel'];
-  var AGT = ['Nick Velkov', 'Amanda Van Kessel', 'Audrey Cibel'];
+  // Teacher names are deliberately NOT shown. Until this reads the studios' real
+  // timetable, naming an instructor against a generated class is a false statement
+  // about a real person.
   var SM_WD = [
     { t: '7:30a', d: 60, n: 'Vinyasa', r: '2R', c: ['AC'] }, { t: '11:00a', d: 75, n: 'Vinyasa', r: '2R', c: ['AC'] },
     { t: '12:00p', d: 60, n: 'Vinyasa', r: '4R', c: ['No AC'] }, { t: '1:00p', d: 60, n: 'Mat Pilates', r: '4F', c: ['AC'] },
@@ -731,16 +762,16 @@
   var booked = {}, state = { studio: 'all', day: 0 };
 
   function pmin(s) { var m = s.match(/(\d+):?(\d*)([ap])/); var h = +m[1], mm = m[2] ? +m[2] : 0, pm = m[3] === 'p'; if (pm && h !== 12) h += 12; if (!pm && h === 12) h = 0; return h * 60 + mm; }
-  function mk(st, c, teacher, d, idx) {
+  function mk(st, c, d, idx) {
     var minutes = pmin(c.t), cap = st === 'sm' ? (c.r === '4F' ? 16 : c.r === '2R' ? 22 : 18) : 20;
     var fill = (d.getDate() * 7 + idx * 13 + minutes) % (cap + 3);
-    return { key: st + d.getDate() + idx + c.t, st: st, t: c.t, d: c.d, n: c.n, r: c.r, c: c.c, who: teacher, min: minutes,
-             spots: Math.max(0, cap - fill), donation: c.c.indexOf('Donation') >= 0 };
+    return { key: st + d.getDate() + idx + c.t, st: st, t: c.t, d: c.d, n: c.n, r: c.r, c: c.c, min: minutes,
+             capacity: cap, donation: c.c.indexOf('Donation') >= 0 };
   }
   function classesFor(d) {
     var we = d.getDay() === 0 || d.getDay() === 6, seed = d.getDate(), out = [];
-    (we ? SM_WE : SM_WD).forEach(function (c, i) { out.push(mk('sm', c, SMT[(i + seed) % SMT.length], d, i)); });
-    (we ? AG_WE : AG_WD).forEach(function (c, i) { out.push(mk('ag', c, AGT[(i + seed) % AGT.length], d, i + 50)); });
+    (we ? SM_WE : SM_WD).forEach(function (c, i) { out.push(mk('sm', c, d, i)); });
+    (we ? AG_WE : AG_WD).forEach(function (c, i) { out.push(mk('ag', c, d, i + 50)); });
     out.sort(function (a, b) { return a.min - b.min; });
     return out;
   }
@@ -755,21 +786,30 @@
       b.onclick = function () { state.day = i; render(); };
       dEl.appendChild(b);
     });
-    var list = classesFor(days[state.day]).filter(function (c) { return state.studio === 'all' || c.st === state.studio; });
+    var d0 = new Date(), nowMin = d0.getHours() * 60 + d0.getMinutes(), isToday = state.day === 0;
+    var list = classesFor(days[state.day])
+      .filter(function (c) { return state.studio === 'all' || c.st === state.studio; })
+      // A class that started hours ago is not something anyone can attend today.
+      .filter(function (c) { return !isToday || c.min >= nowMin; });
     var wrap = document.getElementById('slots'); wrap.innerHTML = '';
-    if (!list.length) { wrap.innerHTML = '<p class="lede">No classes to show.</p>'; return; }
+    if (!list.length) {
+      wrap.innerHTML = isToday
+        ? '<p class="lede">Today\u2019s classes have all started. Try another day above.</p>'
+        : '<p class="lede">No classes listed for this day.</p>';
+      return;
+    }
     list.forEach(function (c) {
-      var s = STUDIOS[c.st], isB = booked[c.key], isF = c.spots <= 0 && !isB;
+      var s = STUDIOS[c.st], isB = booked[c.key];
       var el = document.createElement('div'); el.className = 'slot';
       var chips = c.c.map(function (x) { return '<span class="chip">' + x + '</span>'; }).join('');
       el.innerHTML =
         '<div class="t"><b>' + c.t.replace(/[ap]$/, '') + (/p$/.test(c.t) ? 'p' : 'a') + '</b><i>' + c.d + ' min</i></div>' +
-        '<div class="m"><b>' + c.n + '</b><div class="sub"><span class="loc">' + s.name + '</span><span>· ' + c.who + '</span>' +
+        '<div class="m"><b>' + c.n + '</b><div class="sub"><span class="loc">' + s.name + '</span>' +
         (c.r ? '<span>· ' + c.r + '</span>' : '') + chips + '</div></div>' +
-        '<div class="a">' + (isB ? '<span class="sp">See you there</span>' : isF ? '<span class="sp low">Full</span>' :
-          '<span class="sp' + (c.spots <= 3 ? ' low' : '') + '">' + c.spots + ' spots</span>') +
-        (isB ? '<button class="bk done">Booked ✓</button>' : isF ? '<button class="bk full">Waitlist</button>' :
-          '<button class="bk" data-k="' + c.key + '">Book</button>') + '</div>';
+        '<div class="a">' +
+          (isB ? '<span class="sp">Saved</span>' : '<span class="sp">' + c.capacity + ' mats</span>') +
+          (isB ? '<button class="bk done">Saved</button>'
+               : '<button class="bk" data-k="' + c.key + '">Check times</button>') + '</div>';
       wrap.appendChild(el);
     });
     wrap.querySelectorAll('.bk[data-k]').forEach(function (b) { b.onclick = function () { openBook(b.getAttribute('data-k')); }; });
@@ -801,18 +841,24 @@
     modal.innerHTML =
       '<div class="m-k"><span class="d"></span>' + s.name + ' · ' + s.hood + '</div>' +
       '<h3 class="m-t">' + c.n + '</h3>' +
-      '<div class="m-w">' + DOW[d.getDay()] + ', ' + MON[d.getMonth()] + ' ' + d.getDate() + ' · ' + fmt(c.t) + ' · ' + c.d + ' min · ' + c.who + (c.r ? ' · ' + c.r : '') + '</div>' +
-      '<div class="fld"><label>Your name</label><input id="bn" autocomplete="name" placeholder="First and last"></div>' +
-      '<div class="fld"><label>Email</label><input id="be" type="email" autocomplete="email" placeholder="you@email.com"></div>' +
-      '<div class="note">' + (c.donation ? 'Donation-based class — pay what you can at the studio.' : '$12 drop-in, or free on your membership. Paid at check-in.') + '</div>' +
+      '<div class="m-w">' + DOW[d.getDay()] + ', ' + MON[d.getMonth()] + ' ' + d.getDate() + ' · ' + fmt(c.t) + ' · ' + c.d + ' min' + (c.r ? ' · ' + c.r : '') + '</div>' +
+      '<div class="fld"><label for="bn">Your name</label><input id="bn" autocomplete="name" placeholder="First and last"></div>' +
+      '<div class="fld"><label for="be">Email</label><input id="be" type="email" autocomplete="email" placeholder="you@email.com"></div>' +
+      '<div class="note">' + (c.donation ? 'Donation-based class — pay what you can at the studio.' : 'Drop-ins from $12. Unlimited membership covers St. Mark' + "'" + 's.') + '</div>' +
       '<button class="go" id="bg">Reserve my spot</button><button class="cxl" id="bc">Cancel</button>';
     scrim.classList.add('open'); setTimeout(function () { var n = document.getElementById('bn'); if (n) n.focus(); }, 60);
     document.getElementById('bc').onclick = close;
     document.getElementById('bg').onclick = function () {
       booked[c.key] = true;
-      modal.innerHTML = '<div class="done"><div class="chk"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
-        '<h3 class="m-t">You\'re booked</h3><div class="m-w">' + c.n + ' at ' + s.name + '<br>' + DOW[d.getDay()] + ', ' + MON[d.getMonth()] + ' ' + d.getDate() + ' · ' + fmt(c.t) + '</div>' +
-        '<button class="go" id="bx">Done</button></div>';
+      modal.innerHTML = '<div class="done"><div class="chk"><svg viewBox="0 0 24 24" fill="none">'
+        + '<path d="M4 12.5L9.5 18L20 6" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'
+        + '<h3 class="m-t">Not booked yet</h3>'
+        + '<div class="m-w">Online booking is not switched on here yet, so nothing has been reserved. '
+        + 'To hold a spot in ' + c.n + ', book with the studio:</div>'
+        + '<a class="go" style="display:block;text-align:center;text-decoration:none" href="'
+        + (c.st === 'sm' ? 'https://st-marks-yoga.recess.tv' : 'https://yoga-agora.recess.tv')
+        + '" target="_blank" rel="noopener">Book at ' + s.name + '</a>'
+        + '<button class="cxl" id="bx">Close</button></div>';
       document.getElementById('bx').onclick = function () { close(); render(); };
     };
   }
@@ -822,10 +868,10 @@
     modal.innerHTML =
       '<div class="m-k"><span class="d"></span>Create your account</div>' +
       '<h3 class="m-t">One account, both rooms</h3><div class="m-w">Free to join. Works at St. Mark\'s and Agora.</div>' +
-      '<div class="fld"><label>Your name</label><input id="jn" placeholder="First and last"></div>' +
-      '<div class="fld"><label>Email</label><input id="je" type="email" placeholder="you@email.com"></div>' +
-      '<div class="fld"><label>Create a password</label><input id="jp" type="password" placeholder="••••••••"></div>' +
-      '<div class="fld"><label>How did you hear about us?</label><div class="srcs" id="srcs">' +
+      '<div class="fld"><label for="jn">Your name</label><input id="jn" placeholder="First and last"></div>' +
+      '<div class="fld"><label for="je">Email</label><input id="je" type="email" placeholder="you@email.com"></div>' +
+      '<div class="fld"><label for="jp">Create a password</label><input id="jp" type="password" placeholder="••••••••"></div>' +
+      '<div class="fld"><span class="fld-label" id="srcs-label">How did you hear about us?</span><div class="srcs" id="srcs" role="group" aria-labelledby="srcs-label">' +
       '<button type="button" class="src" data-s="friend">A friend told me</button>' +
       '<button type="button" class="src" data-s="ig">Instagram</button>' +
       '<button type="button" class="src" data-s="ig-ad">An Instagram ad</button>' +
@@ -844,7 +890,8 @@
     document.getElementById('jg').onclick = function () {
       var nm = (document.getElementById('jn').value || 'there').trim().split(/\s+/)[0];
       modal.innerHTML = '<div class="done"><div class="chk"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
-        '<h3 class="m-t">Welcome, ' + nm + '</h3><div class="m-w">Your account works at both locations. Book whenever you\'re ready.</div>' +
+        '<h3 class="m-t">Thanks, ' + nm + '</h3>'
+        + '<div class="m-w">Accounts are not live on this page yet, so nothing was created and no email will be sent. Booking accounts live on Recess today.</div>' +
         '<button class="go" id="jx">Browse the schedule</button></div>';
       document.getElementById('jx').onclick = function () { close(); document.getElementById('schedule').scrollIntoView({ behavior: 'smooth' }); };
     };
@@ -858,17 +905,20 @@
     modal.innerHTML =
       '<div class="m-k"><span class="d"></span>200-Hour Teacher Training</div>' +
       '<h3 class="m-t">Request info &amp; apply</h3><div class="m-w">Jan 10 – Mar 21, 2026 · East Village</div>' +
-      '<div class="fld"><label>Your name</label><input id="tn" placeholder="First and last"></div>' +
-      '<div class="fld"><label>Email</label><input id="te" type="email" placeholder="you@email.com"></div>' +
-      '<div class="fld"><label>Where are you in your practice?</label><select id="tl">' +
+      '<div class="fld"><label for="tn">Your name</label><input id="tn" placeholder="First and last"></div>' +
+      '<div class="fld"><label for="te">Email</label><input id="te" type="email" placeholder="you@email.com"></div>' +
+      '<div class="fld"><label for="tl">Where are you in your practice?</label><select id="tl">' +
       '<option>Newer — building a foundation</option><option>Regular — a few times a week</option><option>Experienced — ready to teach</option></select></div>' +
-      '<div class="note">We\'ll email the full syllabus, dates and payment-plan options. No commitment yet.</div>' +
+      '<div class="note">The next screen gives you the studio email so nothing gets lost.</div>' +
       '<button class="go" id="tg">Send me the details</button><button class="cxl" id="tc">Cancel</button>';
     scrim.classList.add('open'); setTimeout(function () { var n = document.getElementById('tn'); if (n) n.focus(); }, 60);
     document.getElementById('tc').onclick = close;
     document.getElementById('tg').onclick = function () {
       modal.innerHTML = '<div class="done"><div class="chk"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
-        '<h3 class="m-t">You\'re on the list</h3><div class="m-w">We\'ll be in touch with the training details soon.</div><button class="go" id="tx">Done</button></div>';
+        '<h3 class="m-t">Please email us</h3>'
+        + '<div class="m-w">This form is not connected yet, so your details were not sent. For the syllabus, dates and payment plans, email the studio directly.</div>'
+        + '<a class="go" style="display:block;text-align:center;text-decoration:none" href="mailto:info@stmarksyoga.com?subject=200-Hour%20Teacher%20Training">Email info@stmarksyoga.com</a>'
+        + '<button class="cxl" id="tx">Close</button></div>';
       document.getElementById('tx').onclick = close;
     };
   };
