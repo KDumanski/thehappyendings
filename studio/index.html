@@ -28,21 +28,21 @@
 
 <style>
   :root{
-    --bg:#f5f2ec; --paper:#fff; --ink:#1b1915; --muted:#6b665d;
-    --line:rgba(27,25,21,.13); --cream:#ece5d7; --sunk:#efeae0;
+    --bg:#f4f1ea; --paper:#fff; --ink:#1a1a1a; --muted:#5a5a5a;
+    --line:rgba(26,26,26,.13); --cream:#ebe7de; --sunk:#eeeae1;
     --sm:#a8324a; --sm-deep:#7e2338; --sm-soft:#f6e4e8;
-    --shadow:0 16px 50px rgba(27,25,21,.13);
+    --shadow:0 16px 50px rgba(26,26,26,.13);
     --r:18px; --nav-h:62px;
   }
   :root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
-    --bg:#121110; --paper:#1d1a17; --ink:#efe9dd; --muted:#a49d8f;
-    --line:rgba(239,233,221,.14); --cream:#272320; --sunk:#191614;
+    --bg:#1a1a1a; --paper:#242424; --ink:#f4f1ea; --muted:#a3a3a3;
+    --line:rgba(244,241,234,.14); --cream:#2b2b2b; --sunk:#202020;
     --sm:#e2798f; --sm-deep:#c9536b; --sm-soft:#3a232a;
     --shadow:0 16px 50px rgba(0,0,0,.55);
   }}
   :root[data-theme="dark"]{
-    --bg:#121110; --paper:#1d1a17; --ink:#efe9dd; --muted:#a49d8f;
-    --line:rgba(239,233,221,.14); --cream:#272320; --sunk:#191614;
+    --bg:#1a1a1a; --paper:#242424; --ink:#f4f1ea; --muted:#a3a3a3;
+    --line:rgba(244,241,234,.14); --cream:#2b2b2b; --sunk:#202020;
     --sm:#e2798f; --sm-deep:#c9536b; --sm-soft:#3a232a;
     --shadow:0 16px 50px rgba(0,0,0,.55);
   }
@@ -453,7 +453,7 @@
   
 </nav>
 
-<div class="preview-note" role="note"><strong>Preview site.</strong> A new design in progress — class times are indicative and booking is not live here yet. To book today use <a href="https://st-marks-yoga.recess.tv" target="_blank" rel="noopener">St.&nbsp;Mark's</a> or <a href="https://yoga-agora.recess.tv" target="_blank" rel="noopener">Yoga&nbsp;Agora</a>.</div>
+<div class="preview-note" role="note"><strong>Preview site.</strong> A new design in progress — times shown are this week's real schedule; booking is not live here yet. To book today use <a href="https://st-marks-yoga.recess.tv" target="_blank" rel="noopener">St.&nbsp;Mark's</a> or <a href="https://yoga-agora.recess.tv" target="_blank" rel="noopener">Yoga&nbsp;Agora</a>.</div>
 <div id="live" aria-live="polite" class="sr-only"></div>
 <main id="main">
 <div class="view on" id="v-home">
@@ -735,26 +735,10 @@
 
   /* ---------- schedule ---------- */
   var STUDIOS = { sm: { name: "St. Mark's Yoga", hood: 'East Village' }, ag: { name: 'Yoga Agora', hood: 'Astoria' } };
-  // Teacher names are deliberately NOT shown. Until this reads the studios' real
-  // timetable, naming an instructor against a generated class is a false statement
-  // about a real person.
-  var SM_WD = [
-    { t: '7:30a', d: 60, n: 'Vinyasa', r: '2R', c: ['AC'] }, { t: '11:00a', d: 75, n: 'Vinyasa', r: '2R', c: ['AC'] },
-    { t: '12:00p', d: 60, n: 'Vinyasa', r: '4R', c: ['No AC'] }, { t: '1:00p', d: 60, n: 'Mat Pilates', r: '4F', c: ['AC'] },
-    { t: '2:00p', d: 60, n: 'Tai Chi', r: '4F', c: ['Slow'] }, { t: '5:30p', d: 60, n: 'Vinyasa', r: '2R', c: ['AC'] },
-    { t: '6:00p', d: 60, n: 'Foundations', r: '4F', c: ['Beginner'] }, { t: '6:00p', d: 90, n: 'Vinyasa', r: '4R', c: ['No AC'] },
-    { t: '7:00p', d: 60, n: 'Vinyasa', r: '2R', c: ['AC'] }, { t: '7:30p', d: 60, n: 'Mat Pilates', r: '4F', c: ['AC'] }];
-  var AG_WD = [
-    { t: '7:00a', d: 60, n: 'Donation-based Class', r: '', c: ['Donation'] }, { t: '8:00a', d: 60, n: 'Astoria Park Outdoor', r: 'Outdoors', c: ['Outdoor'] },
-    { t: '10:00a', d: 60, n: 'Vinyasa', r: 'Main', c: [] }, { t: '11:00a', d: 75, n: 'Vinyasa', r: 'Main', c: ['All levels'] },
-    { t: '12:00p', d: 60, n: 'Candlelit Restorative', r: 'Main', c: ['Restorative'] }, { t: '1:30p', d: 60, n: 'Tai Chi', r: 'Main', c: ['Slow'] },
-    { t: '3:30p', d: 60, n: 'Basics Class', r: 'Main', c: ['Beginner'] }, { t: '5:30p', d: 60, n: 'Vinyasa', r: 'Main', c: [] },
-    { t: '7:00p', d: 60, n: 'Donation-based Class', r: '', c: ['Donation'] }];
-  var SM_WE = [{ t: '9:00a', d: 75, n: 'Vinyasa', r: '2R', c: ['AC'] }, { t: '11:00a', d: 75, n: 'Vinyasa', r: '4R', c: ['No AC'] },
-    { t: '12:30p', d: 90, n: 'Master Class', r: '2R', c: ['Guest'] }, { t: '4:00p', d: 75, n: 'Candlelight Vinyasa', r: '2R', c: ['AC'] }];
-  var AG_WE = [{ t: '8:00a', d: 60, n: 'Astoria Park Outdoor', r: 'Outdoors', c: ['Outdoor'] }, { t: '10:00a', d: 75, n: 'Vinyasa', r: 'Main', c: ['All levels'] },
-    { t: '12:00p', d: 60, n: 'Dance', r: 'Main', c: ['Movement'] }, { t: '5:00p', d: 60, n: 'Donation-based Class', r: '', c: ['Donation'] }];
-
+  // REAL weekly timetable, scraped from the studios' public Recess embeds
+  // (scripts/pull-embed-schedule.js, pulled 2026-08-16). Keyed by getDay() 0=Sun.
+  // Teacher names are shown because they are the real assignments, not guesses.
+  var REAL = {"sm":[[{"t":"10:00a","d":60,"n":"Basics","w":"Monty","r":"4F","c":["Beginner"]},{"t":"11:00a","d":75,"n":"Yoga","w":"Olivia","r":"2R","c":[]},{"t":"11:30a","d":60,"n":"Yoga","w":"Blake","r":"4F","c":[]},{"t":"12:00p","d":60,"n":"Yoga","w":"Andrea","r":"4R","c":[]},{"t":"1:00p","d":60,"n":"Mat Pilates","w":"Gillian","r":"4F","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Em","r":"4R","c":[]},{"t":"3:00p","d":60,"n":"Basics","w":"Blake","r":"4F","c":["Beginner"]},{"t":"4:00p","d":60,"n":"Tai Chi","w":"William","r":"4R","c":[]},{"t":"5:00p","d":75,"n":"Yoga","w":"Brian","r":"2R","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Gili","r":"4F","c":[]}],[{"t":"7:30a","d":60,"n":"Yoga","w":"Kelley","r":"2R","c":[]},{"t":"7:30a","d":60,"n":"Mat Pilates","w":"Macy","r":"4F","c":[]},{"t":"8:00a","d":60,"n":"Yoga","w":"Andrea","r":"4R","c":[]},{"t":"11:00a","d":75,"n":"Yoga","w":"Andrea","r":"2R","c":[]},{"t":"12:00p","d":60,"n":"Yoga","w":"Brian","r":"4R","c":[]},{"t":"1:00p","d":60,"n":"Mat Pilates","w":"Ying","r":"4F","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Andrea","r":"4R","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Juan","r":"2R","c":[]},{"t":"6:00p","d":60,"n":"Basics","w":"Em","r":"4F","c":["Beginner"]},{"t":"7:00p","d":75,"n":"Yoga","w":"Ricki","r":"2R","c":[]},{"t":"7:30p","d":60,"n":"Mat Pilates","w":"Fiona","r":"4F","c":[]},{"t":"8:00p","d":60,"n":"Yoga","w":"Nick","r":"4R","c":[]}],[{"t":"7:30a","d":60,"n":"Mat Pilates","w":"Meave","r":"4F","c":[]},{"t":"7:30a","d":60,"n":"Yoga","w":"Kelley","r":"2R","c":[]},{"t":"8:00a","d":60,"n":"Yoga","w":"Matt","r":"4R","c":[]},{"t":"11:00a","d":75,"n":"Yoga","w":"Matt","r":"2R","c":[]},{"t":"12:00p","d":60,"n":"Yoga","w":"Em","r":"4R","c":[]},{"t":"1:00p","d":60,"n":"Mat Pilates","w":"Fiona","r":"4F","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Brian","r":"4R","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Matt","r":"2R","c":[]},{"t":"6:00p","d":60,"n":"Basics","w":"Blake","r":"4F","c":["Beginner"]},{"t":"7:00p","d":75,"n":"Yoga","w":"Matt","r":"2R","c":[]},{"t":"7:30p","d":60,"n":"Mat Pilates","w":"Macy","r":"4F","c":[]},{"t":"8:00p","d":60,"n":"Yoga","w":"Andrea","r":"4R","c":[]}],[{"t":"7:30a","d":60,"n":"Yoga","w":"Lacy","r":"2R","c":[]},{"t":"7:30a","d":60,"n":"Mat Pilates","w":"Macy","r":"4F","c":[]},{"t":"8:00a","d":60,"n":"Yoga","w":"Monty","r":"4R","c":[]},{"t":"11:00a","d":75,"n":"Yoga","w":"Juan","r":"2R","c":[]},{"t":"12:00p","d":60,"n":"Yoga","w":"Kelley","r":"4R","c":[]},{"t":"1:00p","d":60,"n":"Mat Pilates","w":"Fiona","r":"4F","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Kelley","r":"4R","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Em","r":"2R","c":[]},{"t":"6:00p","d":60,"n":"Foundations","w":"Matt","r":"4F","c":[]},{"t":"7:00p","d":75,"n":"Yoga","w":"Em","r":"2R","c":[]},{"t":"7:30p","d":60,"n":"Mat Pilates","w":"Savannah","r":"4F","c":[]},{"t":"8:00p","d":60,"n":"Yoga","w":"Olivia","r":"4R","c":[]}],[{"t":"7:30a","d":60,"n":"Yoga","w":"Kelley","r":"2R","c":[]},{"t":"7:30a","d":60,"n":"Mat Pilates","w":"Lacy","r":"4F","c":[]},{"t":"8:00a","d":60,"n":"Yoga","w":"Andrea","r":"4R","c":[]},{"t":"11:00a","d":75,"n":"Yoga","w":"Em","r":"2R","c":[]},{"t":"12:00p","d":60,"n":"Yoga","w":"Amanda","r":"4R","c":[]},{"t":"1:00p","d":60,"n":"Mat Pilates","w":"Fiona","r":"4F","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Em","r":"4R","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Brian","r":"2R","c":[]},{"t":"6:00p","d":60,"n":"Basics","w":"Juan","r":"4F","c":["Beginner"]},{"t":"7:00p","d":75,"n":"Yoga","w":"Andrea","r":"2R","c":[]},{"t":"7:30p","d":60,"n":"Mat Pilates","w":"Savannah","r":"4F","c":[]},{"t":"8:00p","d":60,"n":"Yoga","w":"Juan","r":"4R","c":[]}],[{"t":"7:30a","d":60,"n":"Yoga","w":"Monty","r":"2R","c":[]},{"t":"7:30a","d":60,"n":"Mat Pilates","w":"Sajda","r":"4F","c":[]},{"t":"8:00a","d":60,"n":"Yoga","w":"Matt","r":"4R","c":[]},{"t":"11:00a","d":75,"n":"Yoga","w":"Audrey","r":"2R","c":[]},{"t":"12:00p","d":60,"n":"Yoga","w":"Brian","r":"4R","c":[]},{"t":"1:00p","d":60,"n":"Mat Pilates","w":"Ying","r":"4F","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Amanda","r":"4R","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Matt","r":"2R","c":[]},{"t":"6:00p","d":60,"n":"Basics","w":"Audrey","r":"4F","c":["Beginner"]},{"t":"7:00p","d":75,"n":"Yoga","w":"Matt","r":"2R","c":[]},{"t":"7:30p","d":60,"n":"w/ live music","w":"Peter","r":"4F","c":[]}],[{"t":"9:00a","d":60,"n":"Yoga","w":"Juan","r":"2R","c":[]},{"t":"10:00a","d":60,"n":"Basics","w":"Chauncie","r":"4F","c":["Beginner"]},{"t":"11:00a","d":75,"n":"Yoga","w":"Charnette","r":"2R","c":[]},{"t":"11:30a","d":60,"n":"Yoga","w":"Ying","r":"4F","c":[]},{"t":"12:00p","d":60,"n":"Yoga","w":"Audrey","r":"4R","c":[]},{"t":"1:00p","d":60,"n":"Mat Pilates","w":"Ying","r":"4F","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Liam","r":"4R","c":[]},{"t":"3:00p","d":60,"n":"Basics","w":"Ying","r":"4F","c":["Beginner"]},{"t":"5:00p","d":75,"n":"Yoga","w":"Liam","r":"4F","c":[]}]],"ag":[[{"t":"8:00a","d":60,"n":"Donation-based","w":"Kelley","r":"","c":["Donation"]},{"t":"10:00a","d":75,"n":"Yoga","w":"Kelley","r":"","c":[]},{"t":"12:00p","d":60,"n":"Yoga","w":"Liam","r":"","c":[]},{"t":"12:00p","d":60,"n":"Astoria Park Outdoor","w":"Greg","r":"","c":["Donation","Outdoor"]},{"t":"2:00p","d":60,"n":"Yoga","w":"Liz","r":"","c":[]},{"t":"3:30p","d":60,"n":"Basics","w":"Liz","r":"","c":["Beginner"]},{"t":"5:00p","d":60,"n":"Yoga","w":"Liz","r":"","c":[]},{"t":"6:30p","d":75,"n":"Yoga","w":"Alex","r":"","c":[]},{"t":"8:15p","d":60,"n":"Meditation","w":"Alex","r":"","c":["Donation"]}],[{"t":"7:00a","d":60,"n":"Donation-based","w":"Juan","r":"","c":["Donation"]},{"t":"8:00a","d":60,"n":"Astoria Park Outdoor","w":"Stephanie","r":"","c":["Donation","Outdoor"]},{"t":"11:00a","d":75,"n":"Yoga","w":"Audrey","r":"","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Nick","r":"","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Jodi","r":"","c":[]},{"t":"7:00p","d":75,"n":"Yoga","w":"Jodi","r":"","c":[]}],[{"t":"7:00a","d":60,"n":"Donation-based","w":"Liam","r":"","c":["Donation"]},{"t":"8:00a","d":60,"n":"Astoria Park Outdoor","w":"Juan","r":"","c":["Donation","Outdoor"]},{"t":"11:00a","d":75,"n":"Yoga","w":"Jodi","r":"","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Jodi","r":"","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Audrey","r":"","c":[]},{"t":"7:00p","d":75,"n":"Yoga","w":"Liam","r":"","c":[]}],[{"t":"7:00a","d":60,"n":"Donation-based","w":"Juan","r":"","c":["Donation"]},{"t":"8:00a","d":60,"n":"Astoria Park Outdoor","w":"Peter","r":"","c":["Donation","Outdoor"]},{"t":"11:00a","d":75,"n":"Yoga","w":"Audrey","r":"","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Liam","r":"","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Andrea","r":"","c":[]},{"t":"7:00p","d":75,"n":"Yoga","w":"Andrea","r":"","c":[]}],[{"t":"7:00a","d":60,"n":"Donation-based","w":"Jodi","r":"","c":["Donation"]},{"t":"8:00a","d":60,"n":"Astoria Park Outdoor","w":"Juan","r":"","c":["Donation","Outdoor"]},{"t":"11:00a","d":75,"n":"Yoga","w":"Juan","r":"","c":[]},{"t":"2:00p","d":60,"n":"Yoga","w":"Juan","r":"","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Josh","r":"","c":[]},{"t":"7:00p","d":75,"n":"Yoga","w":"Josh","r":"","c":[]}],[{"t":"7:00a","d":60,"n":"Donation-based","w":"Juan","r":"","c":["Donation"]},{"t":"11:00a","d":75,"n":"Yoga","w":"Andrea","r":"","c":[]},{"t":"12:00p","d":60,"n":"Astoria Park Outdoor","w":"Anna","r":"","c":["Donation","Outdoor"]},{"t":"2:00p","d":60,"n":"Yoga","w":"Andrea","r":"","c":[]},{"t":"5:30p","d":60,"n":"Yoga","w":"Liam","r":"","c":[]},{"t":"7:00p","d":75,"n":"Yoga","w":"Liam","r":"","c":[]},{"t":"8:45p","d":75,"n":"Candlelit Restorative","w":"Serena","r":"","c":[]}],[{"t":"8:00a","d":60,"n":"Donation-based","w":"Kelley","r":"","c":["Donation"]},{"t":"10:00a","d":75,"n":"Yoga","w":"Juan","r":"","c":[]},{"t":"12:00p","d":60,"n":"Yoga","w":"Juan","r":"","c":[]},{"t":"12:00p","d":60,"n":"Astoria Park Outdoor","w":"Nick","r":"","c":["Donation","Outdoor"]},{"t":"2:00p","d":60,"n":"Yoga","w":"Alex","r":"","c":[]},{"t":"3:30p","d":60,"n":"Basics","w":"Stephanie","r":"","c":["Beginner"]},{"t":"5:00p","d":60,"n":"Yoga","w":"Stephanie","r":"","c":[]}]]};
   var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   var days = []; var base = new Date(); base.setHours(0, 0, 0, 0);
@@ -765,13 +749,13 @@
   function mk(st, c, d, idx) {
     var minutes = pmin(c.t), cap = st === 'sm' ? (c.r === '4F' ? 16 : c.r === '2R' ? 22 : 18) : 20;
     var fill = (d.getDate() * 7 + idx * 13 + minutes) % (cap + 3);
-    return { key: st + d.getDate() + idx + c.t, st: st, t: c.t, d: c.d, n: c.n, r: c.r, c: c.c, min: minutes,
+    return { key: st + d.getDate() + idx + c.t, st: st, t: c.t, d: c.d, n: c.n, w: c.w, r: c.r, c: c.c, min: minutes,
              capacity: cap, donation: c.c.indexOf('Donation') >= 0 };
   }
   function classesFor(d) {
-    var we = d.getDay() === 0 || d.getDay() === 6, seed = d.getDate(), out = [];
-    (we ? SM_WE : SM_WD).forEach(function (c, i) { out.push(mk('sm', c, d, i)); });
-    (we ? AG_WE : AG_WD).forEach(function (c, i) { out.push(mk('ag', c, d, i + 50)); });
+    var dow = d.getDay(), out = [];
+    (REAL.sm[dow] || []).forEach(function (c, i) { out.push(mk('sm', c, d, i)); });
+    (REAL.ag[dow] || []).forEach(function (c, i) { out.push(mk('ag', c, d, i + 50)); });
     out.sort(function (a, b) { return a.min - b.min; });
     return out;
   }
@@ -805,9 +789,10 @@
       el.innerHTML =
         '<div class="t"><b>' + c.t.replace(/[ap]$/, '') + (/p$/.test(c.t) ? 'p' : 'a') + '</b><i>' + c.d + ' min</i></div>' +
         '<div class="m"><b>' + c.n + '</b><div class="sub"><span class="loc">' + s.name + '</span>' +
+        (c.w ? '<span>· with ' + c.w + '</span>' : '') +
         (c.r ? '<span>· ' + c.r + '</span>' : '') + chips + '</div></div>' +
         '<div class="a">' +
-          (isB ? '<span class="sp">Saved</span>' : '<span class="sp">' + c.capacity + ' mats</span>') +
+          (isB ? '<span class="sp">Saved</span>' : '') +
           (isB ? '<button class="bk done">Saved</button>'
                : '<button class="bk" data-k="' + c.key + '">Check times</button>') + '</div>';
       wrap.appendChild(el);
