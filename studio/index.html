@@ -758,6 +758,18 @@
   for (var i = 0; i < 7; i++) days.push(new Date(base.getTime() + i * 864e5));
   var booked = {}, state = { studio: 'all', day: 0 };
 
+  // If everything today has already started, drop Today from the strip entirely
+  // and start the week at tomorrow -- no crossed-out dead tab.
+  (function () {
+    var n = new Date(), nm = n.getHours() * 60 + n.getMinutes();
+    var left = classesFor(days[0]).some(function (c) { return c.min >= nm; });
+    if (!left) {
+      days = [];
+      for (var i = 1; i <= 7; i++) days.push(new Date(base.getTime() + i * 864e5));
+      state.autoNote = true;
+    }
+  })();
+
   function pmin(s) { var m = s.match(/(\d+):?(\d*)([ap])/); var h = +m[1], mm = m[2] ? +m[2] : 0, pm = m[3] === 'p'; if (pm && h !== 12) h += 12; if (!pm && h === 12) h = 0; return h * 60 + mm; }
   function mk(st, c, d, idx) {
     var minutes = pmin(c.t), cap = st === 'sm' ? (c.r === '4F' ? 16 : c.r === '2R' ? 22 : 18) : 20;
@@ -775,7 +787,7 @@
   function fmt(s) { return s.replace('a', ' AM').replace('p', ' PM'); }
   function todayDone() {
     var n = new Date(), nm = n.getHours() * 60 + n.getMinutes();
-    return !classesFor(days[0]).some(function (c) { return c.min >= nm; });
+    return !classesFor(base).some(function (c) { return c.min >= nm; });
   }
   function nextOpenDay(from) {
     for (var i = from; i < 7; i++) if (classesFor(days[i]).length) return i;
@@ -787,18 +799,18 @@
     days.forEach(function (d, i) {
       var b = document.createElement('button'); b.className = 'day';
       b.setAttribute('aria-pressed', i === state.day ? 'true' : 'false');
-      if (i === 0 && todayDone()) { b.classList.add('spent'); b.title = 'Classes are done for today'; }
-      b.innerHTML = '<span class="dw">' + (i === 0 ? 'Today' : DOW[d.getDay()]) + '</span><span class="dn">' + d.getDate() + '</span>';
+      if (d.getTime() === base.getTime() && todayDone()) { b.classList.add('spent'); b.title = 'Classes are done for today'; }
+      b.innerHTML = '<span class="dw">' + (d.getTime() === base.getTime() ? 'Today' : DOW[d.getDay()]) + '</span><span class="dn">' + d.getDate() + '</span>';
       b.onclick = function () { state.day = i; state.autoNote = false; render(); var nb = document.querySelectorAll('#days .day')[i]; if (nb) nb.focus(); };
       dEl.appendChild(b);
     });
-    var d0 = new Date(), nowMin = d0.getHours() * 60 + d0.getMinutes(), isToday = state.day === 0;
+    var d0 = new Date(), nowMin = d0.getHours() * 60 + d0.getMinutes(), isToday = days[state.day].getTime() === base.getTime();
     var list = classesFor(days[state.day])
       .filter(function (c) { return state.studio === 'all' || c.st === state.studio; })
       // A class that started hours ago is not something anyone can attend today.
       .filter(function (c) { return !isToday || c.min >= nowMin; });
     var wrap = document.getElementById('slots'); wrap.innerHTML = '';
-    if (state.autoNote && state.day !== 0) {
+    if (state.autoNote) {
       var nd = days[state.day];
       wrap.innerHTML += '<p class="lede" style="font-size:14.5px;margin-bottom:14px">Today\u2019s classes are done \u2014 showing ' + DOW[nd.getDay()] + '.</p>';
     }
